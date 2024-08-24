@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Ramsey\Uuid\Type\Integer;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -33,9 +35,11 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(int $id)
     {
-        //
+        $user = DB::table('sindi_users')->find($id);
+ 
+        return $user;
     }
 
     /**
