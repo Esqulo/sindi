@@ -14,16 +14,16 @@ return new class extends Migration
         Schema::create('deals', function (Blueprint $table) {
             $table->id();
             $table->float('value');
-            $table->integer('from');
+            $table->unsignedBigInteger('from');
             $table->foreign('from')->references('id')->on('users')->onDelete('no action');
-            $table->integer('to');
+            $table->unsignedBigInteger('to');
             $table->foreign('to')->references('id')->on('users')->onDelete('no action');
             $table->dateTime('created_at')->useCurrent();
             $table->integer('answer');
             $table->dateTime('answered_at');
             $table->dateTime('starts_at');
             $table->dateTime('expires_at');
-            $table->integer('place')->nullable();
+            $table->unsignedBigInteger('place')->nullable();
             $table->foreign('place')->references('id')->on('places')->onDelete('set null');
             $table->text('message');
         });
@@ -33,9 +33,9 @@ return new class extends Migration
             $table->string('adress');
             $table->integer('type');
             $table->dateTime('time');
-            $table->integer('from');
+            $table->unsignedBigInteger('from');
             $table->foreign('from')->references('id')->on('users')->onDelete('no action');
-            $table->integer('to');
+            $table->unsignedBigInteger('to');
             $table->foreign('to')->references('id')->on('users')->onDelete('no action');
             $table->dateTime('created_at')->useCurrent();
         });

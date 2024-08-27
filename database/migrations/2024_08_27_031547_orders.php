@@ -23,9 +23,9 @@ return new class extends Migration
         Schema::create('purchases', function (Blueprint $table) {
             $table->id();
             $table->string('transaction_id',500);
-            $table->integer('user_id');
+            $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('no action');
-            $table->integer('product');
+            $table->unsignedBigInteger('product');
             $table->foreign('product')->references('id')->on('products')->onDelete('no action');
             $table->dateTime('purchase_date')->useCurrent();
             $table->dateTime('payment_date')->useCurrent();
