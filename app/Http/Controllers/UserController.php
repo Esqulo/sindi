@@ -37,7 +37,7 @@ class UserController extends Controller
      */
     public function show(int $id)
     {
-        $user = DB::table('sindi_users')->find($id);
+        $user = DB::table('users')->find($id);
  
         return $user;
     }

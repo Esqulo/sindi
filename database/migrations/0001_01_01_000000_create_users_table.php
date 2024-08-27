@@ -13,18 +13,36 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
+            $table->string('doc_number')->unique();
+            $table->string('phone')->unique();
             $table->string('password');
+            $table->dateTime('email_verified_at')->nullable();
+            $table->dateTime('phone_verified_at')->nullable();
             $table->rememberToken();
-            $table->timestamps();
+            $table->dateTime('created_at')->useCurrent();
+            $table->dateTime('updated_at')->nullable()->useCurrentOnUpdate();
+            $table->boolean('active')->default(1);
+        });
+        
+        Schema::create('user_data', function (Blueprint $table) {
+            $table->id();
+            $table->foreign('id')->references('id')->on('users')->onDelete('cascade');
+            $table->date('birthdate');
+            $table->string('adress');
+            $table->string('cep');
+            $table->string('avatar');
+            $table->text('bio');
+            $table->integer('reviews_count');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
-            $table->string('email')->primary();
+            $table->id()->primary()->autoIncrement();
+            $table->integer('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->string('email');
             $table->string('token');
-            $table->timestamp('created_at')->nullable();
+            $table->dateTime('expires_at');
+            $table->dateTime('created_at')->useCurrent();
         });
 
         Schema::create('sessions', function (Blueprint $table) {
@@ -43,6 +61,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('users');
+        Schema::dropIfExists('user_data');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
     }
