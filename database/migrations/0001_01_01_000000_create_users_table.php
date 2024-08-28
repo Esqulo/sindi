@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('email')->unique();
+            $table->string('name');
             $table->string('doc_number')->unique();
             $table->string('phone')->unique();
             $table->string('password');
@@ -23,11 +24,6 @@ return new class extends Migration
             $table->dateTime('created_at')->useCurrent();
             $table->dateTime('updated_at')->nullable()->useCurrentOnUpdate();
             $table->boolean('active')->default(1);
-        });
-        
-        Schema::create('user_data', function (Blueprint $table) {
-            $table->id();
-            $table->foreign('id')->references('id')->on('users')->onDelete('cascade');
             $table->date('birthdate');
             $table->string('adress');
             $table->string('cep');
@@ -35,7 +31,7 @@ return new class extends Migration
             $table->text('bio');
             $table->integer('reviews_count');
         });
-
+        
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->id()->primary()->autoIncrement();
             $table->integer('user_id')->references('id')->on('users')->onDelete('cascade');
@@ -61,7 +57,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('users');
-        Schema::dropIfExists('user_data');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
     }
