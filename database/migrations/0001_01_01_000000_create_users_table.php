@@ -20,16 +20,16 @@ return new class extends Migration
             $table->string('password');
             $table->dateTime('email_verified_at')->nullable();
             $table->dateTime('phone_verified_at')->nullable();
-            $table->rememberToken();
             $table->dateTime('created_at')->useCurrent();
             $table->dateTime('updated_at')->nullable()->useCurrentOnUpdate();
             $table->boolean('active')->default(1);
             $table->date('birthdate');
-            $table->string('adress');
+            $table->string('address');
             $table->string('cep');
-            $table->string('avatar');
+            $table->string('avatar')->nullable();
             $table->text('bio');
             $table->integer('reviews_count');
+            $table->boolean('is_admin')->default(0);
         });
         
         Schema::create('password_reset_tokens', function (Blueprint $table) {
