@@ -27,8 +27,8 @@ return new class extends Migration
             $table->string('address');
             $table->string('cep');
             $table->string('avatar')->nullable();
-            $table->text('bio');
-            $table->integer('reviews_count');
+            $table->text('bio')->nullable();
+            $table->integer('reviews_count')->nullable();
             $table->boolean('is_admin')->default(0);
         });
         
