@@ -67,6 +67,4 @@ class User extends Model
         'reviews_count' => 'integer'
     ];
 
-
-
 }
