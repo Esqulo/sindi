@@ -52,19 +52,19 @@ class UserController extends Controller
         return $user;
     }
 
-    public function update(string $id, Request $body)
-    {
+    public function update(string $id, Request $request)
+    {                
+        $token = $request->header('Authorization');
+        if(!$token) return response()->json(['message' => 'Credentials are required'], 401);
         
-        if(!$body->token) return response()->json(['message' => 'missing parameters'], 400);
-       
-        $isAdmin = $this->userIsAdmin($body->token);
-        if(!$isAdmin && $id != $this->retrieveId($body->token)) return response()->json(['message' => 'not allowed'], 403);
+        $hasAccess = $this->checkModifyPermission($token,$id);
+        if(!$hasAccess) return response()->json(['message' => 'not allowed'], 403);
 
         $user = User::find($id);
         if(!$user) return response()->json(['message' => 'invalid data'], 404);
         
         try{
-            $validatedData = $body->validate([
+            $validatedData = $request->validate([
                 "email" => "sometimes|email|unique:users,email,$id",
                 "phone" => "sometimes|string|unique:users,phone,$id",
                 "password" => "sometimes|string|min:8|regex:/[a-z]/|regex:/[A-Z]/|regex:/[0-9]/|regex:/[@$!%*#?&.;?,'\":{}\-\+\=`_^]/",
@@ -88,19 +88,21 @@ class UserController extends Controller
         return response()->json(true);
     }
 
-    public function destroy(string $id, Request $body)
+    public function destroy(string $id, Request $request)
     {
-        $isAdmin = $this->userIsAdmin($body->token);     
-        if(!$isAdmin && $id != $this->retrieveId($body->token)) return response()->json(['message' => 'not allowed'], 403);
+        $token = $request->header('Authorization');
+        if(!$token) return response()->json(['message' => 'Credentials are required'], 401);
+        
+        $hasAccess = $this->checkModifyPermission($token,$id);
+        if(!$hasAccess) return response()->json(['message' => 'not allowed'], 403);
 
         $user = User::find($id);
-
         if(!$user) return response()->json(['message' => 'User not found'], 404);
 
         $user->active = false;
         $user->save();
 
-        return response()->json(['message' => 'User deleted'], 200);
+        return response()->json(true);
     }
 
     public function create(){
@@ -108,6 +110,12 @@ class UserController extends Controller
     }
     public function edit(string $id){
         return response()->json(['message' => 'not found'], 404);
+    }
+
+    private function checkModifyPermission($token,$item){
+        if (preg_match('/Bearer\s(\S+)/', $token, $matches)) $token = $matches[1];
+        if(!$this->userIsAdmin($token) && $this->retrieveId($token) != $item) return false;
+        return true;
     }
 
     private function passwordIntoHash($password){
