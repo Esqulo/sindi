@@ -11,7 +11,7 @@ class UserController extends Controller
 
     public function index()
     {
-        return User::where('active', true)->get();
+        return User::where('active', true)->paginate(20);
     }
 
     public function store(Request $body)
