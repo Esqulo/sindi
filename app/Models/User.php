@@ -56,7 +56,7 @@ class User extends Model
         'password' => 'string',
         'email_verified_at' => 'datetime',
         'phone_verified_at' => 'datetime',
-        'created_at' => 'datetime',
+        'created_at' => 'date',
         'updated_at' => 'datetime',
         'active' => 'boolean',
         'birthdate' => 'date',
