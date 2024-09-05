@@ -43,7 +43,7 @@ class User extends Model
         'email_verified_at',
         'phone_verified_at',
         'updated_at',
-        'adress',
+        'address',
         'cep',
         'is_admin'
     ];
