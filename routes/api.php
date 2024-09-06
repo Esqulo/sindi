@@ -14,4 +14,6 @@ Route::prefix('nearby')->group(function(){
 
 Route::prefix('auth')->group(function(){
     Route::post('login',[AuthController::class, 'login']);
+    Route::match(['get','post'],'logout',[AuthController::class, 'logout']);
+    Route::post('logoutFromAll',[AuthController::class, 'logoutFromAll']);
 });
