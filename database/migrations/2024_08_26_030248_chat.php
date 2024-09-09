@@ -18,8 +18,8 @@ return new class extends Migration
             $table->unsignedBigInteger('to');
             $table->foreign('to')->references('id')->on('users')->onDelete('no action');
             $table->dateTime('sent_at')->useCurrent();
-            $table->dateTime('received_at');
-            $table->dateTime('read_at');
+            $table->dateTime('received_at')->nullable();
+            $table->dateTime('read_at')->nullable();
             $table->string('message',2000);
         });
     }
