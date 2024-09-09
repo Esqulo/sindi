@@ -3,6 +3,7 @@
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\NearbyController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ChatController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,4 +17,9 @@ Route::prefix('auth')->group(function(){
     Route::post('login',[AuthController::class, 'login']);
     Route::match(['get','post'],'logout',[AuthController::class, 'logout']);
     Route::post('logoutFromAll',[AuthController::class, 'logoutFromAll']);
+});
+
+Route::prefix('chat')->group(function(){
+    Route::get('/{user_id}',[ChatController::class, 'getMessages']);
+    Route::post('send',[ChatController::class, 'sendMessage']);
 });
