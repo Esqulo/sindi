@@ -4,7 +4,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\NearbyController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ChatController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\AvaliationController;
 use Illuminate\Support\Facades\Route;
 
 Route::resource('user', UserController::class);
@@ -23,3 +23,5 @@ Route::prefix('chat')->group(function(){
     Route::get('/{user_id}',[ChatController::class, 'getMessages']);
     Route::post('send',[ChatController::class, 'sendMessage']);
 });
+
+Route::resource('avaliation', AvaliationController::class);
