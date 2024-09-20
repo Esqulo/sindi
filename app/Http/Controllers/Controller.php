@@ -10,6 +10,8 @@ abstract class Controller
 {
     public function userIsAdmin(string $token){   
 
+        if (preg_match('/Bearer\s(\S+)/', $token, $matches)) $token = $matches[1];
+
         $user_id = DB::table('auth')
         ->where('token', $token)
         ->where('expires_at', '>', now())

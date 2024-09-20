@@ -5,6 +5,7 @@ use App\Http\Controllers\NearbyController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\AvaliationController;
+use App\Http\Controllers\ProductsController;
 use Illuminate\Support\Facades\Route;
 
 Route::resource('user', UserController::class);
@@ -25,3 +26,5 @@ Route::prefix('chat')->group(function(){
 });
 
 Route::resource('avaliation', AvaliationController::class);
+
+Route::resource('product', ProductsController::class);
