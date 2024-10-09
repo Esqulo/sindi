@@ -30,7 +30,7 @@ return new class extends Migration
         
         Schema::create('meetings', function (Blueprint $table) {
             $table->id();
-            $table->string('adress');
+            $table->string('address');
             $table->integer('type');
             $table->dateTime('time');
             $table->unsignedBigInteger('from');
