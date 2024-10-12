@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->float('price');
+            $table->string('image');
             $table->string('description',3000);
             $table->boolean('active')->default(1);
             $table->integer('main_category')->nullable();
