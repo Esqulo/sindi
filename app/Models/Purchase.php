@@ -19,23 +19,37 @@ class Purchase extends Model
     }
 
     protected $fillable = [
-        'name',
-        'price',
-        'description',
-        'active',
-        'main_category'
+        'transaction_id',
+        'user_id',
+        'product',
+        'purchase_date',
+        'payment_date',
+        'payment_method',
+        'payment_value',
+        'payment_platform'
     ];
 
     protected $hidden = [
-        'main_category'
+        'id',
+        'transaction_id',
+        'user_id',
+        'product',
+        'purchase_date',
+        'payment_date',
+        'payment_method',
+        'payment_value',
+        'payment_platform'
     ];
 
     protected $casts = [
         'id' => 'integer',
-        'name' => 'string',
-        'price' => 'float',
-        'description' => 'string',
-        'active' => 'boolean',
-        'main_category' => 'integer'
+        'transaction_id' => 'string',
+        'user_id' => 'integer',
+        'product' => 'integer',
+        'purchase_date' => 'datetime',
+        'payment_date' => 'datetime',
+        'payment_method' => 'integer',
+        'payment_value' => 'integer',
+        'payment_platform' => 'string',
     ];
 }
