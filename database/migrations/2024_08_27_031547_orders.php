@@ -26,8 +26,6 @@ return new class extends Migration
             $table->string('transaction_id',500);
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('no action');
-            $table->unsignedBigInteger('product');
-            $table->foreign('product')->references('id')->on('products')->onDelete('no action');
             $table->dateTime('purchase_date')->useCurrent();
             $table->dateTime('payment_date')->useCurrent();
             $table->integer('payment_method')->nullable();
