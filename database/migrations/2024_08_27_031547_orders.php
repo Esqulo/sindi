@@ -23,7 +23,7 @@ return new class extends Migration
 
         Schema::create('purchases', function (Blueprint $table) {
             $table->id();
-            $table->string('transaction_id',500);
+            $table->string('transaction_id',500)->nullable();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('no action');
             $table->dateTime('purchase_date')->useCurrent();
