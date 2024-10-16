@@ -3,15 +3,58 @@
 namespace App\Http\Controllers;
 
 use App\Models\Purchase;
+use App\Models\User;
 use App\Models\Products;
+use App\Models\Order;
 use Illuminate\Http\Request;
 
 use MercadoPago\MercadoPagoConfig;
 use MercadoPago\Client\Preference\PreferenceClient;
 use MercadoPago\Exceptions\MPApiException;
 
+use Exception;
+
 class PurchasesController extends Controller
 {
+    public function newPurchase(Request $request){
+
+        $token = $request->header('Authorization');
+        if(!$token) return response()->json(['success' => false, 'message' => 'Not allowed.'], 403);
+        
+        $userId = $this->retrieveId($token);
+        if(!$userId) return response()->json(['success' => false, 'message' => 'Not allowed.'], 403);
+        $user = User::find($userId);
+
+        if(!$request['items']) return response()->json(['success' => false, 'message' => 'No product informed.'], 400);
+
+        $items = $this->getProductsInfo($request['items']);
+
+        try{
+            $purchase = Purchase::create([
+                'user_id' => $user->id,
+                'payment_platform' => 'mercado_pago'
+            ]);
+
+            foreach($items as $item){
+                Order::create([
+                    'product_id' => $item['id'],
+                    'purchase_id' => $purchase->id
+                ]);
+            }
+
+            $preference = $this->createPaymentPreference($user,$items,$purchase->id);
+
+            $purchase->update([
+                'transaction_id' => $preference->id
+            ]);
+
+            return response()->json($preference,201);
+
+        }catch(Exception $e){
+            return response()->json(['success' => false, 'message' => 'Something unexpected happened, please try again.'],500);
+        }
+
+    }
 
     protected function authenticate(){
         $mpAccessToken = env('MERCADO_PAGO_ACCESS_TOKEN', '');
@@ -19,7 +62,7 @@ class PurchasesController extends Controller
         MercadoPagoConfig::setRuntimeEnviroment(MercadoPagoConfig::LOCAL);
     }
 
-    protected function createPreferenceRequest($items, $payer){
+    protected function createPreferenceRequest($items, $payer, $purchase_id){
         $paymentMethods = [
             "excluded_payment_methods" => [],
             "installments" => 12,
@@ -36,8 +79,8 @@ class PurchasesController extends Controller
             "payer" => $payer,
             "payment_methods" => $paymentMethods,
             "back_urls" => $backUrls,
-            "statement_descriptor" => "NAME_DISPLAYED_IN_USER_BILLING",
-            "external_reference" => "1234567890",
+            "statement_descriptor" => "Compra em Sindi",
+            "external_reference" => $purchase_id,
             "expires" => false,
             "auto_return" => 'all',
         ];
@@ -45,35 +88,24 @@ class PurchasesController extends Controller
         return $request;
     }
 
-    public function createPaymentPreference(Request $request){
-
-        $token = $request->header('Authorization');
-        if(!$token) return response()->json(['success' => false, 'message' => 'Not allowed.'], 403);
-        
-        $userId = $this->retrieveId($token);
-        if(!$userId) return response()->json(['success' => false, 'message' => 'Not allowed.'], 403);
-        $user = $this->getUserInfo($userId);
-
-        if(!$request['items']) return response()->json(['success' => false, 'message' => 'No product informed.'], 400);
+    public function createPaymentPreference($user,$items,$purchase_id){
 
         $this->authenticate();
-
-        $items = $this->getProductsInfo($request['items']);
 
         $payer = array(
             "name" => $user->name,
             "email" => $user->email
         );
 
-        $request = $this->createPreferenceRequest($items, $payer);
+        $request = $this->createPreferenceRequest($items, $payer, $purchase_id);
         
         $client = new PreferenceClient();
 
         try {
             $preference = $client->create($request);
-            return response()->json($preference,201);
+            return $preference;
         } catch (MPApiException $error) {
-            response()->json($error,500);
+            return response()->json($error,500);
         }
     }
 
