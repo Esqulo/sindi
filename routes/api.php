@@ -33,6 +33,6 @@ Route::prefix('chat')->group(function(){
 });
 
 Route::prefix('payment')->group(function(){
-    Route::post('/new',[PurchasesController::class, 'createPaymentPreference']);
+    Route::post('/new',[PurchasesController::class, 'newPurchase']);
 });
 
