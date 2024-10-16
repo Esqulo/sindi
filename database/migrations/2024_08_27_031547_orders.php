@@ -29,7 +29,7 @@ return new class extends Migration
             $table->dateTime('purchase_date')->useCurrent();
             $table->dateTime('payment_date')->useCurrent();
             $table->integer('payment_method')->nullable();
-            $table->float('payment_value');
+            $table->float('payment_value')->nullable();
             $table->string('payment_platform');
         });
 
