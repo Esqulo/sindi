@@ -34,6 +34,14 @@ return new class extends Migration
             $table->float('payment_value');
             $table->string('payment_platform');
         });
+
+        Schema::create('orders', function (Blueprint $table) {
+            $table->id();
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('no action');
+            $table->unsignedBigInteger('product_id');
+            $table->foreign('purchase_id')->references('id')->on('purchases')->onDelete('no action');
+            $table->unsignedBigInteger('purchase_id');
+        });
     }
 
     /**
@@ -43,5 +51,6 @@ return new class extends Migration
     {
         Schema::dropIfExists('products');
         Schema::dropIfExists('purchases');
+        Schema::dropIfExists('orders');
     }
 };
