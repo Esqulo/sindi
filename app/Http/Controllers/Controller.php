@@ -46,16 +46,6 @@ abstract class Controller
 
     }
 
-    public function getUserInfo($user_id){
-        if(!$user_id) return false;
-        
-        $userData = DB::table('users')->find($user_id);
-        
-        if(!$userData) return false;
-
-        return $userData;
-    }
-
     public function getAddressFromCep($cep){
 
         $cep = preg_replace('/[^0-9]/', '', $cep);
