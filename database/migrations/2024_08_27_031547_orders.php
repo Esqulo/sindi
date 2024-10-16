@@ -27,7 +27,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('no action');
             $table->dateTime('purchase_date')->useCurrent();
-            $table->dateTime('payment_date')->useCurrent();
+            $table->dateTime('payment_date')->nullable();
             $table->integer('payment_method')->nullable();
             $table->float('payment_value')->nullable();
             $table->string('payment_platform');
