@@ -27,10 +27,6 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('no action');
             $table->dateTime('purchase_date')->useCurrent();
-            $table->dateTime('payment_date')->nullable();
-            $table->integer('payment_method')->nullable();
-            $table->float('payment_value')->nullable();
-            $table->string('payment_platform');
         });
 
         Schema::create('orders', function (Blueprint $table) {
@@ -40,6 +36,17 @@ return new class extends Migration
             $table->foreign('purchase_id')->references('id')->on('purchases')->onDelete('no action');
             $table->unsignedBigInteger('purchase_id');
         });
+
+        Schema::create('payments', function (Blueprint $table) {
+            $table->id();
+            $table->foreign('purchase_id')->references('id')->on('purchases')->onDelete('no action');
+            $table->unsignedBigInteger('purchase_id');
+            $table->string('payment_id',150);
+            $table->float('amount');
+            $table->dateTime('payment_date');
+            $table->string('payment_method',20);
+            $table->string('payment_platform',25);
+        });
     }
 
     /**
@@ -47,8 +54,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('products');
-        Schema::dropIfExists('purchases');
-        Schema::dropIfExists('orders');
+
     }
 };
