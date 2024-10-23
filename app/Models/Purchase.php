@@ -21,35 +21,20 @@ class Purchase extends Model
     protected $fillable = [
         'transaction_id',
         'user_id',
-        'product',
-        'purchase_date',
-        'payment_date',
-        'payment_method',
-        'payment_value',
-        'payment_platform'
+        'purchase_date'
     ];
 
     protected $hidden = [
         'id',
         'transaction_id',
         'user_id',
-        'product',
-        'purchase_date',
-        'payment_date',
-        'payment_method',
-        'payment_value',
-        'payment_platform'
+        'purchase_date'
     ];
 
     protected $casts = [
         'id' => 'integer',
         'transaction_id' => 'string',
         'user_id' => 'integer',
-        'product' => 'integer',
-        'purchase_date' => 'datetime',
-        'payment_date' => 'datetime',
-        'payment_method' => 'integer',
-        'payment_value' => 'integer',
-        'payment_platform' => 'string',
+        'purchase_date' => 'datetime'
     ];
 }
