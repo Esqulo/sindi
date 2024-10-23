@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Purchase;
 use App\Models\User;
+use App\Models\Purchase;
 use App\Models\Products;
+use App\Models\Payment;
 use App\Models\Order;
+
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 use MercadoPago\MercadoPagoConfig;
 use MercadoPago\Client\Preference\PreferenceClient;
 use MercadoPago\Exceptions\MPApiException;
 
 use Exception;
+use DateTime;
 
 class PurchasesController extends Controller
 {
@@ -31,8 +35,7 @@ class PurchasesController extends Controller
 
         try{
             $purchase = Purchase::create([
-                'user_id' => $user->id,
-                'payment_platform' => 'mercado_pago'
+                'user_id' => $user->id
             ]);
 
             foreach($items as $item){
@@ -43,10 +46,6 @@ class PurchasesController extends Controller
             }
 
             $preference = $this->createPaymentPreference($user,$items,$purchase->id);
-
-            $purchase->update([
-                'transaction_id' => $preference->id
-            ]);
 
             return response()->json($preference,201);
 
@@ -63,26 +62,21 @@ class PurchasesController extends Controller
     }
 
     protected function createPreferenceRequest($items, $payer, $purchase_id){
+        
         $paymentMethods = [
             "excluded_payment_methods" => [],
             "installments" => 12,
             "default_installments" => 1
         ];
 
-        $backUrls = [
-            'success' => '127.0.0.1:80/sindi/success',
-            'failure' => '127.0.0.1:80/sindi/fail'
-        ];
-
         $request = [
             "items" => $items,
             "payer" => $payer,
             "payment_methods" => $paymentMethods,
-            "back_urls" => $backUrls,
-            "statement_descriptor" => "Compra em Sindi",
+            "statement_descriptor" => "Sindi",
+            "notification_url" => 'https://www.table4all.com.br/dev_api/estabelecimento/logger.php',
             "external_reference" => $purchase_id,
             "expires" => false,
-            "auto_return" => 'all',
         ];
 
         return $request;
@@ -131,6 +125,56 @@ class PurchasesController extends Controller
 
         return $productsData;
         
+    }
+
+    public function updateStatus(Request $request){
+        
+        $data = $request->all();
+        
+        if (isset($data['resource'])) {
+            
+            $orderData = Http::withToken(env('MERCADO_PAGO_ACCESS_TOKEN', ''))->get($data['resource']);
+            $purchase = Purchase::find($orderData['external_reference']);
+
+            preg_match('/merchant_orders\/(\d+)/', $data['resource'], $matches);
+            $merchantOrderId = $matches[1];
+
+            $purchase->update([
+                "transaction_id" => $merchantOrderId
+            ]);
+
+            foreach ($orderData['payments'] as $orderPayment) {
+                
+                if($orderPayment['status'] != "approved") continue;
+
+                $payment = Payment::where('payment_id',$orderPayment['id'])->first();
+                $paymentDate = isset($orderPayment['date_approved']) ? (new DateTime($orderPayment['date_approved']))->format('Y-m-d H:i:s') : null;
+
+                $paymentData = [
+                    'purchase_id' => $purchase->id, 
+                    'payment_id' => $orderPayment['id'],
+                    'amount' => $orderPayment['total_paid_amount'],
+                    'payment_date' => $paymentDate, 
+                    'payment_platform' => 'mercado_pago',
+                ];
+            
+                if ($payment) {
+                    $payment->update($paymentData);
+                } else {
+                    Payment::create($paymentData);
+                }
+            }
+
+        }
+
+        return response()->json(['status' => 'success'], 200);
+    }
+
+    public function retrieve($transaction_id){
+        $this->authenticate();
+        $client = new PreferenceClient();
+        $status = $client->get($transaction_id);
+        return response()->json($status,200);
     }
 
 }

@@ -34,5 +34,7 @@ Route::prefix('chat')->group(function(){
 
 Route::prefix('payment')->group(function(){
     Route::post('/new',[PurchasesController::class, 'newPurchase']);
+    Route::get('/retrieve/{transaction_id}',[PurchasesController::class, 'retrieve']);
+    Route::post('/update',[PurchasesController::class, 'updateStatus']);
 });
 
