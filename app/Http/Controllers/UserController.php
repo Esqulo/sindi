@@ -111,13 +111,6 @@ class UserController extends Controller
         return response()->json(true);
     }
 
-    public function create(){
-        return response()->json(['message' => 'not found'], 404);
-    }
-    public function edit(string $id){
-        return response()->json(['message' => 'not found'], 404);
-    }
-
     private function checkModifyPermission($token,$item){
         if (preg_match('/Bearer\s(\S+)/', $token, $matches)) $token = $matches[1];
         if(!$this->userIsAdmin($token) && $this->retrieveId($token) != $item) return false;
