@@ -7,6 +7,7 @@ use App\Http\Controllers\ChatController;
 use App\Http\Controllers\AvaliationController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\MeetingsController;
+use App\Http\Controllers\OfferedServicesController;
 use App\Http\Controllers\PurchasesController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,6 +16,7 @@ Route::resources([
     'avaliation' => AvaliationController::class,
     'product' => ProductsController::class,
     'meeting' => MeetingsController::class,
+    'offeredservices' => OfferedServicesController::class
 ]);
 
 Route::prefix('nearby')->group(function(){
