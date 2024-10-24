@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Exception;
 
+// use App\Http\Controllers\MercadoPagoController;
+
 class UserController extends Controller
 {
 
@@ -34,7 +36,11 @@ class UserController extends Controller
 
             if(!$validatedData) throw new Exception('invalid data');
 
-            User::create($validatedData);
+            $user = User::create($validatedData);
+
+            // $mercadoPagoController = new MercadoPagoController;
+            // $mercadoPagoController->createMercadoPagoUser($user);
+
         } catch (Exception $e) {
             return response()->json([
                 "success" => false,
