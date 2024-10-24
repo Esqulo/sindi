@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('description');
             $table->float('price');
+            $table->boolean('active')->default(1);
         });
 
         Schema::create('avaliations', function (Blueprint $table) {
