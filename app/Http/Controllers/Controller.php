@@ -46,6 +46,17 @@ abstract class Controller
 
     }
 
+    public function validateUser($request){
+
+        $token = $request->header('Authorization');
+        if(!$token) throw new Exception('Credentials are required');
+        
+        $user_id = $this->retrieveId($token);
+        if(!$user_id) throw new Exception('Invalid credentials');
+
+        return $user_id;
+    }
+
     public function getAddressFromCep($cep){
 
         $cep = preg_replace('/[^0-9]/', '', $cep);
