@@ -21,8 +21,10 @@ return new class extends Migration
             $table->dateTime('created_at')->useCurrent();
             $table->integer('answer');
             $table->dateTime('answered_at');
-            $table->unsignedBigInteger('counter')->nullable();
-            $table->foreign('counter')->references('id')->on('deals')->onDelete('no action');
+            $table->unsignedBigInteger('counter_next')->nullable();
+            $table->foreign('counter_next')->references('id')->on('deals')->onDelete('no action');
+            $table->unsignedBigInteger('counter_prev')->nullable();
+            $table->foreign('counter_prev')->references('id')->on('deals')->onDelete('no action');
             $table->dateTime('starts_at');
             $table->dateTime('expires_at');
             $table->unsignedBigInteger('place')->nullable();
