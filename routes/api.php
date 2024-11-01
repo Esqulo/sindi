@@ -9,6 +9,7 @@ use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\MeetingsController;
 use App\Http\Controllers\OfferedServicesController;
 use App\Http\Controllers\PurchasesController;
+use App\Http\Controllers\DealsController;
 use Illuminate\Support\Facades\Route;
 
 Route::resources([
@@ -40,3 +41,9 @@ Route::prefix('payment')->group(function(){
     Route::post('/update',[PurchasesController::class, 'updateStatus']);
 });
 
+Route::prefix('deal')->group(function(){
+    Route::get('/',[DealsController::class, 'listDeals']);
+    Route::get('/{id}',[DealsController::class, 'viewDealDetails']);
+    Route::post('/create',[DealsController::class, 'createDeal']);
+    Route::put('/answer/{id}',[DealsController::class, 'answerDeal']);
+});
