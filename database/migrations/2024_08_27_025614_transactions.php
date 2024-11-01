@@ -19,7 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('to');
             $table->foreign('to')->references('id')->on('users')->onDelete('no action');
             $table->dateTime('created_at')->useCurrent();
-            $table->integer('answer');
+            $table->integer('answer')->nullable();
             $table->dateTime('answered_at');
             $table->unsignedBigInteger('counter_next')->nullable();
             $table->foreign('counter_next')->references('id')->on('deals')->onDelete('no action');
