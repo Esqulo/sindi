@@ -8,7 +8,7 @@
     <style>
         @font-face {
             font-family: 'LexendExa-Regular';
-            src: url('../../assets/fonts/LexendExa-Regular.ttf');
+            src: url('assets/fonts/LexendExa-Regular.ttf');
             font-weight: normal;
             font-style: normal;
         }
@@ -73,7 +73,7 @@
 <body>
     <div class="container">
         <div class="logo">
-            <img src="../../assets/logo.png" alt="Logo">
+            <img src="assets/logo.png" alt="Logo">
         </div>
         <h1>Site em Construção</h1>
         <p>Estamos trabalhando para trazer algo incrível. Volte em breve!</p>
