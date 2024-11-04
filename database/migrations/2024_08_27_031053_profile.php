@@ -27,6 +27,8 @@ return new class extends Migration
             $table->foreign('from')->references('id')->on('users')->onDelete('no action');
             $table->unsignedBigInteger('to');
             $table->foreign('to')->references('id')->on('users')->onDelete('no action');
+            $table->unsignedBigInteger('deal');
+            $table->foreign('deal')->references('id')->on('deals')->onDelete('no action');
             $table->integer('stars');
             $table->string('message',3000);
             $table->dateTime('created_at')->useCurrent();
