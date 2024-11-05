@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::resources([
     'user' => UserController::class,
-    'avaliation' => AvaliationController::class,
     'product' => ProductsController::class,
     'meeting' => MeetingsController::class,
     'offeredservices' => OfferedServicesController::class
@@ -46,4 +45,10 @@ Route::prefix('deal')->group(function(){
     Route::get('/{id}',[DealsController::class, 'viewDealDetails']);
     Route::post('/create',[DealsController::class, 'createDeal']);
     Route::put('/answer/{id}',[DealsController::class, 'answerDeal']);
+});
+
+Route::prefix('avaliation')->group(function(){
+    Route::get('/user/{id}',[AvaliationController::class, 'listUserAvaliations']);
+    Route::get('/{id}',[AvaliationController::class, 'getAvaliationDetails']);
+    Route::post('/new',[AvaliationController::class, 'newAvaliation']);
 });

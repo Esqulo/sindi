@@ -21,11 +21,14 @@ class Avaliation extends Model
     protected $fillable = [
         'from',
         'to',
+        'deal',
         'stars',
         'message'
     ];
 
-    protected $hidden = [];
+    protected $hidden = [
+        "deal"
+    ];
 
     protected $casts = [
         'id' => 'integer',
