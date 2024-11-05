@@ -63,7 +63,7 @@ class DealsController extends Controller
 
             $validatedData = $request->validate([
                 "value" => "required|numeric|min:0",
-                "to" => "required|numeric|min:0",
+                "to" => "required|numeric|exists:users,id",
                 "starts_at" => "required||date|after_or_equal:now",
                 "expires_at" => "required|date",
                 "place" => "sometimes|numeric|min:0|",
@@ -71,6 +71,7 @@ class DealsController extends Controller
             ]);
 
             $validatedData['from'] = $userId;
+            $validatedData['worker'] = $validatedData['to'];
 
             if(!$validatedData) throw new Exception('invalid data');
 
@@ -129,6 +130,7 @@ class DealsController extends Controller
                 $validatedData['answer'] = null;
                 $validatedData['from'] = $userId;
                 $validatedData['to'] = $deal->from;
+                $validatedData['worker'] = $deal->worker;
                 $validatedData['counter_prev'] = $deal->id;
                 
                 $newDeal = $this->runInsert($validatedData);
