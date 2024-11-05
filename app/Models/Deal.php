@@ -41,7 +41,7 @@ class Deal extends Model
         'from' => 'integer',
         'to' => 'integer',
         'created_at' => 'datetime',
-        'answer' => 'boolean',
+        'answer' => 'integer',
         'answered_at' => 'datetime',
         'counter_prev' => 'integer',
         'counter_next' => 'integer',
