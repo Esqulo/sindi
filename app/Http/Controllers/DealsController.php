@@ -71,6 +71,7 @@ class DealsController extends Controller
             ]);
 
             $validatedData['from'] = $userId;
+            $validatedData['hirer'] = $userId;
             $validatedData['worker'] = $validatedData['to'];
 
             if(!$validatedData) throw new Exception('invalid data');
@@ -130,6 +131,7 @@ class DealsController extends Controller
                 $validatedData['answer'] = null;
                 $validatedData['from'] = $userId;
                 $validatedData['to'] = $deal->from;
+                $validatedData['hirer'] = $deal->hirer;
                 $validatedData['worker'] = $deal->worker;
                 $validatedData['counter_prev'] = $deal->id;
                 
