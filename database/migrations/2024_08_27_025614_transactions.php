@@ -18,6 +18,8 @@ return new class extends Migration
             $table->foreign('from')->references('id')->on('users')->onDelete('no action');
             $table->unsignedBigInteger('to');
             $table->foreign('to')->references('id')->on('users')->onDelete('no action');
+            $table->unsignedBigInteger('worker');
+            $table->foreign('worker')->references('id')->on('users')->onDelete('no action');
             $table->dateTime('created_at')->useCurrent();
             $table->integer('answer')->nullable();
             $table->dateTime('answered_at')->nullable();
