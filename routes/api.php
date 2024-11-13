@@ -10,6 +10,7 @@ use App\Http\Controllers\MeetingsController;
 use App\Http\Controllers\OfferedServicesController;
 use App\Http\Controllers\PurchasesController;
 use App\Http\Controllers\DealsController;
+use App\Http\Controllers\GoogleController;
 use Illuminate\Support\Facades\Route;
 
 Route::resources([
@@ -27,6 +28,9 @@ Route::prefix('auth')->group(function(){
     Route::post('login',[AuthController::class, 'login']);
     Route::match(['get','post'],'logout',[AuthController::class, 'logout']);
     Route::post('logoutFromAll',[AuthController::class, 'logoutFromAll']);
+
+    Route::get('google', [GoogleController::class, 'redirectToGoogle']);
+    Route::get('callback', [GoogleController::class, 'handleGoogleCallback']);
 });
 
 Route::prefix('chat')->group(function(){
@@ -51,4 +55,9 @@ Route::prefix('avaliation')->group(function(){
     Route::get('/user/{id}',[AvaliationController::class, 'listUserAvaliations']);
     Route::get('/{id}',[AvaliationController::class, 'getAvaliationDetails']);
     Route::post('/new',[AvaliationController::class, 'newAvaliation']);
+});
+
+Route::prefix('calendar')->group(function(){
+    Route::get('/events', [GoogleController::class, 'listEvents']);
+    Route::post('/events/create', [GoogleController::class, 'createEvent']);
 });
