@@ -91,27 +91,43 @@ class GoogleController extends Controller
             ], 401);
         }
         
-        $accessToken = $this->retrieveUserGoogleCredentials($userId);
+        $userGoogleCredentials = $this->retrieveUserGoogleCredentials($userId);
 
-        if (!$accessToken) {
-            return response()->json(['error' => 'Token não fornecido'], 401);
+        if (!$userGoogleCredentials) {
+            return response()->json(['error' => 'Google Credentials not found'], 401);
         }
     
-        $client = new GoogleClient();
-        $client->setAccessToken($accessToken);
-    
         try {
+            $client = new GoogleClient();
+            $client->setAccessToken($userGoogleCredentials['calendar_token']);
             $calendarService = new Calendar($client);
             $calendarId = 'primary';
     
-            $events = $calendarService->events->listEvents($calendarId);
-    
-            return response()->json($events->getItems(), 200);
+            $events = $calendarService->events->listEvents($calendarId)->getItems();
+
+            return response()->json($events, 200);
         } catch (Exception $e) {
-            return response()->json([
-                'error' => 'Falha ao listar eventos',
-                'details' => $e->getMessage()
-            ], 500);
+            if($e->getCode() == 401){
+                try{
+                    $this->refreshAccessToken($userGoogleCredentials);
+                    $userGoogleCredentials = $this->retrieveUserGoogleCredentials($userId);
+                    $client->setAccessToken($userGoogleCredentials['calendar_token']);
+                    $events = $calendarService->events->listEvents($calendarId)->getItems();
+                    return response()->json($events, 200);
+                }catch(Exception $er){
+                    return response()->json([
+                        "success" => false,
+                        "message" => "Failed at creating event after new auth.",
+                        "details" => json_decode($er->getMessage(),true)
+                    ], $er->getCode() ?: 500);
+                }
+            }else{
+                $message = json_decode($e->getMessage(),true);
+                return response()->json([
+                    'error' => 'Falha ao listar eventos',
+                    'details' => $message
+                ], $e->getCode() ?: 500);
+            }
         }
     }
 
@@ -213,8 +229,8 @@ class GoogleController extends Controller
 
             if($e->getCode() == 401){
                 try{
-                    $newToken = $this->refreshAccessToken($userGoogleCredentials['calendar_refresh_token']);
-                    $this->syncCalendarAccount($userId,$newToken);
+                    $this->refreshAccessToken($userGoogleCredentials);
+                    $userGoogleCredentials = $this->retrieveUserGoogleCredentials($userId);
                     $this->executeCalendarInsert($userGoogleCredentials,$eventData);
                 }catch(Exception $er){
                     return response()->json([
@@ -228,7 +244,7 @@ class GoogleController extends Controller
                     "success" => false,
                     "message" => "Failed at creating event",
                     "details" => $errorDetails
-                ], $e->getCode());
+                ], $e->getCode() ?: 500);
             }
         }
 
@@ -250,17 +266,19 @@ class GoogleController extends Controller
 
     }
 
-    function refreshAccessToken($refreshToken)
+    function refreshAccessToken($tokenData)
     {
         $response = Http::asForm()->post('https://oauth2.googleapis.com/token', [
             'client_id' => env('GOOGLE_CLIENT_ID'),
             'client_secret' => env('GOOGLE_CLIENT_SECRET'),
-            'refresh_token' => $refreshToken,
+            'refresh_token' => $tokenData['calendar_refresh_token'],
             'grant_type' => 'refresh_token',
         ]);
 
         if ($response->successful()) {
-            return $response->json();
+            $newCredentials = $response->json();
+            $this->syncCalendarAccount($tokenData['user_id'],$newCredentials);
+            return $newCredentials;
         } else {
             throw new Exception("Erro ao renovar o token: " . $response->body());
         }
