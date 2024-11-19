@@ -1,0 +1,83 @@
+.lpbanner-container{
+    width: 100%;
+    max-width: 1920px;
+    height: 80dvh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    background: linear-gradient(90deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.55) 100%),url(https://picsum.photos/1920/864);
+    background-size: cover;
+    background-position: center;
+}
+
+.lpbanner-content{
+    /* background-color: red; */
+    width: 100%;
+    height: 65%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0 20%;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.lpbanner-textarea{
+    color: #FFF;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    height: 60%;
+    width: 41%;
+    min-width: 630px;
+}
+
+.lpbanner-textarea-uppertext{
+    font-size: 36px;
+}
+
+.lpbanner-textarea-bottomtext{
+    font-size: 16px;
+}
+
+.lpbanner-formarea{
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+    min-width: 383px;
+    height: 60%;
+    justify-content: space-evenly;
+}
+
+.lpbanner-form-input{
+    border: none;
+    outline: none;
+    color: #000;
+    height: 60px;
+    border-radius: 15px;
+    box-sizing: border-box;
+    padding: 0 20px;
+    font-size: 16px;
+}
+
+.lpbanner-form-button{
+    border: 1px solid #FFF;
+    outline: none;
+    background-color: #000;
+    color: #FFF;
+    height: 60px;
+    border-radius: 15px;
+    box-sizing: border-box;
+    padding: 0 20px;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.lpbanner-form-button:hover{
+    background-color: #1f1f1f;
+}
+
+.lpbanner-form-button:active{
+    background-color: #292929;
+}

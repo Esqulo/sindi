@@ -1,0 +1,23 @@
+import React from "react";
+import "./styles.css";
+
+function LandingPageBanner(){
+    return(
+        <div className="lpbanner-container">
+            <div className="lpbanner-content">
+                <div className="lpbanner-textarea">
+                    <span className="lpbanner-textarea-uppertext">Com a Sindi, conectar síndicos e clientes ficou <b>muito</b> mais fácil</span>
+                    <span className="lpbanner-textarea-bottomtext">Seja o primeiro a saber de todas as novidades! Garanta acesso antecipado à plataforma, receba dicas de como alavancar sua carreira e aproveite 1 mês de acesso premium grátis. Deixe seu e-mail e não perca nenhuma oportunidade</span>
+                </div>
+                <div className="lpbanner-formarea">
+                    <input id="name_input" type="text" className="lpbanner-form-input" placeholder="Nome"/>
+                    <input id="email_input" type="text" className="lpbanner-form-input" placeholder="Digite seu melhor e-mail"/>
+                    <input id="phone_input" type="text" className="lpbanner-form-input" placeholder="DDD + Whatsapp"/>
+                    <button id="send_button" className="lpbanner-form-button">Enviar</button>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+export default LandingPageBanner;

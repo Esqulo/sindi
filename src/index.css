@@ -1,0 +1,26 @@
+@font-face {
+  font-family: 'LexendExa-Regular';
+  src: url('./assets/fonts/LexendExa-Regular.ttf');
+  font-weight: normal;
+  font-style: normal;
+}
+
+*{
+  margin: 0;
+  padding: 0;
+  font-family: LexendExa-Regular, Arial, sans-serif;
+}
+
+html{
+  background-color: #f3f3f3;
+  display: flex;
+  justify-content: center;
+  height: 100dvh;
+  width: 100dvw;
+}
+
+body {
+  flex-direction: column;
+  width: 100%;
+  max-width: 1920px;
+}
