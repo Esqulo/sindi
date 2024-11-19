@@ -1,56 +1,62 @@
 .lpbanner-container{
     width: 100%;
-    max-width: 1920px;
-    height: 80dvh;
+    height: calc(100dvh - 80px);
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: row;
-    background: linear-gradient(90deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.55) 100%),url(https://picsum.photos/1920/864);
+    position: relative;
+    background: linear-gradient(90deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.55) 100%),url("../../assets/images/home_banner.jpg");
     background-size: cover;
-    background-position: center;
+    background-position-x: center;
+    background-position-y: 20%;
+    background-repeat: no-repeat;
+    box-sizing: border-box;
 }
 
 .lpbanner-content{
-    /* background-color: red; */
-    width: 100%;
-    height: 65%;
+    width: 70%;
+    height: 100%;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    padding: 0 20%;
+    justify-content: space-around;
+    padding-top: 5%;
     align-items: center;
     box-sizing: border-box;
+    overflow-x: hidden;
 }
 
 .lpbanner-textarea{
     color: #FFF;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
-    height: 60%;
-    width: 41%;
+    justify-content: space-around;
+    height: 45%;
+    width: 50%;
     min-width: 630px;
+    min-height: 413px;
 }
 
 .lpbanner-textarea-uppertext{
-    font-size: 36px;
+    font-size: 2.65rem;
 }
 
 .lpbanner-textarea-bottomtext{
-    font-size: 16px;
+    font-size: 1.08rem;
 }
 
 .lpbanner-formarea{
     display: flex;
     flex-direction: column;
-    width: 30%;
+    width: 32%;
     min-width: 383px;
-    height: 60%;
+    height: 40%;
+    min-height: 330px;
     justify-content: space-evenly;
 }
 
 .lpbanner-form-input{
+    width: 100%;
     border: none;
     outline: none;
     color: #000;
@@ -58,10 +64,11 @@
     border-radius: 15px;
     box-sizing: border-box;
     padding: 0 20px;
-    font-size: 16px;
+    font-size: 1rem;
 }
 
 .lpbanner-form-button{
+    width: 100%;
     border: 1px solid #FFF;
     outline: none;
     background-color: #000;
@@ -80,4 +87,61 @@
 
 .lpbanner-form-button:active{
     background-color: #292929;
+}
+
+@media (max-width: 1800px) {
+    .lpbanner-content{
+        width: 100%;
+    }
+}
+
+@media (max-width: 1100px) {
+    .lpbanner-container{
+        flex-wrap: wrap;
+        max-width: 100dvw;
+        justify-content: center;
+        align-items: center;
+        min-height: 500px;
+    }
+
+    .lpbanner-content{
+        flex-direction: column;
+        width: 100%;
+        padding: 0 10px;
+    }
+
+    .lpbanner-textarea{
+        width: 100%;
+        text-align: center;
+        height: 50dvh;
+        min-width: 0;
+        min-height: 0;
+    }    
+
+    .lpbanner-formarea{
+        width: 100%;
+        height: 20dvh;
+        min-width: 0;
+    }
+
+    .lpbanner-textarea-uppertext{
+        font-size: 1.5rem;
+    }
+    
+    .lpbanner-textarea-bottomtext{
+        font-size: 1rem;
+    }
+}
+
+@media (min-height: 1000px) {
+    .lpbanner-container{
+        height: calc(75dvh - 80px);
+        padding: 20% 7% 1% 7%;
+        background-position-y: 1%;
+    }
+
+    .lpbanner-textarea{
+        height: 20dvh;
+    }    
+
 }
