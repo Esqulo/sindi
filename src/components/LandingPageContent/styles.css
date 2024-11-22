@@ -1,0 +1,156 @@
+.lpcontent-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 10dvh 45dvh;
+}
+
+.lpcontent-paragraph{
+    text-align: left;
+}
+
+.upper{
+    font-size: 2rem;
+}
+
+.bottom{
+    margin-top: 60px;
+    font-size: 1.6rem;
+    text-align: justify;
+}
+
+.lpcontent-button{
+    margin-top: 150px;
+    width: 50%;
+    height: 60px;
+    border-radius: 10px;
+    border: none;
+    background-color: #000;
+    color: #FFF;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+    min-width: 546px;
+    user-select: none;
+}
+
+.lpcontent-button:hover{
+    transform: scale(1.1);
+}
+
+.lpcontent-button:active{
+    transform: scale(1.05);
+}
+
+.lpcontent-highlight{
+    text-align: center;
+    margin-top: 150px;
+    font-size: 2rem;
+}
+
+.lpcontent-benefits-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    width: 100%;
+    margin-top: 70px;
+}
+
+.lpcontent-benefits-item{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 28%;
+}
+
+.lpcontent-benefits-header{
+    text-align: center;
+    font-weight: bold;
+    font-size: 1rem;
+    margin-top: 10px;
+}
+
+.lpcontent-benefits-description{
+    font-size: 1rem;
+    margin-top: 15px;
+    text-align: center;
+}
+
+.lpcontent-benefits-image{
+    width: 90px;
+    height: 90px;
+    background-size: cover;
+    background-position: center;
+}
+
+#handshakeIcon{
+    background-image: url(/src/assets/images/landing_page/handshake_icon.png);
+}
+#helpIcon{
+    background-image: url(/src/assets/images/landing_page/help_icon.png);
+}
+#securityIcon{
+    background-image: url(/src/assets/images/landing_page/security_icon.png);
+}
+
+@media (max-width: 1500px) {
+    .lpcontent-container{
+        padding: 10dvh 20dvh;
+    }
+}
+
+
+@media (max-width: 1100px) {
+   
+    .lpcontent-benefits-container{
+        margin-top: 0px;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .lpcontent-container{
+        padding: 10dvh 5dvh;
+    }
+    
+    .lpcontent-benefits-item{
+        margin-top: 70px;
+        width: 40%;
+    }
+    
+}
+
+@media (max-width: 800px) {
+    .lpcontent-button{
+        width: 100%;
+        padding: 15px 15px;
+        min-width: 0;
+        box-sizing: content-box;
+    }
+
+    .lpcontent-benefits-item{
+        width: 80%;
+    }
+    
+    .lpcontent-button{
+        margin-top: 100px;
+    }
+
+    .lpcontent-highlight{
+        margin-top: 100px;
+    }
+
+    .lpcontent-paragraph{
+        text-align: center;
+    }
+
+    .upper{
+        font-size: 1.5rem;
+        width: 100%;
+    }
+    
+    .bottom{
+        font-size: 1.2rem;
+    }
+    
+}
