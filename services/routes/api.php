@@ -11,6 +11,7 @@ use App\Http\Controllers\OfferedServicesController;
 use App\Http\Controllers\PurchasesController;
 use App\Http\Controllers\DealsController;
 use App\Http\Controllers\GoogleController;
+use App\Http\Controllers\NewsletterController;
 use Illuminate\Support\Facades\Route;
 
 Route::resources([
@@ -60,4 +61,8 @@ Route::prefix('avaliation')->group(function(){
 Route::prefix('calendar')->group(function(){
     Route::get('/events', [GoogleController::class, 'listEvents']);
     Route::post('/events/create', [GoogleController::class, 'createEvent']);
+});
+
+Route::prefix('newsletter')->group(function(){
+    Route::post('/', [NewsletterController::class, 'insert']);
 });
