@@ -1,5 +1,6 @@
 import React from "react";
 import "./styles.css";
+import MaskedInput from "react-input-mask";
 
 function LandingPageBanner(){
     return(
@@ -11,8 +12,8 @@ function LandingPageBanner(){
                 </div>
                 <div className="lpbanner-formarea">
                     <input id="name_input" type="text" className="lpbanner-form-input" placeholder="Nome"/>
-                    <input id="email_input" type="text" className="lpbanner-form-input" placeholder="Digite seu melhor e-mail"/>
-                    <input id="phone_input" type="text" className="lpbanner-form-input" placeholder="DDD + Whatsapp"/>
+                    <input id="email_input" type="email" className="lpbanner-form-input" placeholder="Digite seu melhor e-mail"/>
+                    <MaskedInput id="phone_input" className="lpbanner-form-input" placeholder="DDD + Whatsapp" mask="(99) 99999-9999"/>
                     <button id="send_button" className="lpbanner-form-button">Enviar</button>
                 </div>
             </div>
