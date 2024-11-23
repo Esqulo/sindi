@@ -22,6 +22,10 @@ class NewsletterController extends Controller
 
             Newsletter::create($validatedData);
 
+            return response()->json([
+                "success" => true
+            ],200);
+
         } catch (Exception $e) {
             return response()->json([
                 "success" => false,
