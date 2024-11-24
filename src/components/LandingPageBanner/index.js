@@ -8,6 +8,7 @@ function LandingPageBanner(){
     const [userName,setUserName] = useState('');
     const [userEmail,setUserEmail] = useState('');
     const [userPhone,setUserPhone] = useState('');
+    const [accountType, setAccountType] = useState(null);
 
     const [showInputs,setShowInputs] = useState(true);
 
@@ -17,6 +18,10 @@ function LandingPageBanner(){
     const [showError,setShowError] = useState(false);
     const [errorMessage,setErrorMessage] = useState('');
 
+    const handleRadioChange = (event) => {
+        setAccountType(event.target.value);
+    };
+
     const handlePhoneInputChange = (e) => {
         const rawValue = e.target.value.replace(/\D/g, "");
         setUserPhone(rawValue);
@@ -25,7 +30,7 @@ function LandingPageBanner(){
     async function send(){
         if(!allowSend) return;
         try{
-            const resp = await fetch("http://127.0.0.1:80/sindi/services/api/newsletter",{
+            const resp = await fetch("/services/api/newsletter",{
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -33,7 +38,8 @@ function LandingPageBanner(){
                 body: JSON.stringify({
                     "name": userName,
                     "email": userEmail,
-                    "phone": userPhone
+                    "phone": userPhone,
+                    "type": accountType
                 })
             });
 
@@ -70,6 +76,20 @@ function LandingPageBanner(){
                             <input id="name_input" type="text" className="lpbanner-form-input" placeholder="Nome" onChange={(e) => setUserName(e.target.value)}/>
                             <input id="email_input" type="email" className="lpbanner-form-input" placeholder="Digite seu melhor e-mail" onChange={(e) => setUserEmail(e.target.value)}/>
                             <MaskedInput id="phone_input" className="lpbanner-form-input" placeholder="DDD + Whatsapp" mask="(99) 99999-9999" onChange={handlePhoneInputChange}/>
+                            <div className="lpbanner-form-radio-area">
+                                    {/* TO DO: Transform this into a component */}
+                                <label className="lpbanner-radio-input" htmlFor="lpbanner-customer_input">
+                                    <input id="lpbanner-customer_input" name="account_type" type="radio" value="0" onChange={handleRadioChange}/>
+                                    <span className="lpbanner-radio-checkmark"></span>
+                                    <span className="lpbanner-radio-text">Condomino</span>
+                                </label>
+                                <label className="lpbanner-radio-input" htmlFor="lpbanner-professional_input">
+                                    <input id="lpbanner-professional_input" name="account_type" type="radio" value="1" onChange={handleRadioChange}/>
+                                    <span className="lpbanner-radio-checkmark"></span>
+                                    <span className="lpbanner-radio-text">Síndico</span>
+                                </label>
+                            </div>
+
                         </>
                     )}
                     <button id="send_button" className="lpbanner-form-button" onClick={send}>{sendButtonText}</button>
