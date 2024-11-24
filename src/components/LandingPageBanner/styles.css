@@ -79,6 +79,7 @@
     padding: 0 20px;
     font-size: 22px;
     cursor: pointer;
+    transition: transform 0.2s;
 }
 
 .lpbanner-form-button:hover{
@@ -86,7 +87,19 @@
 }
 
 .lpbanner-form-button:active{
-    background-color: #292929;
+    transform: scale(0.95);
+}
+
+.errorMessage{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #FFF;
+    background-color: #D00;
+    height: 60px;
+    padding: 10px;
+    text-align: center;
+    border-radius: 10px;
 }
 
 @media (max-width: 1800px) {
