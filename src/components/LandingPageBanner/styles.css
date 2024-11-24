@@ -199,11 +199,11 @@
     }
 
     .lpbanner-form-radio-area{
-        justify-content: flex-start;
+        justify-content: center;
     }
 
     .lpbanner-radio-input{
-        transform: translateX(-350%);
+        transform: translateX(-150%);
     }
 
 }
