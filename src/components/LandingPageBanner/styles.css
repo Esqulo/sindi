@@ -103,6 +103,7 @@
 }
 
 .lpbanner-form-radio-area{
+    padding: 0;
     display: flex;
     flex-direction: row;
     color: #FFF !important;
@@ -110,11 +111,10 @@
     height: 60px;
     justify-content: space-evenly;
     align-items: center;
-    /* background-color: red; */
 }
 
 .lpbanner-radio-input{
-    transform: translateX(-100%);
+    transform: translateX(-150%);
     position: relative;
     display: flex;
     justify-content: center;
@@ -122,6 +122,8 @@
     cursor: pointer;
     width: 25px;
     height: 25px;
+    min-width:25px;
+    min-height: 25px;
     border-radius: 50%;
     border: 2px solid #f1f1f1;
     margin-inline: 90px;
@@ -195,6 +197,15 @@
     .lpbanner-textarea-bottomtext{
         font-size: 1rem;
     }
+
+    .lpbanner-form-radio-area{
+        justify-content: flex-start;
+    }
+
+    .lpbanner-radio-input{
+        transform: translateX(-350%);
+    }
+
 }
 
 @media (min-height: 1000px) {
@@ -206,6 +217,6 @@
 
     .lpbanner-textarea{
         height: 20dvh;
-    }    
+    }
 
 }
