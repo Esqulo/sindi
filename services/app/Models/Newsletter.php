@@ -21,13 +21,15 @@ class Newsletter extends Model
     protected $fillable = [
         'name',
         'email',
-        'phone'
+        'phone',
+        'type'
     ];
 
     protected $hidden = [
         'name',
         'email',
         'phone',
+        'type',
         'created_at'
     ];
 
@@ -35,6 +37,7 @@ class Newsletter extends Model
         'email' => 'string',
         'name' => 'string',
         'phone' => 'string',
+        'type' => 'integer',
         'created_at' => 'datetime'
     ];
 
