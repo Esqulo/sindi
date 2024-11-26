@@ -75,13 +75,13 @@ function LandingPageBanner(){
                         <>
                             <input id="name_input" type="text" className="lpbanner-form-input" placeholder="Nome" onChange={(e) => setUserName(e.target.value)}/>
                             <input id="email_input" type="email" className="lpbanner-form-input" placeholder="Digite seu melhor e-mail" onChange={(e) => setUserEmail(e.target.value)}/>
-                            <MaskedInput id="phone_input" className="lpbanner-form-input" placeholder="DDD + Whatsapp" mask="(99) 99999-9999" onChange={handlePhoneInputChange}/>
+                            <MaskedInput id="phone_input" className="lpbanner-form-input" placeholder="DDD + Whatsapp" mask="(99) 99999-9999" type="tel" onChange={handlePhoneInputChange}/>
                             <div className="lpbanner-form-radio-area">
                                     {/* TO DO: Transform this into a component */}
                                 <label className="lpbanner-radio-input" htmlFor="lpbanner-customer_input">
                                     <input id="lpbanner-customer_input" name="account_type" type="radio" value="0" onChange={handleRadioChange}/>
                                     <span className="lpbanner-radio-checkmark"></span>
-                                    <span className="lpbanner-radio-text">Condomino</span>
+                                    <span className="lpbanner-radio-text">Condômino</span>
                                 </label>
                                 <label className="lpbanner-radio-input" htmlFor="lpbanner-professional_input">
                                     <input id="lpbanner-professional_input" name="account_type" type="radio" value="1" onChange={handleRadioChange}/>
