@@ -37,6 +37,10 @@
     min-height: 413px;
 }
 
+h1{
+    font-weight: normal;
+}
+
 .lpbanner-textarea-uppertext{
     font-size: 2.65rem;
 }

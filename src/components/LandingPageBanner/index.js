@@ -67,8 +67,8 @@ function LandingPageBanner(){
         <div className="lpbanner-container">
             <div className="lpbanner-content">
                 <div className="lpbanner-textarea">
-                    <span className="lpbanner-textarea-uppertext">Com a Sindi, conectar síndicos e clientes ficou <b>muito</b> mais fácil</span>
-                    <span className="lpbanner-textarea-bottomtext">Seja o primeiro a saber de todas as novidades! Garanta acesso antecipado à plataforma, receba dicas de como alavancar sua carreira e aproveite 1 mês de acesso premium grátis. Deixe seu e-mail e não perca nenhuma oportunidade</span>
+                    <h1 className="lpbanner-textarea-uppertext">Com a Sindi, conectar síndicos e clientes ficou <b>muito</b> mais fácil</h1>
+                    <p className="lpbanner-textarea-bottomtext">Seja o primeiro a saber de todas as novidades! Garanta acesso antecipado à plataforma, receba dicas de como alavancar sua carreira e aproveite 1 mês de acesso premium grátis. Deixe seu e-mail e não perca nenhuma oportunidade</p>
                 </div>
                 <div className="lpbanner-formarea">
                     {showInputs && (
