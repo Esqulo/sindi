@@ -93,11 +93,6 @@
     cursor: pointer;
     border: none;
     text-align: center;
-    transition: transform 0.2s ease;
-}
-
-.mainheader-account-container button:active{
-    transform: scale(0.95);
 }
 
 .mainheader-account-sign{

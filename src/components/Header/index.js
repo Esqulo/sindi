@@ -30,8 +30,8 @@ function Banner(){
 
                 </div>
                 <div className="mainheader-account-container">
-                    <button className="mainheader-account-sign" onClick={() => {window.location.href = "/signup"}}>Criar conta</button>
-                    <button className="mainheader-account-log" onClick={() => {window.location.href = "/login"}}>Entrar</button>
+                    <button className="mainheader-account-sign clickable" onClick={() => {window.location.href = "/signup"}}>Criar conta</button>
+                    <button className="mainheader-account-log clickable" onClick={() => {window.location.href = "/login"}}>Entrar</button>
                 </div>
             </div>
         </div>

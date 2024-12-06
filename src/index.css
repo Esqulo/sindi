@@ -32,3 +32,16 @@ body {
   max-width: 1920px;
   overflow-x: hidden;
 }
+
+.clickable{
+  transition: transform ease 0.2s;
+  cursor: pointer;
+}
+
+.clickable:hover{
+  transform: scale(1.05);
+}
+
+.clickable:active{
+  transform: scale(0.95);
+}
