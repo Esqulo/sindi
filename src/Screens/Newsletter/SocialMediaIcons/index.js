@@ -1,8 +1,8 @@
 import React from "react";
 import "./styles.css";
 
-import IgIcon from "../../assets/images/social_media_icons/instagram.png";
-import InIcon from "../../assets/images/social_media_icons/linkedin.png";
+import IgIcon from "../../../assets/images/social_media_icons/instagram.png";
+import InIcon from "../../../assets/images/social_media_icons/linkedin.png";
 
 function SocialMediaIcons(){
     return(

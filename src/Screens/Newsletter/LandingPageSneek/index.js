@@ -2,8 +2,8 @@ import React from "react";
 import { useState, useEffect } from "react";
 import "./styles.css";
 
-import LaptopScreenHome from "../../assets/images/landing_page/laptop-images/home.png"
-import LaptopScreenProfile from "../../assets/images/landing_page/laptop-images/perfil-sindico.png"
+import LaptopScreenHome from "../../../assets/images/landing_page/laptop-images/home.png"
+import LaptopScreenProfile from "../../../assets/images/landing_page/laptop-images/perfil-sindico.png"
 
 function LandingPageSneek(){
 
