@@ -1,9 +1,9 @@
 import React from "react";
 
-import Banner from "../../Screens/Newsletter/LandingPageBanner"
-import LandingPageContent from "../../Screens/Newsletter/LandingPageContent";
-import SocialMediaIcons from "../../Screens/Newsletter/SocialMediaIcons"
-import Sneek from "../../Screens/Newsletter/LandingPageSneek"
+import Banner from "../../components/Newsletter/LandingPageBanner"
+import LandingPageContent from "../../components/Newsletter/LandingPageContent";
+import SocialMediaIcons from "../../components/Newsletter/SocialMediaIcons"
+import Sneek from "../../components/Newsletter/LandingPageSneek"
 
 function LandingPage(){
     return (
