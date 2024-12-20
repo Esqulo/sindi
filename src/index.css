@@ -45,3 +45,15 @@ body {
 .clickable:active{
   transform: scale(0.95);
 }
+
+.row-centered{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.column-centered{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
