@@ -1,0 +1,6 @@
+.custom-image-component{
+    background-size: cover;
+    background-position: center;
+    flex-grow: 0;
+    flex-shrink: 0;
+}

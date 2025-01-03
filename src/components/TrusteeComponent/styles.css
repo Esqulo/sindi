@@ -1,0 +1,40 @@
+.tsc-container{
+    width: 100%;
+    /* justify-content: space-between; */
+}
+
+.tsc-info{
+    display: flex;
+    flex-direction: column;
+}
+
+.tsc-description{
+    width: 100%;
+    gap: 100px;
+    justify-content: space-between;
+}
+
+.tsc-sponsor{
+    color: #c2c2c2;
+    font-size: 11px;
+}
+
+.tsc-name{
+    font-size: 22px;
+    letter-spacing: -2px;
+}
+
+.tsc-stars-container{
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.tsc-see-profile{
+    height: 100%;
+    padding-top: 11px;
+}
+
+.tsc-see-profile span{
+    color: #555;
+    letter-spacing: -2px;
+}
