@@ -30,6 +30,14 @@ function NearbyTrustee(){
                             starsCount: "267"
                         }}
                     />
+                    <TrusteeComponent 
+                        trusteeData={{
+                            img: "https://picsum.photos/150/150",
+                            name:"Juan Elias da Cunha",
+                            stars: "0.50",
+                            starsCount: "153",
+                        }}
+                    />
                 </div>
             </div>
         </div>

@@ -21,7 +21,7 @@ function TrusteeComponent({trusteeData}){
                     </div>
                 </div>
             </div>
-            <div className="tsc-see-profile">
+            <div className="tsc-see-profile row-centered">
                 <span>ver perfil</span>
                 <Chevron/>
             </div>
