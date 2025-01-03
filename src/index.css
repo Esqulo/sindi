@@ -46,11 +46,6 @@ body {
   transform: scale(0.95);
 }
 
-.clickable span::selection {
-  color: inherit;
-  background: inherit;
-}
-
 .row-centered{
   display: flex;
   flex-direction: row;

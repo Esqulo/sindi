@@ -1,4 +1,5 @@
-const BASE_URL = '/services/api';
+// const BASE_URL = '/services/api';
+const BASE_URL = 'http://127.0.0.1:80/sindi/services/api';
 
 const Api = {
 
