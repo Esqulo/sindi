@@ -1,13 +1,39 @@
 .tsc-container{
     width: 100%;
-    height: 100px;
-    /* justify-content: space-between; */
-    border: 1px solid red;
+    height: 200px;
+    cursor: default;
+    margin: 25px 0;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.tsc-content{
+    width: 100%;
+    height: 100%;
+    justify-content: space-between;
+}
+
+.tsc-left-content{
+    height: 100%;
+    margin-left: 20px;
+    display: flex;
+    align-items: flex-start;
+}
+
+.tsc-right-content{
+    height: 100%;
+}
+
+.tsc-info,
+.tsc-details{
+    display: flex;
+    flex-direction: column;
 }
 
 .tsc-info{
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
 }
 
 .tsc-description{
@@ -22,8 +48,10 @@
 }
 
 .tsc-name{
+    width: 250px;
     font-size: 22px;
     letter-spacing: -2px;
+    text-overflow: ellipsis;
 }
 
 .tsc-stars-container{
@@ -31,25 +59,58 @@
     gap: 10px;
 }
 
-.tsc-see-profile{
+.tsc-see-profile {
+    padding: 0 0 0 0;
     height: 100%;
-    padding-top: 11px;
+    cursor: pointer;
+    display: flex;
+    justify-content: flex-start;
 }
 
 .tsc-see-profile span{
+    font-size: 20px;
     color: #555;
     letter-spacing: -2px;
-}
-
-.tsc-see-profile {
-    padding: 0;
-    height: 100%;
+    transition: color 0.2s ease;
 }
 
 .tsc-chevron-container{
+    padding: 6px 0 0 10px;
+}
+
+.tsc-see-profile:hover span {
+    color: #000 !important;
+}
+
+.tsc-details{
+    margin-top: 5px;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0 5px;
-    height: 100%;
+    flex-direction: column;
+}
+
+.tsc-details span,
+.tsc-details-row span{
+    color: #555;
+    font-size: 14px;
+    letter-spacing: -1px;
+}
+
+.tsc-details-row{
+    gap: 10px;
+}
+
+.tsc-price{
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+}
+
+.tsc-price strong{
+    color: #222;
+    font-size: 20px;
+}
+
+.tsc-price span{
+    color: #555;
+    font-size: 14px;
 }

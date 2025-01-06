@@ -27,7 +27,13 @@ function NearbyTrustee(){
                             img: "https://picsum.photos/300/300",
                             name:"Beltrano da Silva",
                             stars: "4.89",
-                            starsCount: "267"
+                            starsCount: "267",
+                            experienceYears: 8,
+                            career: "Administração",
+                            age: 47,
+                            distance: 15,
+                            price: 175,
+                            sponsored: true
                         }}
                     />
                     <TrusteeComponent 

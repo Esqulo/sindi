@@ -8,4 +8,5 @@
 	height: var(--size);
 	transform: rotate(var(--rotate));
 	border-color: var(--color);
+	transition: border-color 0.2s ease;
 }
