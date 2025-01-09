@@ -21,6 +21,7 @@
 }
 
 .tsc-right-content{
+    display: flex;
     height: 100%;
 }
 
@@ -60,11 +61,12 @@
 }
 
 .tsc-see-profile {
-    padding: 0 0 0 0;
+    padding: 20px 0 0 0;
     height: 100%;
     cursor: pointer;
     display: flex;
     justify-content: flex-start;
+    flex-shrink: 0;
 }
 
 .tsc-see-profile span{
@@ -113,4 +115,10 @@
 .tsc-price span{
     color: #555;
     font-size: 14px;
+}
+
+@media (max-width: 900px) {
+    .tsc-description{
+        gap: initial;
+    }
 }
