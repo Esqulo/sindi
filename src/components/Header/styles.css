@@ -29,7 +29,6 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    /* border: 1px solid red; */
     width: 45%;
 }
 
@@ -107,4 +106,38 @@
 .mainheader-account-log{
     background-color: #000;
     color: #fff;
+}
+
+@media (max-width: 1100px) {
+    .mainheader-logo {
+        height: 50%;
+    }
+}
+
+@media (max-width: 900px) {
+    .mainheader-item {
+        font-size: 0.8rem;
+    }
+
+    .mainheader-account-container{
+        gap: 10px;
+    }
+    
+    .mainheader-account-container button{
+        margin: 0;
+        width: 75px;
+        height: 40px;
+    }
+
+    .mainheader-contents{
+        max-height: 90px;
+        justify-content: center;
+        gap: 20px;
+        padding: 0;
+    }
+
+    .mainheader-option-container{
+        gap: 10px;
+    }
+    
 }
