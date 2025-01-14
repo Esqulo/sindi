@@ -15,9 +15,9 @@
     background-color: #FFF;
     display: flex;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: space-between;
     flex-direction: row;
-    padding: 0 2vw;
+    padding: 0 5vw;
     box-sizing: border-box;
 }
 
@@ -27,12 +27,14 @@
 
 .mainheader-option-container {
     display: flex;
-    gap: 10px;
     align-items: center;
+    justify-content: space-between;
+    /* border: 1px solid red; */
+    width: 45%;
 }
 
 .mainheader-item {
-    color: #000;
+    color: #555;
     font-size: 1rem;
     cursor: pointer;
     position: relative;
@@ -43,8 +45,7 @@
 }
 
 .mainheader-item:hover {
-    background-color: #363636;
-    color: #FFF;
+    color: #000;
 }
 
 .mainheader-dropdown {
