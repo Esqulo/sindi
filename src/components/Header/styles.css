@@ -32,7 +32,7 @@
 }
 
 .mainheader-item {
-    color: #555;
+    color: #000;
     font-size: 1rem;
     cursor: pointer;
     position: relative;
@@ -43,7 +43,8 @@
 }
 
 .mainheader-item:hover {
-    color: #000;
+    background-color: #363636;
+    color: #FFF;
 }
 
 .mainheader-dropdown {
