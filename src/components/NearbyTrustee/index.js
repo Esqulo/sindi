@@ -26,6 +26,7 @@ function NearbyTrustee(){
                         trusteeData={{
                             img: "https://picsum.photos/300/300",
                             name:"Beltrano da Silva",
+                            username: "beltrano_silva",
                             stars: "4.89",
                             starsCount: "267",
                             experienceYears: 8,

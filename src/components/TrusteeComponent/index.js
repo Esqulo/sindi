@@ -47,12 +47,16 @@ function TrusteeComponent({trusteeData}){
                     </div>
                 </div>
                 <div className="tsc-right-content">
-                    <div className="tsc-see-profile" onMouseEnter={()=>setchevronColor("#000")} onMouseLeave={()=>setchevronColor("#555")}>
-                        <span>ver perfil</span>
-                        <div className="tsc-chevron-container">
-                            <Chevron color={chevronColor}/>
-                        </div>
-                    </div>
+                    {trusteeData.username &&
+                        <a href={`/profile/${trusteeData.username}`}>
+                            <div className="tsc-see-profile" onMouseEnter={()=>setchevronColor("#000")} onMouseLeave={()=>setchevronColor("#555")}>
+                                <span>ver perfil</span>
+                                <div className="tsc-chevron-container">
+                                    <Chevron color={chevronColor}/>
+                                </div>
+                            </div>
+                        </a>
+                    }
                 </div>
             </div>
         </div>
