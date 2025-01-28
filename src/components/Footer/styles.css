@@ -4,6 +4,7 @@ footer{
     justify-content: space-evenly;
     padding: 30px 100px;
     gap: 30px;
+    box-shadow: 1px 1px 10px 0px rgba(0,0,0,0.75);
 }
 
 .footer-columns-container{
