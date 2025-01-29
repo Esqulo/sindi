@@ -8,7 +8,8 @@ function CustomTextInput({name, label, placeholder, type="text", required=false,
             <label className="custom-text-input-label">{label}</label>
             <MaskedInput 
                 className="custom-text-input-field"
-                name={name} type={type}
+                name={name}
+                type={type}
                 placeholder={placeholder}
                 required={required}
                 mask={mask}
