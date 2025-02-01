@@ -1,0 +1,36 @@
+.custom-radio-container{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 500px;
+    align-items: center;
+}
+
+.custom-radio-container-inputs{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    width: 100%;
+    padding: 10px 20px;
+    gap: 20px;
+}
+
+.custom-radio-input{
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+
+.custom-radio-input-checkmark{
+
+}
+
+.custom-radio-input-text{
+    
+}
+
+.custom-radio-container-error_message{
+    font-size: 14px;
+    color: red;
+}
