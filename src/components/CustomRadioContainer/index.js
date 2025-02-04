@@ -17,9 +17,11 @@ function CustomRadioContainer({fields, groupName, onChangeAction, errorMessage, 
                 {Object.entries(fields).map(
                     ([name, field])=>{
                         return (
-                            <label className="custom-radio-input" htmlFor={name} key={name}>
-                                <input id={name} name={groupName} type="radio" value={field.value} onChange={handleChange} disabled={field.disabled} checked={selectedField === field.value}/>
-                                <span className="custom-radio-input-checkmark"></span>
+                            <label className="custom-radio-input-container" key={name} htmlFor={name}>
+                                <div className="custom-radio-input">
+                                    <input id={name} name={groupName} type="radio" value={field.value} onChange={handleChange} disabled={field.disabled} checked={selectedField === field.value}/>
+                                    <span className="custom-radio-input-checkmark"></span>
+                                </div>
                                 <span className="custom-radio-input-text">{field.label}</span>
                             </label>
                         )
