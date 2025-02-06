@@ -6,6 +6,11 @@
     align-items: center;
 }
 
+.custom-radio-title{
+    width: 100%;
+    padding: 0 0 20px 20px;
+}
+
 .custom-radio-inputs{
     display: flex;
     flex-direction: row;

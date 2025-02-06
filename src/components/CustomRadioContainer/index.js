@@ -2,7 +2,7 @@ import React, { useState, useRef, useCallback} from "react";
 import "./styles.css";
 
 
-function CustomRadioContainer({fields, groupName, onChangeAction, errorMessage, customStyle}) {
+function CustomRadioContainer({title, fields, groupName, onChangeAction, errorMessage, customStyle}) {
     const [selectedField, setSelectedField] = useState("");
     const radioGroupRef = useRef(null);
 
@@ -13,6 +13,9 @@ function CustomRadioContainer({fields, groupName, onChangeAction, errorMessage, 
     
     return(
         <div className="custom-radio-container" ref={radioGroupRef} style={customStyle}>
+            {title &&
+                <span className="custom-radio-title">{title}</span>
+            }
             <div className="custom-radio-inputs">
                 {Object.entries(fields).map(
                     ([name, field])=>{
