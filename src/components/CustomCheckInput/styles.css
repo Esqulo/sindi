@@ -1,0 +1,34 @@
+.custom-check-input{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+}
+
+.custom-check-input-row{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.custom-check-input-field{
+    width: 20px;
+    accent-color: #000;
+    border: 1px solid #000;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.custom-check-input-label a{
+    text-decoration: none;
+    color: #272bff;
+}
+
+.custom-check-input-label a:hover{
+    text-decoration: underline;
+}
+
+.custom-check-input-error{
+    font-size: 14px;
+    color: red;
+}

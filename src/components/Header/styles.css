@@ -32,6 +32,10 @@
     width: 45%;
 }
 
+.mainheader-option-container a {
+    text-decoration: none;
+}
+
 .mainheader-item {
     color: #555;
     font-size: 1rem;

@@ -15,7 +15,7 @@ function Banner(){
                 <img src={Logo} className="mainheader-logo" alt="Logo"/>
                 <div className="mainheader-option-container">
                     
-                    <div className="mainheader-item">Início</div>
+                    <a href="/"><div className="mainheader-item">Início</div></a>
 
                     <div className="mainheader-item" onClick={() => toggleDropdown("services")}>
                         Conheça a Sindi

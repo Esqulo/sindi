@@ -1,0 +1,23 @@
+.custom-text-input{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+}
+
+.custom-text-input-field{
+    border: 1px solid #000;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.custom-text-input-field::-webkit-input-placeholder {
+    color: #000;
+    opacity: 0.4;
+}
+
+.custom-text-input-error{
+    font-size: 14px;
+    color: red;
+}
+

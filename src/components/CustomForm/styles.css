@@ -1,0 +1,25 @@
+.custom-form-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    width: 100%;
+    max-width: 500px;
+    padding: 10px 20px;
+    gap: 20px;
+}
+
+.custom-form-send_button{
+    width: 100%;
+    border: none;
+    background-color: #000;
+    color: #FFF;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+
+.custom-form-send_button:hover{
+    opacity: 80%;
+}
