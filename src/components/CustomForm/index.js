@@ -161,7 +161,7 @@ function CustomForm({fields, onSubmit, ButtonText, customStyle}) {
 
         cpf = cpf.replace(/\D/g, "");
 
-        if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
+        if (cpf.length !== 11) return false;
     
         let sum = 0, remainder;
     
@@ -171,7 +171,7 @@ function CustomForm({fields, onSubmit, ButtonText, customStyle}) {
     
         remainder = (sum * 10) % 11;
         if (remainder === 10 || remainder === 11) remainder = 0;
-        if (remainder !== parseInt(cpf.charAt(9))) return false;
+        if (remainder !== parseInt(cpf.charAt(9)));
     
         sum = 0;
     
@@ -182,11 +182,10 @@ function CustomForm({fields, onSubmit, ButtonText, customStyle}) {
         remainder = (sum * 10) % 11;
         if (remainder === 10 || remainder === 11) remainder = 0;
         
-        if(remainder !== parseInt(cpf.charAt(10))) setErrorMessage('cpf','CPF Inválido');
+        if(remainder !== parseInt(cpf.charAt(10)) || /^(\d)\1{10}$/.test(cpf)) setErrorMessage('cpf','CPF Inválido');
 
-        return true;
+    }, [fieldValues.cpf,setErrorMessage]);
 
-    }, [fieldValues.cpf,setErrorMessage]); 
 
     useEffect(() => { checkCpf(); }, [checkCpf]);
 
