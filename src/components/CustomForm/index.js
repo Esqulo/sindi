@@ -42,41 +42,43 @@ function CustomForm({fields, onSubmit, ButtonText, customStyle}) {
             const name = input.getAttribute("name");
 
             if (!input.value.trim() || (input.type === "checkbox" && !input.checked)) { 
-            
                 if(!newErrors[name]) newErrors[name] = "Campo obrigatório";
                 if (!firstErrorField) firstErrorField = input;
-
             }
 
             if(input.type === "email" && !input.value.includes("@")){
-
                 if(!newErrors[name]) newErrors[name] = "Email inválido";
                 if (!firstErrorField) firstErrorField = input;
-
             }
 
             if(input.type === "tel" && !input.value.length < 11){
-
                 if(!newErrors[name]) newErrors[name] = "Número inválido";
                 if (!firstErrorField) firstErrorField = input;
-
             }
 
             if(input.type === "cep"){
-                
                 let isCepOk = checkCep();
                 if(!isCepOk){
                     if(!newErrors[name]) newErrors[name] = "CEP inválido";
                     if(!firstErrorField) firstErrorField = input;
                 }
-
             }
 
             if(input.name === "cpf"){
-                let isCpfValid = checkCpf();
-                if(!isCpfValid) setErrorMessage('cpf','CPF Inválido');
+                let isCpfValid = validateCPF(input.value);
+                if(!isCpfValid){
+                    if(!newErrors[name]) newErrors[name] = "CPF Inválido";
+                    if(!firstErrorField) firstErrorField = input;
+                }
             }
 
+            if(input.name === "cnpj"){
+                let isCnpjValid =  validateCNPJ(input.value)
+                if(!isCnpjValid){
+                    if(!newErrors[name]) newErrors[name] = "CNPJ Inválido";
+                    if(!firstErrorField) firstErrorField = input;
+                }
+            }
         }
     
         setErrors(newErrors);
@@ -87,6 +89,66 @@ function CustomForm({fields, onSubmit, ButtonText, customStyle}) {
         }
 
         return false;
+    }
+
+    function validateCPF(cpf){
+        cpf = cpf.replace(/\D/g, "");
+    
+        if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
+    
+        let sum = 0, remainder;
+
+        for (let i = 0; i < 9; i++) {
+            sum += parseInt(cpf.charAt(i)) * (10 - i);
+        }
+        remainder = (sum * 10) % 11;
+        if (remainder === 10 || remainder === 11) remainder = 0;
+        if (remainder !== parseInt(cpf.charAt(9))) return false;
+
+        sum = 0;
+
+        for (let i = 0; i < 10; i++) {
+            sum += parseInt(cpf.charAt(i)) * (11 - i);
+        }
+
+        remainder = (sum * 10) % 11;
+        if (remainder === 10 || remainder === 11) remainder = 0;
+        
+        return remainder === parseInt(cpf.charAt(10));
+    }
+
+    function validateCNPJ(cnpj) {
+        cnpj = cnpj.replace(/\D/g, "");
+
+        if (cnpj.length !== 14 || /^(\d)\1{13}$/.test(cnpj)) return false;
+
+        let size = cnpj.length - 2;
+        let numbers = cnpj.substring(0, size);
+        let digits = cnpj.substring(size);
+        let sum = 0;
+        let pos = size - 7;
+
+        for (let i = size; i >= 1; i--) {
+            sum += numbers.charAt(size - i) * pos--;
+            if (pos < 2) pos = 9;
+        }
+
+        let result = sum % 11 < 2 ? 0 : 11 - (sum % 11);
+        if (result !== parseInt(digits.charAt(0))) return false;
+
+        size = size + 1;
+        numbers = cnpj.substring(0, size);
+        sum = 0;
+        pos = size - 7;
+
+        for (let i = size; i >= 1; i--) {
+            sum += numbers.charAt(size - i) * pos--;
+            if (pos < 2) pos = 9;
+        }
+
+        result = sum % 11 < 2 ? 0 : 11 - (sum % 11);
+
+        return result === parseInt(digits.charAt(1));
     }
     
     function sendForm() {
@@ -159,41 +221,33 @@ function CustomForm({fields, onSubmit, ButtonText, customStyle}) {
 
         if(!fieldValues.cpf) return;
 
-        let cpf = fieldValues.cpf;
+        let cpf = fieldValues.cpf.replace(/\D/g, '');
+        if(!cpf || cpf.length !== 11) return;
 
-        cpf = cpf.replace(/\D/g, "");
+        let isCpfValid = validateCPF(cpf);
+        if(isCpfValid) return;
 
-        if (cpf.length !== 11) return false;
-    
-        let sum = 0, remainder;
-    
-        for (let i = 0; i < 9; i++) {
-            sum += parseInt(cpf.charAt(i)) * (10 - i);
-        }
-    
-        remainder = (sum * 10) % 11;
-        if (remainder === 10 || remainder === 11) remainder = 0;
-        if (remainder !== parseInt(cpf.charAt(9)));
-    
-        sum = 0;
-    
-        for (let i = 0; i < 10; i++) {
-            sum += parseInt(cpf.charAt(i)) * (11 - i);
-        }
-    
-        remainder = (sum * 10) % 11;
-        if (remainder === 10 || remainder === 11) remainder = 0;
-        
-        if(remainder !== parseInt(cpf.charAt(10)) || /^(\d)\1{10}$/.test(cpf)){
-            setErrorMessage('cpf','CPF Inválido');
-            return false;
-        };
-
-        return true;
+        setErrorMessage('cpf','CPF Inválido')
 
     }, [fieldValues.cpf,setErrorMessage]);
 
+    const checkCnpj = useCallback(async () => {
+
+        if(!fieldValues.cnpj) return;
+
+        let cnpj = fieldValues.cnpj.replace(/\D/g, '');
+        if(!cnpj || cnpj.length !== 14) return;
+
+        let isCnpjValid = validateCNPJ(cnpj);
+        if(isCnpjValid) return;
+
+        setErrorMessage('cnpj','CNPJ Inválido')
+
+    }, [fieldValues.cnpj,setErrorMessage]); 
+
     useEffect(() => { checkCpf(); }, [checkCpf]);
+    
+    useEffect(() => { checkCnpj(); }, [checkCnpj]);
 
     useEffect(() => { checkCep(); }, [checkCep]);
 
