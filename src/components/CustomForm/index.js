@@ -71,6 +71,10 @@ function CustomForm({fields, onSubmit, ButtonText, customStyle}) {
                 }
 
             }
+
+            if(input.name === "cpf"){
+                checkCpf();
+            }
         }
     
         setErrors(newErrors);
@@ -126,6 +130,10 @@ function CustomForm({fields, onSubmit, ButtonText, customStyle}) {
         handleChange('city', cepData.localidade);
 
     }, [handleChange, updateFieldProperty]);
+
+    const setErrorMessage = useCallback((field, message) => {
+        setErrors((prev) => ({ ...prev, [field]: message }))
+    }, []);
     
     const checkCep = useCallback(async () => {
 
@@ -144,6 +152,43 @@ function CustomForm({fields, onSubmit, ButtonText, customStyle}) {
         return true;
 
     }, [fieldValues.cep, setLocationFields]); 
+
+    const checkCpf = useCallback(async () => {
+
+        if(!fieldValues.cpf) return;
+
+        let cpf = fieldValues.cpf;
+
+        cpf = cpf.replace(/\D/g, "");
+
+        if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
+    
+        let sum = 0, remainder;
+    
+        for (let i = 0; i < 9; i++) {
+            sum += parseInt(cpf.charAt(i)) * (10 - i);
+        }
+    
+        remainder = (sum * 10) % 11;
+        if (remainder === 10 || remainder === 11) remainder = 0;
+        if (remainder !== parseInt(cpf.charAt(9))) return false;
+    
+        sum = 0;
+    
+        for (let i = 0; i < 10; i++) {
+            sum += parseInt(cpf.charAt(i)) * (11 - i);
+        }
+    
+        remainder = (sum * 10) % 11;
+        if (remainder === 10 || remainder === 11) remainder = 0;
+        
+        if(remainder !== parseInt(cpf.charAt(10))) setErrorMessage('cpf','CPF Inválido');
+
+        return true;
+
+    }, [fieldValues.cpf,setErrorMessage]); 
+
+    useEffect(() => { checkCpf(); }, [checkCpf]);
 
     useEffect(() => { checkCep(); }, [checkCep]);
 
