@@ -33,27 +33,40 @@ function CustomForm({fields, onSubmit, ButtonText, customStyle}) {
         }));
     }, []);
 
+    function removeMasks(value) {
+
+        return value.replace(/\D/g, '');
+
+    }
+
     function validateForm() {
         let requiredFields = formRef.current.querySelectorAll("input[required]");
         let newErrors = {};
         let firstErrorField = null;
     
         for (let input of requiredFields) {
+            
             const name = input.getAttribute("name");
-
-            if (!input.value.trim() || (input.type === "checkbox" && !input.checked)) { 
+            const value = fields[name].mask ? removeMasks(fieldValues[name]) : fieldValues[name];           
+            
+            if(name === 'terms' && fieldValues[name] === true) continue;
+            
+            if (!value || !value.trim() || (input.type === "checkbox" && !input.checked)) {
                 if(!newErrors[name]) newErrors[name] = "Campo obrigatório";
                 if (!firstErrorField) firstErrorField = input;
+                continue;
             }
 
-            if(input.type === "email" && !input.value.includes("@")){
+            if(input.type === "email" && !value.includes("@")){
                 if(!newErrors[name]) newErrors[name] = "Email inválido";
                 if (!firstErrorField) firstErrorField = input;
+                continue;
             }
 
-            if(input.type === "tel" && !input.value.length < 11){
+            if(input.type === "tel" && value.length !== 11){
                 if(!newErrors[name]) newErrors[name] = "Número inválido";
                 if (!firstErrorField) firstErrorField = input;
+                continue;
             }
 
             if(input.type === "cep"){
@@ -62,23 +75,43 @@ function CustomForm({fields, onSubmit, ButtonText, customStyle}) {
                     if(!newErrors[name]) newErrors[name] = "CEP inválido";
                     if(!firstErrorField) firstErrorField = input;
                 }
+                continue;
             }
 
-            if(input.name === "cpf"){
+            if(name === "cpf"){
                 let isCpfValid = validateCPF(input.value);
                 if(!isCpfValid){
                     if(!newErrors[name]) newErrors[name] = "CPF Inválido";
                     if(!firstErrorField) firstErrorField = input;
                 }
+                continue;
             }
 
-            if(input.name === "cnpj"){
+            if(name === "cnpj"){
                 let isCnpjValid =  validateCNPJ(input.value)
                 if(!isCnpjValid){
                     if(!newErrors[name]) newErrors[name] = "CNPJ Inválido";
                     if(!firstErrorField) firstErrorField = input;
                 }
+                continue;
             }
+
+            if(name === "password" && requiredFields['confirmPassword']){
+                if(!checkPasswordIsStrong(value)){
+                    if(!newErrors[name]) newErrors[name] = "A senha deve conter caracteres especiais, letras maiúscula, minúsculas e números.";
+                    if(!firstErrorField) firstErrorField = input;
+                }
+                continue;
+            }
+
+            if(name === "confirmPassword"){
+                if(!checkPasswordsMatch()){
+                    if(!newErrors[name]) newErrors[name] = "As senhas não coincidem";
+                    if(!firstErrorField) firstErrorField = input;
+                }
+                continue;
+            }
+
         }
     
         setErrors(newErrors);
@@ -153,8 +186,39 @@ function CustomForm({fields, onSubmit, ButtonText, customStyle}) {
     
     function sendForm() {
         let hasErrors = validateForm();
-        if(!hasErrors) onSubmit();
+        if(!hasErrors){
+            
+            const fieldsWithoutMask = {};
+            
+            for(let fieldName in fieldValues){
+                fieldsWithoutMask[fieldName] = fields[fieldName].mask ? removeMasks(fieldValues[fieldName]) : fieldValues[fieldName]; 
+            }
+            
+            onSubmit(fieldsWithoutMask);
+        } 
     }
+
+    const checkPasswordIsStrong = useCallback((password) => {
+
+        const minLength = 8;
+        const hasUpperCase = /[A-Z]/.test(password);
+        const hasLowerCase = /[a-z]/.test(password);
+        const hasNumber = /[0-9]/.test(password);
+        const hasSpecialChar = /[\W_]/.test(password);
+    
+        if (
+            password.length >= minLength &&
+            hasUpperCase &&
+            hasLowerCase &&
+            hasNumber &&
+            hasSpecialChar
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+
+    },[])
 
     const checkPasswordsMatch = useCallback(async () => {
 
@@ -162,8 +226,10 @@ function CustomForm({fields, onSubmit, ButtonText, customStyle}) {
     
         if (fieldValues.password !== fieldValues.confirmPassword) {
             setErrors((prev) => ({ ...prev, confirmPassword: "As senhas não coincidem" }));
+            return false;
         } else {
             setErrors((prev) => ({ ...prev, confirmPassword: "" }));
+            return true;
         }
 
     }, [fieldValues.password, fieldValues.confirmPassword]);
@@ -251,7 +317,16 @@ function CustomForm({fields, onSubmit, ButtonText, customStyle}) {
 
     useEffect(() => { checkCep(); }, [checkCep]);
 
-    useEffect(() => { checkPasswordsMatch(); }, [checkPasswordsMatch]);
+    useEffect(() => { 
+        
+        checkPasswordsMatch();
+
+        if(fieldValues['password']){
+            let passwordIsStrong = checkPasswordIsStrong(fieldValues['password']);
+            if(!passwordIsStrong) setErrorMessage('password', "A senha deve conter caracteres especiais, letras maiúscula, minúsculas e números.");
+        }
+
+     }, [checkPasswordsMatch, checkPasswordIsStrong, setErrorMessage, fieldValues]);
 
     return(
         <div className="custom-form-container" onKeyDown={handleKeyDown} ref={formRef} style={customStyle}>
