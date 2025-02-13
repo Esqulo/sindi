@@ -27,10 +27,19 @@ class UserController extends Controller
                 "phone" => "required|string|unique:users,phone",
                 "password" => "required|string|min:8|regex:/[a-z]/|regex:/[A-Z]/|regex:/[0-9]/|regex:/[@$!%*#?&.;?,'\":{}\-\+\=`_^]/",
                 "birthdate" => "required|date|after_or_equal:1900-01-01|before:now",
+                "state" => "required|string|max:2",
+                "city" => "required|string",
+                "neighbourhood" => "required|string",
                 "address" => "required|string",
+                "number" => "required|string",
+                "complement" => "nullable|string",
+                "user_type" => "required|integer|min:0|max:1",
+                "terms" => "required|integer|min:1|max:1",
                 "cep" => "required|string|regex:/^[0-9]+$/",
                 "bio" => "sometimes|string",
             ]);
+            
+            $validatedData['last_accepted_terms'] = date("Y-m-d H:i:s");
 
             if($validatedData['password']) $validatedData['password'] = $this->passwordIntoHash($validatedData['password']);
 

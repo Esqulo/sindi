@@ -29,10 +29,17 @@ class User extends Model
         'updated_at',
         'active',
         'birthdate',
+        'state',
+        'city',
+        'neighbourhood',
         'address',
+        'number',
+        'complement',
         'cep',
         'avatar',
         'bio',
+        'user_type',
+        'last_accepted_terms',
         'reviews_count'
     ];
 
@@ -45,7 +52,8 @@ class User extends Model
         'updated_at',
         'address',
         'cep',
-        'is_admin'
+        'is_admin',
+        'last_accepted_terms'
     ];
 
     protected $casts = [
@@ -60,11 +68,18 @@ class User extends Model
         'updated_at' => 'datetime',
         'active' => 'boolean',
         'birthdate' => 'date',
+        'state' => 'string',
+        'city' => 'string',
+        'neighbourhood' => 'string',
         'address' => 'string',
+        'number' => 'string',
+        'complement' => 'string',
         'cep' => 'string',
         'avatar' => 'string',
         'bio' => 'string',
-        'reviews_count' => 'integer'
+        'reviews_count' => 'integer',
+        'user_type' => 'integer',
+        'last_accepted_terms' => 'datetime'
     ];
 
 }
