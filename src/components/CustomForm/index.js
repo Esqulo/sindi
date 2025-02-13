@@ -34,8 +34,8 @@ function CustomForm({fields, onSubmit, ButtonText, customStyle}) {
     }, []);
 
     function removeMasks(value) {
-
-        return value.replace(/\D/g, '');
+        
+        return value?.replace(/\D/g, '');
 
     }
 
@@ -356,6 +356,8 @@ function CustomForm({fields, onSubmit, ButtonText, customStyle}) {
                                 type={field.type}
                                 required={field.required}
                                 disabled={field.disabled}
+                                min={field.min}
+                                max={field.max}
                                 onChange={(value) => handleChange(name, value)}
                                 errorMessage={errors[name]}
                             />

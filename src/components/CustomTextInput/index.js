@@ -2,7 +2,7 @@ import React from "react";
 import "./styles.css";
 import MaskedInput from "react-input-mask";
 
-function CustomTextInput({name, value, label, placeholder, type="text", required=false, onChange, inputRef, errorMessage, customStyle, mask, disabled}) {
+function CustomTextInput({name, value, label, placeholder, type="text", required=false, onChange, inputRef, errorMessage, customStyle, mask, disabled, min, max}) {
     return (
         <div className="custom-text-input">
             <label className="custom-text-input-label">{label}</label>
@@ -15,6 +15,8 @@ function CustomTextInput({name, value, label, placeholder, type="text", required
                 disabled={disabled}
                 required={required}
                 mask={mask}
+                min={min}
+                max={max}
                 onChange={(e) => onChange(e.target.value)}
                 ref={inputRef}
                 style={customStyle}
