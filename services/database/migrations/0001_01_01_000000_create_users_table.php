@@ -29,7 +29,7 @@ return new class extends Migration
             $table->string('neighbourhood');
             $table->string('address');
             $table->string('number');
-            $table->string('complement');
+            $table->string('complement')->nullable();
             $table->string('cep');
             $table->string('avatar')->nullable();
             $table->text('bio')->nullable();
