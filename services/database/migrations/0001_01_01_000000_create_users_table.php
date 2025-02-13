@@ -24,11 +24,18 @@ return new class extends Migration
             $table->dateTime('updated_at')->nullable()->useCurrentOnUpdate();
             $table->boolean('active')->default(1);
             $table->date('birthdate');
+            $table->string('state');
+            $table->string('city');
+            $table->string('neighbourhood');
             $table->string('address');
+            $table->string('number');
+            $table->string('complement');
             $table->string('cep');
             $table->string('avatar')->nullable();
             $table->text('bio')->nullable();
             $table->integer('reviews_count')->nullable();
+            $table->dateTime('last_accepted_terms')->nullable();
+            $table->integer('user_type');
             $table->boolean('is_admin')->default(0);
         });
         
