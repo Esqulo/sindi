@@ -112,6 +112,26 @@ function CustomForm({fields, onSubmit, ButtonText, customStyle}) {
                 continue;
             }
 
+            if(input.type === "date" && (input.min || input.max)){
+
+                const inputDate = new Date(value);
+                const minDate = input.min ? new Date(input.min) : null;
+                const maxDate = input.max ? new Date(input.max) : null;
+            
+                if (minDate && inputDate < minDate) {
+                    if (!newErrors[name]) newErrors[name] = "Data menor que o permitido";
+                    if (!firstErrorField) firstErrorField = input;
+                    continue;
+                }
+            
+                if (maxDate && inputDate > maxDate) {
+                    if (!newErrors[name]) newErrors[name] = "Data maior que o permitido";
+                    if (!firstErrorField) firstErrorField = input;
+                    continue;
+                }
+                
+            }
+
         }
     
         setErrors(newErrors);
