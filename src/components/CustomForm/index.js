@@ -4,13 +4,17 @@ import "./styles.css";
 import CustomTextInput from "../CustomTextInput";
 import CustomCheckInput from "../CustomCheckInput";
 
+import LoadingIcon from "../LoadingIcon";
+
 import Api from "../../Api";
 
-function CustomForm({fields, onSubmit, ButtonText, customStyle}) {
+function CustomForm({fields, onSubmit, ButtonText, customStyle, formError}) {
     const [errors, setErrors] = useState({});
     const [hookFields, setHookFields] = useState(fields);
     const [fieldValues, setFieldValues] = useState({});
     const formRef = useRef(null);
+
+    const [loading, setLoading] = useState(false);
 
     function handleKeyDown(event) {
         if (event.key === "Enter") {
@@ -204,8 +208,11 @@ function CustomForm({fields, onSubmit, ButtonText, customStyle}) {
         return result === parseInt(digits.charAt(1));
     }
     
-    function sendForm() {
+    async function sendForm() {
+        setLoading(true);
+
         let hasErrors = validateForm();
+
         if(!hasErrors){
             
             const fieldsWithoutMask = {};
@@ -214,8 +221,13 @@ function CustomForm({fields, onSubmit, ButtonText, customStyle}) {
                 fieldsWithoutMask[fieldName] = fields[fieldName].mask ? removeMasks(fieldValues[fieldName]) : fieldValues[fieldName]; 
             }
             
-            onSubmit(fieldsWithoutMask);
+            try {
+                await onSubmit(fieldsWithoutMask);
+            } catch (error) {
+                console.error(error);
+            }
         } 
+        setLoading(false);
     }
 
     const checkPasswordIsStrong = useCallback((password) => {
@@ -346,7 +358,7 @@ function CustomForm({fields, onSubmit, ButtonText, customStyle}) {
             if(!passwordIsStrong) setErrorMessage('password', "A senha deve conter caracteres especiais, letras maiúscula, minúsculas e números.");
         }
 
-     }, [checkPasswordsMatch, checkPasswordIsStrong, setErrorMessage, fieldValues]);
+    }, [checkPasswordsMatch, checkPasswordIsStrong, setErrorMessage, fieldValues]);
 
     return(
         <div className="custom-form-container" onKeyDown={handleKeyDown} ref={formRef} style={customStyle}>
@@ -385,7 +397,13 @@ function CustomForm({fields, onSubmit, ButtonText, customStyle}) {
                     }
                 )
             }
-            <button className="custom-form-send_button" onClick={sendForm}>{ButtonText}</button>
+            <button className="custom-form-send_button" onClick={sendForm} disabled={loading}>
+                {loading ? <LoadingIcon size={16}/> : ButtonText}
+            </button>
+            {formError &&
+                <span className="custom-form-error_message"  dangerouslySetInnerHTML={{ __html: formError }}/>
+            }
+            
         </div>
     );
 }

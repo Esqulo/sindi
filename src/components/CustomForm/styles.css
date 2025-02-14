@@ -17,9 +17,17 @@
     border-radius: 5px;
     cursor: pointer;
     transition: opacity 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-
 
 .custom-form-send_button:hover{
     opacity: 80%;
+}
+
+.custom-form-error_message{
+    color: red;
+    text-align: center;
+    width: 100%;
 }
