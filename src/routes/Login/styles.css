@@ -37,3 +37,11 @@
 .login-form-forgotpassword:hover{
     text-decoration: underline;
 }
+
+.login-account-successfull{
+    text-align: center;
+    font-size: 20px;
+    color: green;
+    line-height: 18px;
+    padding: 20px 0;
+}
