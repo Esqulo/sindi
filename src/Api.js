@@ -37,6 +37,27 @@ const Api = {
             };
         }
     },
+    newUser: async (userData) => {
+        try{
+            const req = await fetch(`${BASE_URL}/user`,{
+                method: 'POST',
+                headers:{ Accept: 'application/json', 'Content-Type': 'application/json' },
+                body: JSON.stringify(userData)
+            });
+            const json = await req.json();
+            return {
+                message: json?.message,
+                success: json?.success,
+                status: req.status,
+                data: json?.data
+            };
+        }
+        catch(error){
+            return {
+                error: error
+            };
+        }
+    }
 }
 
 export default Api;

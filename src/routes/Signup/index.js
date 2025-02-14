@@ -9,6 +9,7 @@ import Api from "../../Api";
 function Signup() {
 
 	const [selectedRadio, setSelectedRadio] = useState("");
+	const [formError, setFormError] = useState("");
 
 	const radioInputs = {
 		consumer: { label: "Condômino", value: "consumer" },
@@ -65,6 +66,7 @@ function Signup() {
 	};
 
 	async function sendRegister(values) {
+		setFormError('');
 		let formValues = {
 			email: values?.email,
 			name: values?.name,
@@ -82,28 +84,25 @@ function Signup() {
 			complement: values?.complement,
 			terms: values?.terms
 		};
-		
-		new Promise((resolve)=>{
-            setTimeout(()=>{
-				console.log(formValues);
-                resolve();
-            },2000);
-        });
+		try {
+			let api_response = await Api.newUser(formValues);
+			if(api_response.status !== 201) throw api_response;
 
-	
+			window.location.href = '/login?welcome=true';
 
-		// let api_response = await Api.newUser(formValues);
-		// console.log(api_response);
+		} catch (error) {
+			setFormError(`Erro: Operação não realizada. <br><br> Mensagem: ${error.message}. cod.: ${error.status}.`);
+		}
 	}
 
 	return (
 		<div className="signup-container column-centered">
 			<CustomRadioContainer fields={radioInputs} groupName={"accountType"} onChangeAction={handleRadioChange} />
 			{selectedRadio === 'trustee' &&
-				<CustomForm fields={trustee_fields} onSubmit={sendRegister} ButtonText={"Enviar"} />
+				<CustomForm fields={trustee_fields} onSubmit={sendRegister} ButtonText={"Enviar"} formError={formError}/>
 			}
 			{selectedRadio === 'consumer' &&
-				<CustomForm fields={consumer_fields} onSubmit={sendRegister} ButtonText={"Enviar"} />
+				<CustomForm fields={consumer_fields} onSubmit={sendRegister} ButtonText={"Enviar"} formError={formError}/>
 			}
 		</div>
 	);
