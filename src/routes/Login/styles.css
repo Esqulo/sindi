@@ -22,6 +22,9 @@
     border-radius: 5px;
     cursor: pointer;
     transition: opacity 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .login-button:hover{
@@ -44,4 +47,9 @@
     color: green;
     line-height: 18px;
     padding: 20px 0;
+}
+
+.login-form-error_message{
+    text-align: center;
+    color: red;
 }

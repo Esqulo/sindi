@@ -3,13 +3,20 @@ import "./styles.css";
 
 import CustomTextInput from "../../components/CustomTextInput";
 
+import Api from "../../Api";
+
+import LoadingIcon from "../../components/LoadingIcon";
+
 function Login() {
 	const [fields, setFields] = useState({ email: "", password: "" });
 	const [errors, setErrors] = useState({});
 	const [accountCreated, setAccountCreated] = useState(false);
+	const [formError, setformError] = useState("");
+	const [loading, setLoading] = useState(false);
 	const formRef = useRef(null);
 
-	function validateFields() {
+	async function validateFields() {
+
 		const requiredFields = formRef.current.querySelectorAll("input[required]");
 		let newErrors = {};
 		let firstErrorField = null;
@@ -33,10 +40,16 @@ function Login() {
 
 		if (Object.keys(newErrors).length !== 0) {
 			firstErrorField.focus();
+			return true;
 		}
+		
+		return false;
 	}
 
 	useEffect(()=>{
+
+		let token = localStorage.getItem('token');
+		if(token) window.location.href = '/';
 
 		const params = new URLSearchParams(window.location.search);
 
@@ -46,8 +59,43 @@ function Login() {
 
 	},[]);
 
-	function handleLogin() {
-		validateFields();
+	async function handleLogin() {
+		
+		setLoading(true);
+		setformError("");
+
+		try{
+
+			let hasErros = await validateFields();
+			if(hasErros) return;
+
+			let api_response = await Api.login({
+				username: fields.email,
+				password: fields.password
+			});
+	
+			if(api_response.status !== 200) throw api_response;
+
+			localStorage.setItem('token', api_response.token.toString());
+
+			window.location.href = '/';
+
+		}catch(err){
+			err.status = err.status ? err.status : -1;
+			
+			switch(err.status){
+				case 404:
+					setformError("Email ou senha inválidos");
+					break;
+				default:
+					setformError("Ocorreu um erro inesperado");
+					break;
+			}
+
+		}finally{
+			setLoading(false);
+		}
+
 	}
 
 	function handleChange(name, value) {
@@ -77,8 +125,15 @@ function Login() {
 					name="password" label="Senha" placeholder="**********" type="password" required
 					value={fields.password} onChange={(value) => handleChange("password", value)} errorMessage={errors.password}
 				/>
-				<button className="login-button" onClick={handleLogin}>Entrar</button>
-				<a href="/forgotpassword" className="login-form-forgotpassword"><span >Esqueci a senha</span></a>
+				<button className="login-button" onClick={handleLogin}>
+					{loading ? <LoadingIcon size={16}/> : 'Entrar'}
+				</button>
+				{formError &&
+					<span className="login-form-error_message">
+						{formError}
+					</span>
+				}
+				<a href="/forgotpassword" className="login-form-forgotpassword"><span>Esqueci a senha</span></a>
 			</div>
 		</div>
 	);
