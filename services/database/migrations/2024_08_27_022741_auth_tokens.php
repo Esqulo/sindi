@@ -30,6 +30,17 @@ return new class extends Migration
             $table->boolean('already_used')->default(0);
             $table->boolean('expired_by_another')->default(0);
         });
+
+        Schema::create('email_confirmation_codes', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->string('code');
+            $table->dateTime('created_at')->useCurrent();
+            $table->dateTime('expires_at')->default('2100-12-31 23:59');
+            $table->boolean('already_used')->default(0);
+            $table->boolean('expired_by_another')->default(0);
+        });
     }
 
     /**
