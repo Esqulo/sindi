@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Http\Controllers\MailSender;
 use Exception;
 
 // use App\Http\Controllers\MercadoPagoController;
@@ -47,6 +48,9 @@ class UserController extends Controller
 
             $user = User::create($validatedData);
 
+            $mailSender = new MailSender();
+            $mailSender->sendEmailConfirmation($user->id);
+            
             // $mercadoPagoController = new MercadoPagoController;
             // $mercadoPagoController->createMercadoPagoUser($user);
 
