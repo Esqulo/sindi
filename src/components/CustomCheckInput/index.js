@@ -1,7 +1,7 @@
 import React from "react";
 import "./styles.css";
 
-function CustomTextInput({name, value, label, required=false, onChange, inputRef, errorMessage, customStyle}) {
+function CustomCheckInput({name, value, label, required=false, onChange, inputRef, errorMessage, customStyle}) {
     return (
         <div className="custom-check-input">
             <div className="custom-check-input-row">
@@ -21,4 +21,4 @@ function CustomTextInput({name, value, label, required=false, onChange, inputRef
     )
 }
 
-export default CustomTextInput;
+export default CustomCheckInput;
