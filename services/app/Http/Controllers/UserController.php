@@ -7,7 +7,7 @@ use App\Models\User;
 use App\Http\Controllers\MailSender;
 use Exception;
 
-// use App\Http\Controllers\MercadoPagoController;
+use App\Http\Controllers\MercadoPagoController;
 
 class UserController extends Controller
 {
@@ -51,8 +51,8 @@ class UserController extends Controller
             $mailSender = new MailSender();
             $mailSender->sendEmailConfirmation($user->id);
             
-            // $mercadoPagoController = new MercadoPagoController;
-            // $mercadoPagoController->createMercadoPagoUser($user);
+            $mercadoPagoController = new MercadoPagoController;
+            $mercadoPagoController->createMercadoPagoUser($user);
 
         } catch (Exception $e) {
             return response()->json([
