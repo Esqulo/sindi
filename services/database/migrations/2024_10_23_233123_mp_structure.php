@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('mp_customers', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('user_id')->unique();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('mp_usertoken');
+            $table->string('mp_usertoken')->unique();
         });
     }
 
