@@ -24,6 +24,7 @@ function CardForm({onSubmit}) {
 
     function handleDocChange (docData){
         setFieldValues((prev) => ({ ...prev, "doc_number": docData.value }));
+        setFieldValues((prev) => ({ ...prev, "doc_type": docData.type }));
         if(!docData.isValid){
             setErrorMessage('doc_number','Documento Inválido');
             return;
