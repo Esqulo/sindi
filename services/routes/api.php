@@ -12,6 +12,7 @@ use App\Http\Controllers\PurchasesController;
 use App\Http\Controllers\DealsController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\NewsletterController;
+use App\Http\Controllers\MercadoPagoController;
 use Illuminate\Support\Facades\Route;
 
 Route::resources([
@@ -65,4 +66,9 @@ Route::prefix('calendar')->group(function(){
 
 Route::prefix('newsletter')->group(function(){
     Route::post('/', [NewsletterController::class, 'insert']);
+});
+
+Route::prefix('mp')->group(function(){
+    Route::post('/newcard', [MercadoPagoController::class, 'registerCard']);
+    Route::post('/aaa', [MercadoPagoController::class, 'aaa']);
 });

@@ -9,6 +9,7 @@ import LandingPage from './routes/LandingPage';
 import Home from './routes/Home';
 import Login from './routes/Login';
 import Signup from './routes/Signup';
+import MyCards from './routes/MyCards';
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
       {
         path: "/signup",
         element: <Signup/>
+      },
+      {
+        path: "/mycards",
+        element: <MyCards/>
       }
     ]
   }
