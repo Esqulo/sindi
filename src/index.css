@@ -68,3 +68,7 @@ body {
   width: 100%;
   text-align: center;
 }
+
+.shadow-default{
+  box-shadow: 0 0 10px 5px #94949454;
+}

@@ -10,6 +10,7 @@ import Home from './routes/Home';
 import Login from './routes/Login';
 import Signup from './routes/Signup';
 import MyCards from './routes/MyCards';
+import Chat from './routes/Chat';
 
 const router = createBrowserRouter([
   {
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
       {
         path: "/mycards",
         element: <MyCards/>
+      },
+      {
+        path: "/chat",
+        element: <Chat/>
       }
     ]
   }
