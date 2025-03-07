@@ -11,10 +11,6 @@ use Illuminate\Support\Facades\Http;
 
 class MercadoPagoController extends Controller
 {
-//2290150372-NEUjY21lOSMadj test
-    public function aaa(Request $request){
-        return $this->signUp($request);
-    }
 
     public function createMercadoPagoUser($userData){
          try{
@@ -58,21 +54,12 @@ class MercadoPagoController extends Controller
             $userId = $this->retrieveId($token);
             $user_mpid = MP_Customers::where('user_id',$userId)->first()['mp_usertoken'];
             
-            //Valores obtidos:
-            //$user_mpid = "2290150372-NEUjY21lOSMadj"
-            //$request['card_token'] = "66e43d8b5b3e37f2afbfc472f93c8e50"
-
             $response = Http::withToken(env('MERCADO_PAGO_ACCESS_TOKEN'))
             ->post("https://api.mercadopago.com/v1/customers/$user_mpid/cards",[
-                'token' => $request['card_token'],
-                'payment_method_id' => 'master'
+                'token' => $request['card_token']
             ]);
 
             $data = $response->json();
-
-            return response()->json([
-                "response" => $data
-            ],200);
 
             UserSavedCard::create([
                 "mp_card_id" => $data['id'],
@@ -83,50 +70,18 @@ class MercadoPagoController extends Controller
             ]);
 
             return response()->json([
-                "response" => $response
-            ],200);
+                "success" => true
+            ],201);
 
         }catch(Exception $e){
-            $status = 200;// method_exists($e, 'getStatusCode') ? $e->getStatusCode() : 500;
+            $status = $e instanceof \Symfony\Component\HttpKernel\Exception\HttpException ? $e->getStatusCode() : 500;
+            $message = $e instanceof \Symfony\Component\HttpKernel\Exception\HttpException ? $e->getMessage() : "Algo deu errado ao registrar o cartão";
             return response()->json([
                 "success" => false,
                 "data" => $e,
-                "message" => $e->getMessage()
+                "message" => $message
             ],$status);
         }
     }
 
-    public function signUp(Request $request){
-        try{
-        
-            $token = $request->header('Authorization');
-            $userId = $this->retrieveId($token);
-            $userEmail = $this->getUserEmail($userId);
-
-            $response = Http::withToken(env('MERCADO_PAGO_ACCESS_TOKEN'))
-            ->post("https://api.mercadopago.com/preapproval",[
-                'card_token_id' => "1b55bb0f4b1351b19544f678ac7b8614",
-                'preapproval_plan_id' => "2c938084950cbacf01953fdb684f1897",
-                'reason' => "Assinatura Sindi",
-                'payer_email' => "zecazeca11@hotmail.com",
-                'status' => "authorized"
-            ]);
-
-            $data = $response->json();
-
-            return response()->json([
-                "response" => $data
-            ],200);
-
-
-        }catch(Exception $e){
-            $status = 200;
-            return response()->json([
-                "success" => false,
-                "data" => $e,
-                "message" => $e->getMessage()
-            ],$status);
-        }
-
-    }
 }
