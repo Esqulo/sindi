@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "./styles.css";
-import { initMercadoPago, getPaymentMethods  } from '@mercadopago/sdk-react';
+import { initMercadoPago } from '@mercadopago/sdk-react';
 import { createCardToken } from '@mercadopago/sdk-react/esm/coreMethods';
 
 import CardForm from "../../components/CardForm";
+
+import Api from "../../Api";
 
 function MyCards() {
     // eslint-disable-next-line
@@ -18,7 +20,6 @@ function MyCards() {
         payment_method_id: ""
     });
 
-    const [cardToken, setCardToken] = useState(null);
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -29,61 +30,41 @@ function MyCards() {
 
     async function handleSubmit(formData){
 
+        let cardToken;
+
         setError(null);
 
         try {
-            await new Promise(resolve => setTimeout(resolve, 100));
 
-            const bin = formData.card_number.replace(/\D/g, "").slice(0, 6);
-            
-            const cardBinData = await getPaymentMethods({ bin });
-            const payment_method = cardBinData.results[0].id;
-
-            console.log(cardBinData);
-           
             const [month, year] = formData.expiration_date.split('/');
 
             const docType = formData.doc_type.toUpperCase();
 
-            // setCardData({
-            //     cardNumber: formData.card_number,
-            //     cardholderName: formData.full_name,
-            //     expirationMonth: month,
-            //     expirationYear: year,
-            //     securityCode: formData.security_code,
-            //     identificationType: docType,
-            //     identificationNumber: formData.doc_number
-            // });
-
-            console.log({
+            const cardTokenResponse = await createCardToken({
                 cardNumber: formData.card_number,
                 cardholderName: formData.full_name,
-                expirationMonth: month,
-                expirationYear: year,
+                cardExpirationMonth: month,
+                cardExpirationYear: year,
                 securityCode: formData.security_code,
                 identificationType: docType,
                 identificationNumber: formData.doc_number
             });
 
-            const response = await createCardToken({
-                cardNumber: formData.card_number,
-                cardholderName: formData.full_name,
-                expirationMonth: month,
-                expirationYear: year,
-                securityCode: formData.security_code,
-                identificationType: docType,
-                identificationNumber: formData.doc_number
+            if (cardTokenResponse.error) throw new Error({
+                message: "Erro ao gerar token do cartão."
+            });
+            
+            cardToken = cardTokenResponse.id;
+
+            const newCardResponse = await Api.newCard(cardToken);
+
+            if(!newCardResponse.success) throw new Error({
+                message: newCardResponse.message
             });
 
-            if (response.error) {
-                setError(response.error.message);
-            } else {
-                setCardToken(response.id);
-                console.log("Token gerado:", response.id);
-            }
         } catch (err) {
-            setError("Erro ao gerar token do cartão.");
-            console.error(err);
+            setError(err.message);
+            console.log(err);
         }
     };
 
