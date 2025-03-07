@@ -70,5 +70,4 @@ Route::prefix('newsletter')->group(function(){
 
 Route::prefix('mp')->group(function(){
     Route::post('/newcard', [MercadoPagoController::class, 'registerCard']);
-    Route::post('/aaa', [MercadoPagoController::class, 'aaa']);
 });
