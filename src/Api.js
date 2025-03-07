@@ -57,6 +57,26 @@ const Api = {
                 error: error
             };
         }
+    },
+    newCard: async (cardToken) => {
+        try{
+            const req = await fetch(`${BASE_URL}/mp/newcard`,{
+                method: 'POST',
+                headers:{ 
+                    'Accept': 'application/json', 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem("token")}`
+                },
+                body: JSON.stringify({card_token: cardToken})
+            });
+            const json = await req.json();
+            return json;
+        }
+        catch(error){
+            return {
+                error: error
+            };
+        }
     }
 }
 
