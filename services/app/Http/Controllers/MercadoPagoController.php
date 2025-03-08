@@ -103,4 +103,30 @@ class MercadoPagoController extends Controller
         }
     }
 
+    public function getPlans(){
+
+        $response = [];
+
+        try{
+
+            $plansFromMp = Http::withToken(env('MERCADO_PAGO_ACCESS_TOKEN'))
+            ->get("https://api.mercadopago.com/preapproval_plan/search?status=active");
+
+            foreach ($plansFromMp->json()['results'] as $plan) {
+                $response[] = [
+                    'title' => $plan['reason'],
+                    'price' => $plan['auto_recurring']['transaction_amount'],
+                ];
+            }
+
+            return response()->json($response,200);
+
+        }catch(Exception $e){
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ],400);
+        }
+    }
+
 }
