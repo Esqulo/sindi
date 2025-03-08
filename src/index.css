@@ -72,3 +72,28 @@ body {
 .shadow-default{
   box-shadow: 0 0 10px 5px #94949454;
 }
+
+.no-padding{
+  padding: 0 !important;
+}
+
+.custom-scroll::-webkit-scrollbar {
+  width: 10px;
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+  background: #bdbdbd;
+  border-radius: 10px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: #000;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  transition: all ease 0.2s;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+  border: 15px;
+}
