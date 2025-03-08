@@ -4,7 +4,7 @@
     background-color: transparent;
     display: flex;
     flex-direction: row;
-    box-shadow: 1px 1px 10px 0px rgba(0,0,0,0.75);
+    box-shadow: 0 0 10px 5px #94949454;
 }
 
 .mainheader-contents{
