@@ -84,4 +84,23 @@ class MercadoPagoController extends Controller
         }
     }
 
+    public function getUserCards(Request $request){
+        try{
+
+            $token = $request->header('Authorization');
+
+            $userId = $this->retrieveId($token);
+
+            $userCards = UserSavedCard::where('user_id',$userId)->get();
+
+            return response()->json($userCards,200);
+
+        }catch(Exception $e){
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ],400);
+        }
+    }
+
 }
