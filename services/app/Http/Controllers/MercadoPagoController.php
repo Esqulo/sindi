@@ -13,7 +13,7 @@ class MercadoPagoController extends Controller
 {
 
     public function createMercadoPagoUser($userData){
-         try{
+        try{
             $mp_user = $this->getMercadoPagoUser($userData['id']);
             if($mp_user['mp_usertoken']) throw new Exception('MP User already exists');
 
@@ -100,6 +100,54 @@ class MercadoPagoController extends Controller
                 'success' => false,
                 'message' => $e->getMessage()
             ],400);
+        }
+    }
+
+    private function allowedToDeleteCard($userId,$cardId){
+        //to do: checar se existe assinatura no cartão, funcionalidade de assinatura ainda não existe
+        
+        $totalCards = UserSavedCard::where('user_id', $userId)->take(2)->count();
+        if ($totalCards <= 1) return [
+            'reason' => 'Não é possível deletar todos os cartões'
+        ];
+
+        return true;
+    }
+
+    public function deleteCard(Request $request){
+        try{
+
+            $token = $request->header('Authorization');
+            $userId = $this->retrieveId($token);
+            
+            $card = UserSavedCard::where('id',$request->card_id)->first();
+
+            if (!$card) throw new Exception('Cartão não encontrado', 404);
+            
+            if($card->user_id != $userId) throw new Exception('Access Denied',403);
+            
+            $isAllowed = $this->allowedToDeleteCard($userId,$card['id']);
+
+            if($isAllowed !== true) throw new Exception($isAllowed['reason']);
+
+            $mpUserId = $this->getMercadoPagoUser($userId)->mp_usertoken;
+            $mpcardId = $card->mp_card_id;
+
+            $mp_response = Http::withToken(env('MERCADO_PAGO_ACCESS_TOKEN'))
+            ->delete("https://api.mercadopago.com/v1/customers/$mpUserId/cards/$mpcardId");
+
+            if($mp_response->status() != 200) throw new Exception('Erro ao deletar cartão',500);
+
+            $card->delete();
+
+            return response()->json(true,200);
+
+        }catch(Exception $e){
+            $status = $e->getCode() ?: 400;
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ],$status);
         }
     }
 

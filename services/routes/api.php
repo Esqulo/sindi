@@ -69,7 +69,8 @@ Route::prefix('newsletter')->group(function(){
 });
 
 Route::prefix('mp')->group(function(){
-    Route::post('/newcard', [MercadoPagoController::class, 'registerCard']);
-    Route::get('/cards', [MercadoPagoController::class, 'getUserCards']);
+    Route::post('/card', [MercadoPagoController::class, 'registerCard']);
+    Route::get('/card', [MercadoPagoController::class, 'getUserCards']);
+    Route::delete('/card/{card_id}', [MercadoPagoController::class, 'deleteCard']);
     Route::get('/plans', [MercadoPagoController::class, 'getPlans']);
 });
