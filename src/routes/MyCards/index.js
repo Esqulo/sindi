@@ -86,6 +86,9 @@ function MyCards() {
 
         } catch (err) {
             alert('Ocorreu um erro ao salvar o seu cartão, por favor, verifique os dados e tente novamente.');
+        }finally{
+            getMyCards();
+            setShowCardForm(false);
         }
     };
 
