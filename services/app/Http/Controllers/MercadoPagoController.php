@@ -144,7 +144,9 @@ class MercadoPagoController extends Controller
 
             $card->delete();
 
-            return response()->json(true,200);
+            return response()->json([
+                'success' => true
+            ],200);
 
         }catch(Exception $e){
             $status = $e->getCode() ?: 400;
