@@ -52,14 +52,19 @@ class MercadoPagoController extends Controller
         
             $token = $request->header('Authorization');
             $userId = $this->retrieveId($token);
-            $user_mpid = MP_Customers::where('user_id',$userId)->first()['mp_usertoken'];
+            $user_mpid = $this->getMercadoPagoUser($userId)->mp_usertoken;
             
             $response = Http::withToken(env('MERCADO_PAGO_ACCESS_TOKEN'))
             ->post("https://api.mercadopago.com/v1/customers/$user_mpid/cards",[
                 'token' => $request['card_token']
             ]);
 
+            if($response->status() != 201) throw new Exception('Erro ao registrar cartão',500);
+            
             $data = $response->json();
+
+            $cardAlreadyExists = UserSavedCard::where('mp_card_id', $data['id'])->first();
+            if ($cardAlreadyExists) throw new Exception("O cartão já está registrado para este usuário.", 409);
 
             UserSavedCard::create([
                 "mp_card_id" => $data['id'],
@@ -74,11 +79,10 @@ class MercadoPagoController extends Controller
             ],201);
 
         }catch(Exception $e){
-            $status = $e instanceof \Symfony\Component\HttpKernel\Exception\HttpException ? $e->getStatusCode() : 500;
-            $message = $e instanceof \Symfony\Component\HttpKernel\Exception\HttpException ? $e->getMessage() : "Algo deu errado ao registrar o cartão";
+            $status = $e->getCode() ?: 400;
+            $message = $e->getMessage() ?: "Algo deu errado ao registrar o cartão";
             return response()->json([
                 "success" => false,
-                "data" => $e,
                 "message" => $message
             ],$status);
         }
