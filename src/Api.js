@@ -60,7 +60,7 @@ const Api = {
     },
     newCard: async (cardToken) => {
         try{
-            const req = await fetch(`${BASE_URL}/mp/newcard`,{
+            const req = await fetch(`${BASE_URL}/mp/card`,{
                 method: 'POST',
                 headers:{ 
                     'Accept': 'application/json', 
@@ -77,7 +77,45 @@ const Api = {
                 error: error
             };
         }
-    }
+    },
+    getMyCards: async () => {
+        try{
+            const req = await fetch(`${BASE_URL}/mp/card`,{
+                method: 'GET',
+                headers:{ 
+                    'Accept': 'application/json', 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem("token")}`
+                }
+            });
+            const json = await req.json();
+            return json;
+        }
+        catch(error){
+            return {
+                error: error
+            };
+        }
+    },
+    deleteCard: async (cardId) => {
+        try{
+            const req = await fetch(`${BASE_URL}/mp/card/${cardId}`,{
+                method: 'DELETE',
+                headers:{ 
+                    'Accept': 'application/json', 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem("token")}`
+                }
+            });
+            const json = await req.json();
+            return json;
+        }
+        catch(error){
+            return {
+                error: error
+            };
+        }
+    },
 }
 
 export default Api;

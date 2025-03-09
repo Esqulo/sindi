@@ -7,26 +7,50 @@ import CardForm from "../../components/CardForm";
 
 import Api from "../../Api";
 
+import trashIcon from "../../assets/images/icons/red-trash.svg";
+import LoadingIcon from "../../components/LoadingIcon";
+
 function MyCards() {
-    // eslint-disable-next-line
-    const [cardData, setCardData] = useState({
-        cardNumber: "",
-        cardholderName: "",
-        expirationMonth: "",
-        expirationYear: "",
-        securityCode: "",
-        identificationType: "",
-        identificationNumber: "",
-        payment_method_id: ""
-    });
 
     const [error, setError] = useState(null);
+    const [myCards, setMyCards] = useState([]);
+    const [cardsLoading, setCardsLoading] = useState(true);
+    const [showCardForm, setShowCardForm] = useState(false);
+    const [isDeletingCard, setIsDeletingCard] = useState(null);
 
     useEffect(() => {
         initMercadoPago(process.env.REACT_APP_MP_PUBLIC_TOKEN, {
             locale: "pt-BR"
         });
+
+        getMyCards();
     }, []);
+
+    async function getMyCards(){
+        setCardsLoading(true);
+        try{
+            let apiResponse = await Api.getMyCards();
+            if(apiResponse.success === false) throw new Error(apiResponse.message);
+            setMyCards(apiResponse)
+        }catch(err){
+            alert('Ocorreu um erro ao buscar seus cartões salvos.');
+            setMyCards([]);
+        }
+        setCardsLoading(false);
+    }
+
+    async function deleteCard(cardId){
+        setIsDeletingCard(parseInt(cardId));
+        try{
+            let apiResponse = await Api.deleteCard(cardId);
+            if(apiResponse.success === false) throw new Error(apiResponse.message);
+        }catch(err){
+            alert(err.message);
+        }finally{
+            getMyCards();
+            setIsDeletingCard(null);
+        }
+    }
 
     async function handleSubmit(formData){
 
@@ -53,30 +77,67 @@ function MyCards() {
             if (cardTokenResponse.error) throw new Error({
                 message: "Erro ao gerar token do cartão."
             });
-            
+
             cardToken = cardTokenResponse.id;
 
             const newCardResponse = await Api.newCard(cardToken);
 
-            if(!newCardResponse.success) throw new Error({
-                message: newCardResponse.message
-            });
+            if(!newCardResponse.success) throw new Error(newCardResponse.message);
 
         } catch (err) {
-            setError(err.message);
-            console.log(err);
+            alert('Ocorreu um erro ao salvar o seu cartão, por favor, verifique os dados e tente novamente.');
         }
     };
 
+    function openCardForm(){
+        setShowCardForm(true);
+    }
+
     return (
         <div className="my-cards-container">
-            <h1>Cadastro de Cartão</h1>
 
-			<CardForm onSubmit={handleSubmit}/>
+            <h1>Seus cartões:</h1>
+                
+            <div className="cards-view">
+                
+                {!cardsLoading ? (
+                    <div className="cards-list custom-scroll">
+                        {myCards.map((card, index) => (
+                            <div className="card-list-item" key={String(card.id)}>
+                                
+                                <div className="card-info">
+                                    <span className="card-flag">{card.flag}</span>
+                                    <span className="card-last-digits">Terminado em: {card.last_four_digits}</span>
+                                </div>
 
-            {error && (
-                <p style={{ color: "red" }}>{error}</p>
-            )}
+                                <div className="card-options">
+                                    <button className="card-option" onClick={() => deleteCard(String(card.id))}>
+                                        {isDeletingCard === card.id ? (<LoadingIcon color="#000" size={20}/>) : (<img src={trashIcon} alt="Excluir" />)}
+                                    </button>
+                                </div>
+
+                            </div>
+                        ))}
+
+                        <div className="card-list-item no-padding">
+                            <button class="new-card-button" onClick={openCardForm}>
+                                <span>Adicionar um cartão</span>
+                            </button>
+                        </div>
+
+                    </div>
+                ) : (
+                    <div className="loading-container">
+                        <LoadingIcon color="#000" size={40}/>
+                    </div>
+                )} 
+                
+                {showCardForm &&
+                    <CardForm onSubmit={handleSubmit}/>
+                }
+
+            </div>
+            
         </div>
     );
 }
