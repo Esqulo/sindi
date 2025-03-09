@@ -17,6 +17,12 @@ function CardForm({onSubmit}) {
     const [fieldValues, setFieldValues] = useState({});
     const [errors, setErrors] = useState({});
 
+    function handleKeyDown(event) {
+        if (event.key === "Enter") {
+            sendForm();
+        }
+    }
+
     function handleChange(name, value){
         setFieldValues((prev) => ({ ...prev, [name]: value }));
         setErrors((prev) => ({ ...prev, [name]: "" }));
@@ -159,7 +165,7 @@ function CardForm({onSubmit}) {
     }
 
     return (
-        <div className="card-form-container" ref={formRef}>
+        <div className="card-form-container" ref={formRef}  onKeyDown={handleKeyDown}>
             <CustomTextInput
                 key={'card_number'}
                 name={'card_number'}
