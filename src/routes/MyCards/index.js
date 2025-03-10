@@ -11,7 +11,9 @@ import trashIcon from "../../assets/images/icons/red-trash.svg";
 import LoadingIcon from "../../components/LoadingIcon";
 
 function MyCards() {
-
+    
+    //to do: better error presentation
+    // eslint-disable-next-line
     const [error, setError] = useState(null);
     const [myCards, setMyCards] = useState([]);
     const [cardsLoading, setCardsLoading] = useState(true);
