@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use DateTimeInterface;
 
-class Chat extends Model
+class ChatAccess extends Model
 {
     use HasFactory;
 
