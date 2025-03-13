@@ -10,7 +10,7 @@ class Chat extends Model
 {
     use HasFactory;
 
-    protected $table = 'chat';
+    protected $table = 'chat_messages';
     public $timestamps = false;
 
     protected function serializeDate(DateTimeInterface $date)
@@ -19,19 +19,17 @@ class Chat extends Model
     }
 
     protected $fillable = [
-        'title',
-        'type',
-        'image',
+        'chat_id',
+        'from',
+        'message',
     ];
 
     protected $hidden = [];
 
     protected $casts = [
-        'id' => 'integer',
-        'title' => 'string',
-        'type' => 'integer',
-        'image' => 'string',
-        'created_at' => 'datetime'
+        'chat_id' => 'integer',
+        'from' => 'integer',
+        'message' => 'string'
     ];
 }
 
