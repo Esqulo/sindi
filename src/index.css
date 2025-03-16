@@ -97,3 +97,9 @@ body {
 .custom-scroll::-webkit-scrollbar-thumb:hover {
   border: 15px;
 }
+
+.prevent-select {
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
