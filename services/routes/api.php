@@ -36,8 +36,10 @@ Route::prefix('auth')->group(function(){
 });
 
 Route::prefix('chat')->group(function(){
-    Route::get('/{user_id}',[ChatController::class, 'getMessages']);
-    Route::post('send',[ChatController::class, 'sendMessage']);
+    Route::get('/',[ChatController::class, 'getUserChats']);
+    Route::get('/{chat_id}',[ChatController::class, 'getChatMessages']);
+    Route::post('/message',[ChatController::class, 'sendMessage']);
+    Route::post('/new',[ChatController::class, 'createNewChat']);
 });
 
 Route::prefix('payment')->group(function(){
