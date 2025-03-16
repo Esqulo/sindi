@@ -125,7 +125,7 @@ function MyCards() {
                         ))}
 
                         <div className="card-list-item no-padding">
-                            <button class="new-card-button" onClick={openCardForm}>
+                            <button className="new-card-button" onClick={openCardForm}>
                                 <span>Adicionar um cartão</span>
                             </button>
                         </div>
