@@ -1,4 +1,4 @@
-import React, {useState,useEffect,useRef} from "react";
+import React, {useState,useEffect,useRef,useCallback} from "react";
 import "./styles.css";
 
 import CustomImageComponent from "../../components/CustomImgComponent";
@@ -135,7 +135,7 @@ function Chat(){
         }
     }
 
-    async function loadRecentMessages() {
+    const loadRecentMessages = useCallback(async () => {
         try{
             setLoadingChats(true);
 
@@ -165,9 +165,27 @@ function Chat(){
         }finally{
             setLoadingChats(false);
         }
-    }
+    }, []);
 
-    async function loadMessagesFromDatabase() {
+    const storeChatMessages = useCallback(async (chat_id, messages) => {
+    // function storeChatMessages(chat_id, messages) {
+        if (!messages.length) return;
+
+        const lastMessage = messages[messages.length - 1];
+        const lastMessageDate = lastMessage ? lastMessage.sent_at : null;
+
+        let dataToStore = {
+            id: chat_id,
+            title: currentChatDataVar.title,
+            image: currentChatDataVar.image,
+            messages: messages,
+            lastMessageDate: lastMessageDate
+        };
+
+        localStorage.setItem(`chat_data_${chat_id}`, JSON.stringify(dataToStore));
+    }, [currentChatDataVar.image,currentChatDataVar.title] )
+
+    const loadMessagesFromDatabase = useCallback(async () => {
         let chat_id = currentChatDataVar.id;
         if(!chat_id) return;
 
@@ -192,7 +210,7 @@ function Chat(){
             
             return updatedMessages;
         });
-    }
+    }, [currentChatDataVar.id, storeChatMessages])
 
     async function loadMessagesFromLocalStorage() {
         let chat_id = currentChatDataVar.id;
@@ -232,23 +250,6 @@ function Chat(){
             setLoadingMessages(false);
         }
     }
-    
-    function storeChatMessages(chat_id, messages) {
-        if (!messages.length) return;
-
-        const lastMessage = messages[messages.length - 1];
-        const lastMessageDate = lastMessage ? lastMessage.sent_at : null;
-
-        let dataToStore = {
-            id: chat_id,
-            title: currentChatDataVar.title,
-            image: currentChatDataVar.image,
-            messages: messages,
-            lastMessageDate: lastMessageDate
-        };
-
-        localStorage.setItem(`chat_data_${chat_id}`, JSON.stringify(dataToStore));
-    }
 
     async function getCurrentUserId(){
         let userId = await Api.getCurrentUserId();
@@ -266,7 +267,7 @@ function Chat(){
         }, 10000);
         return () => clearInterval(interval);
 
-    }, []);
+    }, [loadMessagesFromDatabase, loadRecentMessages]);
 
     return(
         <div className="chat-container column-centered">
