@@ -45,15 +45,15 @@ class ChatController extends Controller
 
     public function sendMessage(Request $request){
         $token = $request->header('Authorization');
+        if(!$token) return response()->json(['success' => false, 'message' => 'Not allowed.'], 403);
+
         $user_id = $this->retrieveId($token);
-        $to = $request->to;
-
         if(!$user_id) return response()->json(['success' => false, 'message' => 'Not allowed.'], 403);
-        if(!$request->message) return response()->json(['success' => false, 'message' => 'Missing parameter.'], 400);
-        if(!$to) return response()->json(['success' => false, 'message' => 'Missing parameter.'], 400);
 
-        $chat_id = Chat::where('id',$to)->first();
-        $hasAccess = $this->checkChatPermission($user_id,$to);
+        if(!$request->to || !$request->message) return response()->json(['success' => false, 'message' => 'Missing parameter.'], 400);
+
+        $chat_id = Chat::where('id',$request->to)->first();
+        $hasAccess = $this->checkChatPermission($user_id,$request->to);
 
         if(!$hasAccess || !$chat_id) return response()->json(['success' => false, 'message' => 'Conversation not found.'], 404);
 
@@ -61,7 +61,7 @@ class ChatController extends Controller
 
         ChatMessages::create([
             'from' => $user_id,
-            'chat_id' => $to,
+            'chat_id' => $request->to,
             'message' => $message
         ]);
 
@@ -70,7 +70,8 @@ class ChatController extends Controller
 
     private function getChatImage($chat_id, $requesting_user) {
 
-        $image = 'no-image';
+        // $image = env('APP_URL')."/assets/images/icons/no-image-profile.png";
+        $image = null;
 
         $chat = Chat::where('id', $chat_id)->first();
     
@@ -94,16 +95,42 @@ class ChatController extends Controller
         return $image;
     }
 
+    private function getChatTitle($chat_id, $requesting_user) {
+
+        $title = "";
+        $chat = Chat::where('id', $chat_id)->first();
+    
+        if ($chat->type == 0) {
+
+            $otherChatUser = ChatAccess::where('chat_id', $chat_id)
+                ->where('user_id', '!=', $requesting_user)
+                ->first();
+
+            if ($otherChatUser){
+                $user = User::where('id', $otherChatUser->user_id)->first();
+                if($user->name){
+                    $title = $user->name;
+                }
+            }
+            
+        } elseif ($chat->type == 1 && $chat->title) { 
+            $title = $chat->title;
+        }
+    
+        return $title;
+    }
+
     private function getChatLastMessage($chat_id){
-        if(!$chat_id)  return '' ;
+        if(!$chat_id) return '' ;
         $lastMessage = ChatMessages::where('chat_id',$chat_id)->orderByDesc('sent_at')->first();
         return $lastMessage ? $lastMessage->message : null;
     }
 
-    public function getUserChats(Request $request){ 
+    public function getUserChats(Request $request){
         $token = $request->header('Authorization');
-        $user_id = $this->retrieveId($token);
+        if(!$token) return response()->json(['success' => false, 'message' => 'Not allowed.'], 403);
 
+        $user_id = $this->retrieveId($token);
         if(!$user_id) return response()->json(['success' => false, 'message' => 'Not allowed.'], 403);
 
         $chatIds = ChatAccess::where('user_id', $user_id)->pluck('chat_id');
@@ -120,6 +147,7 @@ class ChatController extends Controller
         $chats->transform(function ($chat) use ($user_id) {
             $chat->image = $this->getChatImage($chat->id, $user_id);
             $chat->last_message = $this->getChatLastMessage($chat->id);
+            $chat->title = $this->getChatTitle($chat->id, $user_id);
             return $chat;
         });
 
@@ -142,7 +170,7 @@ class ChatController extends Controller
         $query = ChatMessages::where('chat_id', $chat_id)->orderBy('sent_at', 'asc');
 
         if ($beginDate) {
-            $query->where('sent_at', '>=', $beginDate);
+            $query->where('sent_at', '>', $beginDate);
         }
 
         $conversation = $query->paginate(10);
