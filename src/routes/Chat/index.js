@@ -55,7 +55,8 @@ function Chat(){
         });
 
         let now = new Date();
-        let sent_at = `${now.getDate()}/${now.getMonth() < 9 ? `0${now.getMonth()+1}` : `${now.getMonth()+1}` }/${now.getFullYear()} ${now.getHours() < 10 ? `0${now.getHours()}` : now.getHours()}:${now.getMinutes() < 10 ? `0${now.getMinutes()}` : now.getMinutes()}`;
+        let dateString = `${now.getFullYear()}-${now.getMonth() < 9 ? `0${now.getMonth()+1}` : `${now.getMonth()+1}`}/${now.getDate()} ${now.getHours() < 10 ? `0${now.getHours()}` : now.getHours()}:${now.getMinutes() < 10 ? `0${now.getMinutes()}` : now.getMinutes()}`;
+        let sent_at = dateString;
         
         setChatMessages((prev) => [
             ...prev, 
