@@ -110,7 +110,6 @@ function Chat(){
     
             currentChatPage.current += 1;
     
-            console.log('currentChatPage', currentChatPage.current);
     
             const apiResponse = await Api.getMyChats(currentChatPage.current);
     
@@ -210,7 +209,6 @@ function Chat(){
     }
 
     async function setChat(chatData) {
-        console.log(chatMessages)
         try{
             if(chatData.id === currentChatData.id) return;
             setChatMessages([]);
