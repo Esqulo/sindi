@@ -68,4 +68,14 @@ class AuthController extends Controller
             return response()->json(['message' => 'token not found'], 404);
         }
     }
+
+    public function getCurrentUserId(Request $request){
+        $token = $request->header('Authorization');
+        if(!$token) return response()->json(['success' => false, 'message' => 'Not allowed.'], 403);
+
+        $user_id = $this->retrieveId($token);
+        if(!$user_id) return response()->json(['success' => false, 'message' => 'Not allowed.'], 403);
+
+        return $user_id;
+    }
 }
