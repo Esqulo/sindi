@@ -3,33 +3,69 @@ import "./styles.css";
 
 import CustomImageComponent from "../../components/CustomImgComponent";
 import SendIcon from "../../assets/images/icons/send.svg";
+import LoadingIcon from "../../components/LoadingIcon";
+
+import noUserImage from "../../assets/images/icons/no-image-profile.png";
+
+import Api from "../../Api";
 
 function Chat(){
 
     const chatContainerRef = useRef(null);
+    const chatListContainerRef = useRef(null);
 
-    const [chats,setChats] = useState([]);
+    const [chatsList,setChatsList] = useState([]);
+    const [currentChatData,setCurrentChatData] = useState({});
     const [chatMessages,setChatMessages] = useState([]);
     const [currentUserId,setCurrentUserId] = useState(0);
     const [currentMessage,setCurrentMessage] = useState('');
-    const [currentChatData,setCurrentChatData] = useState({});
     const [autoScrollEnabled, setAutoScrollEnabled] = useState(true);
 
+    const [loadingChats, setLoadingChats] = useState(false);
+    const [loadingMessages, setLoadingMessages] = useState(false);
+
+    const currentChatPage = useRef(0);
+    let currentChatDataVar = {};
+
+    function formatDateTime(dateTimeString) {
+        const date = new Date(dateTimeString);
+    
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Meses começam do 0
+        const year = date.getFullYear();
+    
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+    
+        return `${day}/${month}/${year} ${hours}:${minutes}`;
+    }
+    
     function handleKeyDown(event) {
         if (event.key === "Enter") {
             sendMessage();
         }
     }
 
-    function sendMessage(){
-        let now = new Date();
-        let sent_at = `${now.getDate()}/${now.getMonth() + 1 < 10 ? `0${now.getMonth()+1}` : `${now.getMonth()+1}` }/${now.getFullYear()} ${now.getHours()}:${now.getMinutes()}`;
-        console.log()
+    async function sendMessage(){
         if (!currentMessage.trim()) return;
+
+        await Api.sendMessage({
+            message: currentMessage,
+            to: currentChatData.id
+        });
+
+        let now = new Date();
+        let sent_at = `${now.getDate()}/${now.getMonth() < 9 ? `0${now.getMonth()+1}` : `${now.getMonth()+1}` }/${now.getFullYear()} ${now.getHours() < 10 ? `0${now.getHours()}` : now.getHours()}:${now.getMinutes() < 10 ? `0${now.getMinutes()}` : now.getMinutes()}`;
+        
         setChatMessages((prev) => [
             ...prev, 
-            { from: currentUserId, message: currentMessage, sent_at }
+            {
+                from: currentUserId,
+                message: currentMessage,
+                sent_at
+            }
         ]);
+        
         setCurrentMessage('');
     }
 
@@ -39,7 +75,7 @@ function Chat(){
         }
     }, [chatMessages, autoScrollEnabled]);
 
-    function handleScroll() {
+    function handleMessagesScroll() {
         if (!chatContainerRef.current) return;
 
         const { scrollTop, scrollHeight, clientHeight } = chatContainerRef.current;
@@ -51,151 +87,227 @@ function Chat(){
         }
     }
 
-    useEffect(() => {
-        setCurrentUserId(2);
+    async function handleChatListScroll() {
+        if (!chatListContainerRef.current) return;
+    
+        const { scrollTop, scrollHeight, clientHeight } = chatListContainerRef.current;
+        
+        const scrollPosition = scrollTop + clientHeight;
+        const triggerPoint = scrollHeight * 0.8;
+    
+        if (scrollPosition >= triggerPoint) {
+            //currentChatPage is set to -1 after reaching end of scrolling
+            //new messages are loaded by loadRecentMessages()
+            if (loadingChats || currentChatPage.current === -1) return;
+            await loadChatListOnScroll();
+        }
+    }
 
-        setChats([
-            {
-                "id": 1,
-                "name": "Juan Elias da Cunha",
-                "last_message": "Às 18:00 está bom para você?"
-            },
-            {
-                "id": 2,
-                "name": "Ana Beatriz Vieira da Silva",
-                "last_message": "Oi, boa tarde!",
-                "avatar": "https://picsum.photos/200/200"
-            },
-            {
-                "id": 3,
-                "name": "Silvania Aparecida Elias",
-                "last_message": "Poderia me informar o valor?",
-                "avatar": "https://picsum.photos/400/400"
-            },
-            {
-                "id": 4,
-                "name": "Roberta Sara Elias da Cunha",
-                "last_message": "Entrarei em contato, assim que possível.",
-                "avatar": "https://picsum.photos/500/500"
-            },
-            {
-                "id": 5,
-                "name": "Rian Elias da Cunha",
-                "last_message": "perfeito!",
-                "avatar": "https://picsum.photos/350/350"
-            },
-            {
-                "id": 6,
-                "name": "Juan Elias da Cunha",
-                "last_message": "Às 18:00 está bom para você?"
-            },
-            {
-                "id": 7,
-                "name": "Ana Beatriz Vieira da Silva",
-                "last_message": "Oi, boa tarde!",
-                "avatar": "https://picsum.photos/200/200"
-            },
-            {
-                "id": 8,
-                "name": "Silvania Aparecida Elias",
-                "last_message": "Poderia me informar o valor?",
-                "avatar": "https://picsum.photos/400/400"
-            },
-            {
-                "id": 9,
-                "name": "Roberta Sara Elias da Cunha",
-                "last_message": "Entrarei em contato, assim que possível.",
-                "avatar": "https://picsum.photos/500/500"
-            },
-            {
-                "id": 10,
-                "name": "Rian Elias da Cunha",
-                "last_message": "perfeito!",
-                "avatar": "https://picsum.photos/350/350"
-            },
-        ]);
+    async function loadChatListOnScroll() {
+        try {
 
-        setChatMessages([
-            {
-                "from": 1,
-                "message": "Oi, boa tarde!",
-                "sent_at": "11/03/2025 21:48"
-            },
-            {
-                "from": 2,
-                "message": "Boa tarde!",
-                "sent_at": "11/03/2025 21:48"
-            },
-            {
-                "from": 1,
-                "message": "Gostaria de realizar um orçamento.",
-                "sent_at": "11/03/2025 21:48"
-            },
-            {
-                "from": 2,
-                "message": "Que ótimo! Tem disponibilidade para um reunião?",
-                "sent_at": "11/03/2025 21:48"
-            },
-            {
-                "from": 1,
-                "message": "Podemos marcar amanhã às 18:00?",
-                "sent_at": "11/03/2025 21:48"
-            },
-            {
-                "from": 2,
-                "message": "Perfeito!",
-                "sent_at": "11/03/2025 21:48"
-            },
-            {
-                "from": 1,
-                "message": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sagittis, eros non dapibus hendrerit, orci lectus auctor est, eu pulvinar elit ante ac nisi. Nunc viverra odio in euismod convallis. Suspendisse venenatis lobortis sapien. Integer elementum vel quam sed elementum. Fusce nec lacinia ex. Fusce dictum dictum lacus, eget consectetur nunc suscipit ut. Sed ac risus at risus volutpat iaculis. Vivamus egestas nisi nec vulputate suscipit. Cras eget finibus justo. Suspendisse ut sagittis purus.",
-                "sent_at": "11/03/2025 21:48"
-            },
-            {
-                "from": 2,
-                "message": "Donec facilisis ante in mauris gravida, vitae vestibulum enim vehicula. Integer dignissim dui id mollis placerat. Donec vitae mauris nec nibh dictum viverra nec ac arcu. Nullam a ligula et nibh dignissim malesuada. Suspendisse interdum finibus neque vitae interdum. Vestibulum tristique augue hendrerit, maximus nisl eu, commodo velit. Cras auctor consectetur eleifend. Donec commodo eros quis posuere tincidunt. Mauris facilisis pulvinar dolor vitae consectetur. Etiam placerat est sit amet nulla commodo, in blandit ligula rutrum.",
-                "sent_at": "11/03/2025 21:48"
-            },
-        ]);
+            setLoadingChats(true);
+    
+            currentChatPage.current += 1;
+    
+            console.log('currentChatPage', currentChatPage.current);
+    
+            const apiResponse = await Api.getMyChats(currentChatPage.current);
+    
+            if (apiResponse.data?.length === 0) {
+                currentChatPage.current = -1;
+                return;
+            }
+    
+            if (apiResponse.error) return;
+    
+            setChatsList((prev) => {
+                const newChats = (apiResponse.data || []).filter(
+                    (newChat) => !prev.some((chat) => chat.id === newChat.id)
+                );
+                return [...prev, ...newChats];
+            });
+    
+        } catch (err) {
 
-        setCurrentChatData({
-            image: "https://picsum.photos/300/300",
-            title: "Ana Beatriz Vieira da Silva"
+        } finally {
+            setLoadingChats(false);
+        }
+    }
+
+    async function loadRecentMessages() {
+        try{
+            setLoadingChats(true);
+
+            //Load only first page!
+            const apiResponse = await Api.getMyChats(1);
+
+            if (apiResponse.error || apiResponse.data?.length === 0) return;
+
+            setChatsList((prevChats) => {
+                const newChats = apiResponse.data || [];
+    
+                const updatedChats = newChats.map((newChat) => {
+                    const existingChat = prevChats.find((chat) => chat.id === newChat.id);
+                    return existingChat ? { ...existingChat, ...newChat } : newChat;
+                });
+    
+                const mergedChats = [...prevChats, ...updatedChats].reduce((acc, chat) => {
+                    acc.set(chat.id, chat);
+                    return acc;
+                }, new Map());
+    
+                return Array.from(mergedChats.values());
+            });
+
+        }catch(err){
+
+        }finally{
+            setLoadingChats(false);
+        }
+    }
+
+    async function loadMessagesFromDatabase() {
+        let chat_id = currentChatDataVar.id;
+        if(!chat_id) return;
+
+        const storedChat = localStorage.getItem(`chat_data_${chat_id}`);
+        const storedJson = storedChat ? JSON.parse(storedChat) : { messages: [] };
+        
+        const lastMessageDate = storedJson.lastMessageDate || null;
+       
+        const apiResponse = await Api.getChatMessages({
+            chat_id,
+            begin_date: lastMessageDate
         });
+
+        const newMessages = apiResponse.data || [];
+
+        if (newMessages.length === 0) return;
+
+        setChatMessages((prevMessages) => {
+            const updatedMessages = [...prevMessages, ...newMessages];
+            
+            storeChatMessages(chat_id, updatedMessages);
+            
+            return updatedMessages;
+        });
+    }
+
+    async function loadMessagesFromLocalStorage() {
+        let chat_id = currentChatDataVar.id;
+        if(!chat_id) return;
+       
+        const storedChat = localStorage.getItem(`chat_data_${chat_id}`);
+        let storedJson = storedChat ? JSON.parse(storedChat) : { messages: [] };
+
+        setChatMessages(storedJson.messages);
+        
+        setCurrentChatData((prev) => ({
+            ...prev,
+            lastMessageDate: storedJson.lastMessageDate
+        }));
+    }
+
+    async function setChat(chatData) {
+        console.log(chatMessages)
+        try{
+            if(chatData.id === currentChatData.id) return;
+            setChatMessages([]);
+            setLoadingMessages(true);
+
+            currentChatDataVar = {
+                id: chatData.id,
+                title: chatData.title,
+                image: chatData.image
+            }
+            
+            setCurrentChatData(currentChatDataVar);
+
+            await loadMessagesFromLocalStorage();
+            await loadMessagesFromDatabase();
+            
+        }catch(err){
+
+        }finally{
+            setLoadingMessages(false);
+        }
+    }
+    
+    function storeChatMessages(chat_id, messages) {
+        if (!messages.length) return;
+
+        const lastMessage = messages[messages.length - 1];
+        const lastMessageDate = lastMessage ? lastMessage.sent_at : null;
+
+        let dataToStore = {
+            id: chat_id,
+            title: currentChatDataVar.title,
+            image: currentChatDataVar.image,
+            messages: messages,
+            lastMessageDate: lastMessageDate
+        };
+
+        localStorage.setItem(`chat_data_${chat_id}`, JSON.stringify(dataToStore));
+    }
+
+    async function getCurrentUserId(){
+        let userId = await Api.getCurrentUserId();
+        setCurrentUserId(userId);
+    }
+
+    useEffect(() => {
+
+        loadRecentMessages();
+        getCurrentUserId();
+
+        const interval = setInterval(() => {
+            loadRecentMessages();
+            loadMessagesFromDatabase();
+        }, 10000);
+        return () => clearInterval(interval);
 
     }, []);
 
     return(
         <div className="chat-container column-centered">
             <div className="chat-content row-centered">
-                <div className="chat-people-container column-centered shadow-default custom-scroll">
-                    {chats.map((chat,index) => (
-                        <div className="chat-person-container row-centered" key={String(chat.id)}>
-                            <CustomImageComponent img={chat.avatar} width={"80px"} borderRadius={"50%"} />
+                <div className="chat-people-container column-centered shadow-default custom-scroll" ref={chatListContainerRef} onScroll={handleChatListScroll}>
+                    {chatsList.map((chat,index) => (
+                        <div className={`chat-person-container row-centered prevent-select ${chat.id === currentChatData.id ? 'selected' : ''}`} key={String(chat.id)} onClick={ () => setChat(chat) }>
+                            <CustomImageComponent img={chat.image || noUserImage} width={"80px"} borderRadius={"50%"} style={{border:'2px solid #FFF', backgroundSize: '120%'}}/>
                             <div className="chat-person-info">
-                                <span className="chat-person-name">{chat.name}</span>
+                                <span className="chat-person-name">{chat.title}</span>
                                 <span className="chat-person-last-message" title={chat.last_message}>{chat.last_message}</span>
                             </div>
                         </div>
                     ))}
+                    {loadingChats &&
+                        <LoadingIcon color="#000"/>
+                    }
                 </div>
                 <div className="chat-conversation-container shadow-default">
-                    <div className="chat-conversation-header row-centered">
-                        <CustomImageComponent img={currentChatData.image} width={"60px"} height={"60px"} borderRadius={"50%"} style={{maxHeight: "100%"}}/>
-                        <span className="chat-conversation-header-title">{currentChatData.title}</span>
-                    </div>
-                    <div className="chat-conversation-content custom-scroll" ref={chatContainerRef} onScroll={handleScroll}>
-                        {chatMessages.map((message,index) => (
-                            <div className={`chat-message-container ${message.from === currentUserId ? 'mesage-right' : 'mesage-left'}`} key={String(index)}>
-                                <div className="chat-message">{message.message}</div>
-                                <span className={`chat-message-time ${message.from === currentUserId ? 'message-time-right' : 'message-time-left'}`} >{message.sent_at}</span>
-                            </div>
-                        ))}
-                    </div>
-                    <div className="chat-conversation-input row-centered">
-                        <input type="text" placeholder="Digite uma mensagem" value={currentMessage} onChange={(event)=>{setCurrentMessage(event.target.value)}} onKeyDown={handleKeyDown}/>
-                        <img src={SendIcon} alt="enviar" onClick={sendMessage} className="chat-conversation-send-icon"/>
-                    </div>
+                    {currentChatData.id && <>
+                        <div className="chat-conversation-header row-centered">
+                            <CustomImageComponent img={currentChatData.image || noUserImage} width={"60px"} height={"60px"} borderRadius={"50%"} style={{maxHeight: "100%"}}/>
+                            <span className="chat-conversation-header-title">{currentChatData.title}</span>
+                        </div>
+                        <div className="chat-conversation-content custom-scroll" ref={chatContainerRef} onScroll={handleMessagesScroll}>
+                            {chatMessages.map((message,index) => (
+                                <div className={`chat-message-container ${message.from === currentUserId ? 'mesage-right' : 'mesage-left'}`} key={String(index)}>
+                                    <div className="chat-message">{message.message}</div>
+                                    <span className={`chat-message-time ${message.from === currentUserId ? 'message-time-right' : 'message-time-left'}`} >{formatDateTime(message.sent_at)}</span>
+                                </div>
+                            ))}
+                            {loadingMessages &&
+                                <div className="loading-messages-container"><LoadingIcon color="#000"/></div>
+                            }
+                        </div>
+                        <div className="chat-conversation-input row-centered">
+                            <input type="text" placeholder="Digite uma mensagem" value={currentMessage} onChange={(event)=>{setCurrentMessage(event.target.value)}} onKeyDown={handleKeyDown}/>
+                            <img src={SendIcon} alt="enviar" onClick={sendMessage} className="chat-conversation-send-icon"/>
+                        </div>
+                    </>}
                 </div>
             </div>
         </div>

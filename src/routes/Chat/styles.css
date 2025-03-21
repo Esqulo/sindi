@@ -33,11 +33,20 @@
     padding: 10px 15px;
     cursor: pointer;
     flex-shrink: 0;
+    transition: background-color 0.2s ease;
+}
+
+.chat-person-container:hover{
+    background-color: #5f5f5f3f;
+}
+
+.chat-person-container.selected{
+    background-color: #000;
+    color: #fff;
 }
 
 .chat-person-container ::selection{
-    background-color: transparent;
-    color: inherit;
+    user-select: none;
 }
 
 .chat-person-photo{
@@ -206,4 +215,11 @@
 
 .chat-conversation-send-icon:active{
     opacity: 0.9;
+}
+
+.loading-messages-container{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
