@@ -86,8 +86,11 @@ class PurchasesController extends Controller
 
         $this->authenticate();
 
+        $nameParts = explode(" ", trim($user->name), 2);
+
         $payer = array(
-            "name" => $user->name,
+            "name" => $nameParts[0],
+            "surname" => isset($nameParts[1]) ? $nameParts[1] : "",
             "email" => $user->email
         );
 
