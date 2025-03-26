@@ -19,8 +19,11 @@ class Order extends Model
     }
 
     protected $fillable = [
+        'purchase_id',
         'product_id',
-        'purchase_id'
+        'amount',
+        'current_unit_price',
+        'current_fee_percentage'
     ];
 
     protected $hidden = [
@@ -29,8 +32,11 @@ class Order extends Model
 
     protected $casts = [
         'id' => 'integer',
+        'purchase_id' => 'integer',
         'product_id' => 'integer',
-        'purchase_id' => 'integer'
+        'amount' => 'float',
+        'current_unit_price' => 'float',
+        'current_fee_percentage' => 'float'
     ];
 
 }

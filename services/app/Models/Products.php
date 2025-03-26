@@ -21,6 +21,7 @@ class Products extends Model
     protected $fillable = [
         'name',
         'price',
+        'fee_percentage',
         'description',
         'active',
         'main_category'
@@ -34,6 +35,7 @@ class Products extends Model
         'id' => 'integer',
         'name' => 'string',
         'price' => 'float',
+        'fee_percentage' => 'float',
         'description' => 'string',
         'active' => 'boolean',
         'main_category' => 'integer'
