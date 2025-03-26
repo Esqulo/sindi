@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->float('price');
-            $table->string('image');
+            $table->float('fee_percentage')->nullable();
+            $table->string('image')->nullable();
             $table->string('description',3000);
             $table->boolean('active')->default(1);
             $table->integer('main_category')->nullable();
@@ -31,10 +32,13 @@ return new class extends Migration
 
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('no action');
-            $table->unsignedBigInteger('product_id');
             $table->foreign('purchase_id')->references('id')->on('purchases')->onDelete('no action');
             $table->unsignedBigInteger('purchase_id');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('no action');
+            $table->unsignedBigInteger('product_id');
+            $table->integer('amount');
+            $table->float('current_unit_price');
+            $table->float('current_fee_percentage');
         });
 
         Schema::create('payments', function (Blueprint $table) {
