@@ -24,7 +24,7 @@ class PurchasesController extends Controller
 
         $token = $request->header('Authorization');
         if(!$token) return response()->json(['success' => false, 'message' => 'Not allowed.'], 403);
-        
+
         $userId = $this->retrieveId($token);
         if(!$userId) return response()->json(['success' => false, 'message' => 'Not allowed.'], 403);
         $user = User::find($userId);
@@ -40,18 +40,36 @@ class PurchasesController extends Controller
 
             foreach($items as $item){
                 Order::create([
+                    'purchase_id' => $purchase->id,
                     'product_id' => $item['id'],
-                    'purchase_id' => $purchase->id
+                    'amount' => $item['quantity'],
+                    'current_unit_price' => $item['unit_price'],
+                    'current_fee_percentage' => $item['fee_percentage']
                 ]);
             }
 
-            $preference = $this->createPaymentPreference($user,$items,$purchase->id);
+            $fee = $this->calculateFee($items);
+
+            $preference = $this->createPaymentPreference($user,$items,$purchase->id,$fee);
 
             return response()->json($preference,201);
 
         }catch(Exception $e){
+            return $items;
             return response()->json(['success' => false, 'message' => 'Something unexpected happened, please try again.'],500);
         }
+
+    }
+
+    private function calculateFee($items){
+
+        $totalAmount = 0;
+
+        foreach($items as $item){
+            $totalAmount += ($item['quantity'] * $item['unit_price']) * ($item['fee_percentage']/100);
+        }
+
+        return $totalAmount;
 
     }
 
@@ -61,7 +79,7 @@ class PurchasesController extends Controller
         MercadoPagoConfig::setRuntimeEnviroment(MercadoPagoConfig::LOCAL);
     }
 
-    protected function createPreferenceRequest($items, $payer, $purchase_id){
+    protected function createPreferenceRequest($items, $payer, $purchase_id, $fee){
         
         $paymentMethods = [
             "excluded_payment_methods" => [],
@@ -71,10 +89,11 @@ class PurchasesController extends Controller
 
         $request = [
             "items" => $items,
+            "marketplace_fee" => $fee,
             "payer" => $payer,
             "payment_methods" => $paymentMethods,
             "statement_descriptor" => "Sindi",
-            "notification_url" => 'https://www.table4all.com.br/dev_api/estabelecimento/logger.php',
+            "notification_url" => 'https://www.table4all.com.br/dev_api/estabelecimento/logger.php', //TODO
             "external_reference" => $purchase_id,
             "expires" => false,
         ];
@@ -82,7 +101,7 @@ class PurchasesController extends Controller
         return $request;
     }
 
-    public function createPaymentPreference($user,$items,$purchase_id){
+    public function createPaymentPreference($user,$items,$purchase_id,$fee = 0){
 
         $this->authenticate();
 
@@ -94,7 +113,7 @@ class PurchasesController extends Controller
             "email" => $user->email
         );
 
-        $request = $this->createPreferenceRequest($items, $payer, $purchase_id);
+        $request = $this->createPreferenceRequest($items, $payer, $purchase_id, $fee);
         
         $client = new PreferenceClient();
 
@@ -121,7 +140,8 @@ class PurchasesController extends Controller
                     "description" => $productInfo->description,
                     "currency_id" => "BRL",
                     "quantity" => $product['quantity'],
-                    "unit_price" => $productInfo->price
+                    "unit_price" => $productInfo->price,
+                    "fee_percentage" => $productInfo->fee_percentage ?? 0
                 ];
             }
         }
