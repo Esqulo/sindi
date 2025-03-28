@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        //Store products
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -21,7 +22,7 @@ return new class extends Migration
             $table->boolean('active')->default(1);
             $table->integer('main_category')->nullable();
         });
-
+        //Store user purchases
         Schema::create('purchases', function (Blueprint $table) {
             $table->id();
             $table->string('transaction_id',500)->nullable();
@@ -29,18 +30,18 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('no action');
             $table->dateTime('purchase_date')->useCurrent();
         });
-
+        //Store items inside purchases
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->foreign('purchase_id')->references('id')->on('purchases')->onDelete('no action');
             $table->unsignedBigInteger('purchase_id');
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('no action');
+            $table->string('product_type',10);
             $table->unsignedBigInteger('product_id');
             $table->integer('amount');
             $table->float('current_unit_price');
             $table->float('current_fee_percentage');
         });
-
+        //Store Purchases payments 
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->foreign('purchase_id')->references('id')->on('purchases')->onDelete('no action');
