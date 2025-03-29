@@ -37,15 +37,15 @@ return new class extends Migration
             $table->unsignedBigInteger('purchase_id');
             $table->string('product_type',10);
             $table->unsignedBigInteger('product_id');
-            $table->integer('amount');
+            $table->integer('quantity');
             $table->float('current_unit_price');
             $table->float('current_fee_percentage');
         });
         //Store Purchases payments 
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->foreign('purchase_id')->references('id')->on('purchases')->onDelete('no action');
             $table->unsignedBigInteger('purchase_id');
+            $table->foreign('purchase_id')->references('id')->on('purchases')->onDelete('no action');
             $table->string('payment_id',150);
             $table->float('amount');
             $table->dateTime('payment_date');
@@ -59,6 +59,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-
+        Schema::dropIfExists('products');
+        Schema::dropIfExists('purchases');
+        Schema::dropIfExists('orders');
+        Schema::dropIfExists('payments');
     }
 };
