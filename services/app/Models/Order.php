@@ -20,8 +20,9 @@ class Order extends Model
 
     protected $fillable = [
         'purchase_id',
+        'product_type',
         'product_id',
-        'amount',
+        'quantity',
         'current_unit_price',
         'current_fee_percentage'
     ];
@@ -32,9 +33,10 @@ class Order extends Model
 
     protected $casts = [
         'id' => 'integer',
+        'product_type' => 'string',
         'purchase_id' => 'integer',
         'product_id' => 'integer',
-        'amount' => 'float',
+        'quantity' => 'float',
         'current_unit_price' => 'float',
         'current_fee_percentage' => 'float'
     ];
