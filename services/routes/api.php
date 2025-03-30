@@ -53,7 +53,7 @@ Route::prefix('offeredservices')->group(function(){
     Route::get('/{user_id}',[ProductsController::class, 'getUserOfferedServices']);
     Route::get('/service/{service_id}',[ProductsController::class, 'getServiceDetails']);
     Route::post('/',[ProductsController::class, 'createOfferedService']);
-    Route::put('/{service_id}',[ProductsController::class, 'updateOferedService']);
+    Route::put('/{service_id}',[ProductsController::class, 'updateOfferedService']);
     Route::delete('/{service_id}',[ProductsController::class, 'deleteOferedService']);
 });
 

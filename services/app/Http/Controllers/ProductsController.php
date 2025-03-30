@@ -62,25 +62,31 @@ class ProductsController extends Controller
         return $product;
     }
 
-    public function update(Request $request, int $id)
+    public function updateOfferedService(Request $request, int $id)
     {
         $token = $request->header('Authorization');
+        $userId = $this->retrieveId($token);
+        if(!$userId) return response()->json(['success' => false, 'message' => 'Not allowed.'], 403);
 
-        if(!$token || !$this->userIsAdmin($token)) return response()->json(['success' => false, 'message' => 'Not allowed.'], 403);
-       
-        $product = Products::find($id);
+        $user = User::find($userId);
+
+        $product = Products::where('id',$id)->where('active',1)->first();
         if(!$product) return response()->json(['message' => 'invalid data'], 404);
+
+        if( //if user does not own and is not owned by admin
+            ($product->user_id != $userId) &&
+            (!$product->user_id && $user->is_admin)
+        ) return response()->json(['success' => false, 'message' => 'Not allowed.'], 403);
 
         try{
             $validatedData = $request->validate([
                 "name" => "sometimes|string",
                 "price" => "sometimes|numeric|min:0",
-                "description" => "sometimes|string",
-                "active" => "sometimes|boolean",
-                "main_category" => "sometimes|integer",
+                "description" => "sometimes|string"
             ]);
 
             $product->update($validatedData);
+
         } catch (Exception $e) {
             return response()->json([
                 "success" => false,
@@ -112,7 +118,6 @@ class ProductsController extends Controller
 
     }
 
-    public function updateOferedService(){}
     public function deleteOferedService(){}
 
 }
