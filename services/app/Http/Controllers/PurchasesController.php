@@ -27,37 +27,73 @@ class PurchasesController extends Controller
 
         $userId = $this->retrieveId($token);
         if(!$userId) return response()->json(['success' => false, 'message' => 'Not allowed.'], 403);
-        $user = User::find($userId);
-
-        if(!$request['items']) return response()->json(['success' => false, 'message' => 'No product informed.'], 400);
 
         $items = $this->getProductsInfo($request['items']);
+        if(!$items) return response()->json(['success' => false, 'message' => 'No valid product informed.'], 400);
 
         try{
-            $purchase = Purchase::create([
-                'user_id' => $user->id
-            ]);
 
-            foreach($items as $item){
-                Order::create([
-                    'purchase_id' => $purchase->id,
-                    'product_id' => $item['id'],
-                    'amount' => $item['quantity'],
-                    'current_unit_price' => $item['unit_price'],
-                    'current_fee_percentage' => $item['fee_percentage']
-                ]);
-            }
+            $purchase = $this->createNewPurchase($userId);
 
-            $fee = $this->calculateFee($items);
+            $this->addProducts($purchase->id,$items);
 
-            $preference = $this->createPaymentPreference($user,$items,$purchase->id,$fee);
+            $dataForPayment = $this->generatePayment($purchase->id);
 
-            return response()->json($preference,201);
+            return response()->json($dataForPayment,201);
 
         }catch(Exception $e){
-            return $items;
+            return $e;
             return response()->json(['success' => false, 'message' => 'Something unexpected happened, please try again.'],500);
         }
+
+    }
+
+    public function createNewPurchase($userId) {
+        return Purchase::create([
+            'user_id' => $userId
+        ]);
+    }
+
+    public function addProducts($purchaseId,$products) {
+        foreach($products as $item){  
+            Order::create([
+                'purchase_id' => $purchaseId,
+                'product_type' => $item['type'],
+                'product_id' => $item['id'],
+                'quantity' => $item['quantity'],
+                'current_unit_price' => $item['unit_price'],
+                'current_fee_percentage' => $item['fee_percentage']
+            ]);
+        }
+    }
+
+    public function getPurchaseItems($purchaseId){
+        
+        $orders = Order::where('purchase_id',$purchaseId)->get()->toArray();
+
+        $items = [];
+
+        foreach ($orders as $order) {
+            $items[] = [
+                "id" => $order['product_id'],
+                "quantity" => $order['quantity']
+            ];
+        }
+
+        return $this->getProductsInfo($items);
+
+    }
+
+    public function generatePayment($purchaseId){
+
+        $items = $this->getPurchaseItems($purchaseId);
+        $fee = $this->calculateFee($items);
+        $purchase = Purchase::find($purchaseId);
+        $user = User::find($purchase->user_id);
+       
+        $preference = $this->createPaymentPreference($user,$items,$purchaseId,$fee);
+
+        return $preference;
 
     }
 
@@ -68,8 +104,8 @@ class PurchasesController extends Controller
         foreach($items as $item){
             $totalAmount += ($item['quantity'] * $item['unit_price']) * ($item['fee_percentage']/100);
         }
-
-        return $totalAmount;
+        
+        return round($totalAmount, 2);
 
     }
 
@@ -131,10 +167,11 @@ class PurchasesController extends Controller
 
         foreach ($products as $product) {
         
-            $productInfo = Products::find($product['id']);
+            $productInfo = Products::where('id',$product['id'])->where('active',1)->first();
 
             if ($productInfo) {
                 $productsData[] = [
+                    "type" => 'product',
                     "id" => $product['id'],
                     "title" => $productInfo->name,
                     "description" => $productInfo->description,
