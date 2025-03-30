@@ -8,6 +8,8 @@ use App\Models\User;
 use App\Models\Deal;
 use Exception;
 
+use App\Http\Controllers\PurchasesController;
+
 class DealsController extends Controller
 {
     public function listDeals(Request $request){
@@ -114,50 +116,71 @@ class DealsController extends Controller
             'success' => false,
             'message' => 'already answered'
         ], 409);
-        
+
+        $validatedData = $request->validate([
+            "answer" => "required|numeric|min:0|max:2",
+            "value" => "numeric|min:0|required_if:answer,2",
+            "starts_at" => "date|after_or_equal:now|required_if:answer,2",
+            "expires_at" => "date|required_if:answer,2",
+            "place" => "sometimes|numeric|min:0",
+            "message" => "string|required_if:answer,2",
+        ]);
+        $validatedData['answered_at'] = Carbon::now();
 
         try{
-            if($request['answer'] == 2){    
-                $validatedData = $request->validate([
-                    "answer" => "required|numeric|min:0|max:2",
-                    "value" => "required|numeric|min:0",
-                    "starts_at" => "required||date|after_or_equal:now",
-                    "expires_at" => "required|date",
-                    "place" => "sometimes|numeric|min:0|",
-                    "message" => "required|string",
-                ]);
+            switch($validatedData['answer']){
+                case 0: //Denied: save denied
+                    
+                    $this->runUpdate($id,$validatedData);
 
-                //must be inversed since it's a counter!
-                $validatedData['answer'] = null;
-                $validatedData['from'] = $userId;
-                $validatedData['to'] = $deal->from;
-                $validatedData['hirer'] = $deal->hirer;
-                $validatedData['worker'] = $deal->worker;
-                $validatedData['counter_prev'] = $deal->id;
-                
-                $newDeal = $this->runInsert($validatedData);
-                
-                $this->runUpdate($id,[
-                    "answer" => 2,
-                    'answered_at' => Carbon::now(),
-                    "counter_next" => $newDeal->id
-                ]);
+                    return response()->json([
+                        "success" => true,
+                    ],200);
 
-                return response()->json([
-                    "success" => true,
-                ],201);
+                break;
+                case 1: //Accepted: save accepted and create new purchase
 
-            }else{
-                $validatedData = $request->validate([
-                    "answer" => "required|numeric|min:0|max:2"
-                ]);
-                $validatedData['answered_at'] = Carbon::now();
-                $this->runUpdate($id,$validatedData);
+                    $this->runUpdate($id,$validatedData);
 
-                return response()->json([
-                    "success" => true,
-                ],200);
+                    //Create a new payment to be processed later
+                    // $purchasesController = new PurchasesController;
+                    // $purchasesController->newPurchase();
+
+                    return response()->json([
+                        "success" => true,
+                    ],200);
+
+                break;
+                case 2: //Answered with a counter-deal: save and create the new deal
+
+                    //must be inversed since it's a counter!
+                    $validatedData['answer'] = null;
+                    $validatedData['from'] = $userId;
+                    $validatedData['to'] = $deal->from;
+                    $validatedData['hirer'] = $deal->hirer;
+                    $validatedData['worker'] = $deal->worker;
+                    $validatedData['counter_prev'] = $deal->id;
+                    
+                    $newDeal = $this->runInsert($validatedData);
+                    
+                    $this->runUpdate($id,[
+                        "answer" => 2,
+                        'answered_at' => $validatedData['answered_at'],
+                        "counter_next" => $newDeal->id
+                    ]);
+    
+                    return response()->json([
+                        "success" => true,
+                    ],201);
+
+                break;
+                default:
+
+                    throw new Exception("Invalid option.",400);
+
+                break;
             }
+
         } catch (Exception $e) {
             return response()->json([
                 "success" => false,

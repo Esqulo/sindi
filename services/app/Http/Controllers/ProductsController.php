@@ -14,23 +14,33 @@ class ProductsController extends Controller
         return Products::where('active', true)->paginate(20);
     }
 
-    public function store(Request $request)
+    public function createOfferedService(Request $request)
     {
         $token = $request->header('Authorization');
-
-        if(!$token || !$this->userIsAdmin($token)) return response()->json(['success' => false, 'message' => 'Not allowed.'], 403);
+        $userId = $this->retrieveId($token);
+        if(!$userId) return response()->json(['success' => false, 'message' => 'Not allowed.'], 403);
 
         try{
 
             $validatedData = $request->validate([
                 "name" => "required|string",
                 "price" => "required|numeric|min:0",
+                "image" => "sometimes|string",
                 "description" => "required|string",
                 "active" => "sometimes|boolean",
                 "main_category" => "sometimes|integer",
             ]);
 
-            Products::create($validatedData);
+            Products::create([
+                "name" => $validatedData['name'],
+                "price" => $validatedData['price'],
+                "image" => $validatedData['image'] ?? "",
+                "description" => $validatedData['description'],
+                "active" => $validatedData['active'] ?? 1,
+                "main_category" => $validatedData['main_category'] ?? null,
+                "user_id" => $this->userIsAdmin($token) ? null : $userId
+            ]);
+
         } catch (Exception $e) {
             return response()->json([
                 "success" => false,
@@ -89,15 +99,5 @@ class ProductsController extends Controller
         $product->save();
 
         return response()->json(true);
-    }
-
-    public function edit(string $id)
-    {
-        return response()->json(['success' => false, 'message' => 'not found'], 404);
-    }
-
-    public function create()
-    {
-        return response()->json(['success' => false, 'message' => 'not found'], 404);
     }
 }
