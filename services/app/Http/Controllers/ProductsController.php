@@ -55,7 +55,7 @@ class ProductsController extends Controller
         return response()->json(true,201);
     }
 
-    public function show(int $id)
+    public function getServiceDetails(int $id)
     {
         $product = Products::find($id);
         if(!$product) return response()->json(['message' => 'Product not found'], 404);
@@ -104,4 +104,15 @@ class ProductsController extends Controller
 
         return response()->json(true);
     }
+
+    public function getUserOfferedServices(Request $request){
+
+        $userId = $this->retrieveId($request->header('Authorization'));
+        if(!$userId) return response()->json(['success' => false, 'message' => 'Not allowed.'], 403);
+
+    }
+
+    public function updateOferedService(){}
+    public function deleteOferedService(){}
+
 }

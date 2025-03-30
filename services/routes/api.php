@@ -51,6 +51,7 @@ Route::prefix('payment')->group(function(){
 Route::prefix('offeredservices')->group(function(){
     Route::get('/',[ProductsController::class, 'getUserOfferedServices']);
     Route::get('/{user_id}',[ProductsController::class, 'getUserOfferedServices']);
+    Route::get('/service/{service_id}',[ProductsController::class, 'getServiceDetails']);
     Route::post('/',[ProductsController::class, 'createOfferedService']);
     Route::put('/{service_id}',[ProductsController::class, 'updateOferedService']);
     Route::delete('/{service_id}',[ProductsController::class, 'deleteOferedService']);
