@@ -11,16 +11,6 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('offered_services', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('name');
-            $table->string('description');
-            $table->float('price');
-            $table->boolean('active')->default(1);
-        });
-
         Schema::create('avaliations', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('from');

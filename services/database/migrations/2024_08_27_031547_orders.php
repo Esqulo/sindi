@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->string('description',3000);
             $table->boolean('active')->default(1);
+            $table->unsignedBigInteger('user_id')->nullable();//Can be a offered by Sindi, wich means null user_id
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->integer('main_category')->nullable();
         });
         //Store user purchases
