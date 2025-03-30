@@ -24,11 +24,14 @@ class Products extends Model
         'fee_percentage',
         'description',
         'active',
-        'main_category'
+        'main_category',
+        'user_id'
     ];
 
     protected $hidden = [
-        'main_category'
+        'main_category',
+        'fee_percentage',
+        'active'
     ];
 
     protected $casts = [
@@ -38,7 +41,8 @@ class Products extends Model
         'fee_percentage' => 'float',
         'description' => 'string',
         'active' => 'boolean',
-        'main_category' => 'integer'
+        'main_category' => 'integer',
+        'user_id' => 'integer'
     ];
 
 }
