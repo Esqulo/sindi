@@ -27,7 +27,9 @@ abstract class Controller
 
     }
 
-    public function retrieveId(string $token){
+    public function retrieveId($token = ""){
+
+        if(!$token) return false;
 
         if (preg_match('/Bearer\s(\S+)/', $token, $matches)) $token = $matches[1];
 
