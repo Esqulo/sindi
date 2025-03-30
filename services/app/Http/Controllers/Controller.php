@@ -10,17 +10,10 @@ abstract class Controller
 {
     public function userIsAdmin(string $token){   
 
-        if (preg_match('/Bearer\s(\S+)/', $token, $matches)) $token = $matches[1];
+        $userId = $this->retrieveId($token);
 
-        $user_id = DB::table('auth')
-        ->where('token', $token)
-        ->where('expires_at', '>', now())
-        ->value('user_id');
+        $userData = DB::table('users')->find($userId);
 
-        if(!$user_id) return false;
-        
-        $userData = DB::table('users')->find($user_id);
-        
         if(!$userData->is_admin) return false;
 
         return true;
