@@ -74,8 +74,8 @@ class ProductsController extends Controller
         if(!$product) return response()->json(['message' => 'invalid data'], 404);
 
         if( //if user does not own and is not owned by admin
-            ($product->user_id != $userId) &&
-            (!$product->user_id && $user->is_admin)
+            (!$user->is_admin && $product->user_id != $userId) ||
+            ($user->is_admin && $product->user_id && $product->user_id != $userId)
         ) return response()->json(['success' => false, 'message' => 'Not allowed.'], 403);
 
         try{
@@ -109,8 +109,8 @@ class ProductsController extends Controller
         if(!$product) return response()->json(['message' => 'invalid data'], 404);
 
         if( //if user does not own and is not owned by admin
-            ($product->user_id != $userId) &&
-            (!$product->user_id && $user->is_admin)
+            (!$user->is_admin && $product->user_id != $userId) ||
+            ($user->is_admin && $product->user_id && $product->user_id != $userId)
         ) return response()->json(['success' => false, 'message' => 'Not allowed.'], 403);
 
         try{
