@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Products;
+use App\Models\User;
 use Exception;
 
 
@@ -18,7 +19,10 @@ class ProductsController extends Controller
     {
         $token = $request->header('Authorization');
         $userId = $this->retrieveId($token);
-        if(!$userId) return response()->json(['success' => false, 'message' => 'Not allowed.'], 403);
+
+        $user = User::find($userId);
+
+        if(!$user->is_admin && (!$userId || $user->user_type != 1)) return response()->json(['success' => false, 'message' => 'Not allowed.'], 403);
 
         try{
 
@@ -38,7 +42,7 @@ class ProductsController extends Controller
                 "description" => $validatedData['description'],
                 "active" => $validatedData['active'] ?? 1,
                 "main_category" => $validatedData['main_category'] ?? null,
-                "user_id" => $this->userIsAdmin($token) ? null : $userId
+                "user_id" => $user->is_admin == 1 ? null : $userId
             ]);
 
         } catch (Exception $e) {
