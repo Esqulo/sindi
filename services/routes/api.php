@@ -18,8 +18,7 @@ use Illuminate\Support\Facades\Route;
 Route::resources([
     'user' => UserController::class,
     'product' => ProductsController::class,
-    'meeting' => MeetingsController::class,
-    'offeredservices' => OfferedServicesController::class
+    'meeting' => MeetingsController::class
 ]);
 
 Route::prefix('nearby')->group(function(){
@@ -47,6 +46,14 @@ Route::prefix('payment')->group(function(){
     Route::post('/new',[PurchasesController::class, 'newPurchase']);
     Route::get('/retrieve/{transaction_id}',[PurchasesController::class, 'retrieve']);
     Route::post('/update',[PurchasesController::class, 'updateStatus']);
+});
+
+Route::prefix('offeredservices')->group(function(){
+    Route::get('/',[ProductsController::class, 'getUserOfferedServices']);
+    Route::get('/{user_id}',[ProductsController::class, 'getUserOfferedServices']);
+    Route::post('/',[ProductsController::class, 'createOfferedService']);
+    Route::put('/{service_id}',[ProductsController::class, 'updateOferedService']);
+    Route::delete('/{service_id}',[ProductsController::class, 'deleteOferedService']);
 });
 
 Route::prefix('deal')->group(function(){
