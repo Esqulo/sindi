@@ -97,18 +97,36 @@ class ProductsController extends Controller
         return response()->json(true,200);
     }
 
-    public function destroy(int $id, Request $request)
+    public function deleteOfferedService(Request $request, int $id)
     {
         $token = $request->header('Authorization');
-        if(!$token || !$this->userIsAdmin($token)) return response()->json(['success' => false, 'message' => 'Not allowed.'], 403);
+        $userId = $this->retrieveId($token);
+        if(!$userId) return response()->json(['success' => false, 'message' => 'Not allowed.'], 403);
 
-        $product = Products::find($id);
+        $user = User::find($userId);
+
+        $product = Products::where('id',$id)->where('active',1)->first();
         if(!$product) return response()->json(['message' => 'invalid data'], 404);
-       
-        $product->active = false;
-        $product->save();
 
-        return response()->json(true);
+        if( //if user does not own and is not owned by admin
+            ($product->user_id != $userId) &&
+            (!$product->user_id && $user->is_admin)
+        ) return response()->json(['success' => false, 'message' => 'Not allowed.'], 403);
+
+        try{
+
+            $product->update([
+                'active' => 0
+            ]);
+
+        } catch (Exception $e) {
+            return response()->json([
+                "success" => false,
+                "message" => $e->getMessage()
+            ],400);
+        }
+
+        return response()->json(true,200);
     }
 
     public function getUserOfferedServices(Request $request){
@@ -117,7 +135,5 @@ class ProductsController extends Controller
         if(!$userId) return response()->json(['success' => false, 'message' => 'Not allowed.'], 403);
 
     }
-
-    public function deleteOferedService(){}
 
 }

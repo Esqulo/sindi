@@ -54,7 +54,7 @@ Route::prefix('offeredservices')->group(function(){
     Route::get('/service/{service_id}',[ProductsController::class, 'getServiceDetails']);
     Route::post('/',[ProductsController::class, 'createOfferedService']);
     Route::put('/{service_id}',[ProductsController::class, 'updateOfferedService']);
-    Route::delete('/{service_id}',[ProductsController::class, 'deleteOferedService']);
+    Route::delete('/{service_id}',[ProductsController::class, 'deleteOfferedService']);
 });
 
 Route::prefix('deal')->group(function(){
