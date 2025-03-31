@@ -52,21 +52,16 @@ class DealsController extends Controller
     }
 
     public function createDeal(Request $request){
-        try{
-            $userId = $this->validateUser($request);
-        }catch(Exception $e){
-            return response([
-                'success' => false,
-                'message' => $e->getMessage()
-            ], 401);
-        }
+
+        $userId = $this->retrieveId($request->header('Authorization'));
+        if(!$userId) return response()->json(['success' => false, 'message' => 'Not allowed.'], 403);
 
         try{
 
             $validatedData = $request->validate([
                 "value" => "required|numeric|min:0",
                 "to" => "required|numeric|exists:users,id",
-                "starts_at" => "required||date|after_or_equal:now",
+                "starts_at" => "required|date|after_or_equal:now",
                 "expires_at" => "required|date",
                 "place" => "sometimes|numeric|min:0|",
                 "message" => "required|string",
@@ -76,7 +71,7 @@ class DealsController extends Controller
             $validatedData['hirer'] = $userId;
             $validatedData['worker'] = $validatedData['to'];
 
-            if(!$validatedData) throw new Exception('invalid data');
+            if(!$validatedData) throw new Exception('invalid data',400);
 
             $this->runInsert($validatedData);
 
@@ -90,48 +85,34 @@ class DealsController extends Controller
         return response()->json(true,201);
     }
 
-    public function answerDeal(Request $request,int $id){
+    public function answerDeal(Request $request,int $dealId){
         try{
-            $userId = $this->validateUser($request);
-        }catch(Exception $e){
-            return response([
-                'success' => false,
-                'message' => $e->getMessage()
-            ], 401);
-        }
+            $userId = $this->retrieveId($request->header('Authorization'));
+            if(!$userId) return response()->json(['success' => false, 'message' => 'Not allowed.'], 403);
 
-        $deal = Deal::find($id);
+            $deal = Deal::find($dealId);
 
-        if(!$deal) return response([
-            'success' => false,
-            'message' => 'deal not found'
-        ], 404);
+            if(!$deal) throw new Exception("deal not found.",404);
 
-        if($deal->to != $userId) return response([
-            'success' => false,
-            'message' => 'not allowed'
-        ], 403);
+            if($deal->to != $userId) throw new Exception("not allowed",403);
 
-        if($deal->answer != null) return response([
-            'success' => false,
-            'message' => 'already answered'
-        ], 409);
+            if($deal->answer != null) throw new Exception("already answered",409);
 
-        $validatedData = $request->validate([
-            "answer" => "required|numeric|min:0|max:2",
-            "value" => "numeric|min:0|required_if:answer,2",
-            "starts_at" => "date|after_or_equal:now|required_if:answer,2",
-            "expires_at" => "date|required_if:answer,2",
-            "place" => "sometimes|numeric|min:0",
-            "message" => "string|required_if:answer,2",
-        ]);
-        $validatedData['answered_at'] = Carbon::now();
-
-        try{
+            $validatedData = $request->validate([
+                "answer" => "required|numeric|min:0|max:2",
+                "value" => "numeric|min:0|required_if:answer,2",
+                "starts_at" => "date|after_or_equal:now|required_if:answer,2",
+                "expires_at" => "date|required_if:answer,2",
+                "place" => "sometimes|numeric|min:0",
+                "message" => "string|required_if:answer,2",
+            ]);
+        
             switch($validatedData['answer']){
                 case 0: //Denied: save denied
                     
-                    $this->runUpdate($id,$validatedData);
+                    $validatedData['answered_at'] = Carbon::now();
+
+                    $this->runUpdate($dealId,$validatedData);
 
                     return response()->json([
                         "success" => true,
@@ -139,12 +120,24 @@ class DealsController extends Controller
 
                 break;
                 case 1: //Accepted: save accepted and create new purchase
-
-                    $this->runUpdate($id,$validatedData);
+                   
+                    $alreadyMadeADeal = Deal::where('worker',$deal->worker)->where('answer',1)->first();
+                    $validatedData['answered_at'] = Carbon::now();
+                    
+                    $this->runUpdate($dealId,$validatedData);
 
                     //Create a new payment to be processed later
-                    // $purchasesController = new PurchasesController;
-                    // $purchasesController->newPurchase();
+                    $purchasesController = new PurchasesController;
+                    $purchase = $purchasesController->createNewPurchase($deal->hirer);
+                    $purchasesController->addProducts($purchase->id,[
+                        [
+                            'type' => 'deal',
+                            'id' => $deal['id'],
+                            'quantity' => 1,
+                            'unit_price' => $deal['value'],
+                            'fee_percentage' => $alreadyMadeADeal ? 0 : 100 //first deal has a 100% fee
+                        ]
+                    ]);
 
                     return response()->json([
                         "success" => true,
@@ -163,9 +156,9 @@ class DealsController extends Controller
                     
                     $newDeal = $this->runInsert($validatedData);
                     
-                    $this->runUpdate($id,[
+                    $this->runUpdate($dealId,[
                         "answer" => 2,
-                        'answered_at' => $validatedData['answered_at'],
+                        'answered_at' => Carbon::now(),
                         "counter_next" => $newDeal->id
                     ]);
     
@@ -184,8 +177,8 @@ class DealsController extends Controller
         } catch (Exception $e) {
             return response()->json([
                 "success" => false,
-                "message" => $e->getMessage()
-            ],400);
+                "message" => $e->getMessage() ?? "solicitação inválida"
+            ],$e->code ?? 400);
         }
     }
 
