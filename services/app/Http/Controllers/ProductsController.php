@@ -129,10 +129,16 @@ class ProductsController extends Controller
         return response()->json(true,200);
     }
 
-    public function getUserOfferedServices(Request $request){
+    public function getUserOfferedServices(Request $request, $userId = 0){
 
-        $userId = $this->retrieveId($request->header('Authorization'));
-        if(!$userId) return response()->json(['success' => false, 'message' => 'Not allowed.'], 403);
+        if($userId == 0){
+            $userId = $this->retrieveId($request->header('Authorization'));
+            if(!$userId) return response()->json(['success' => false, 'message' => 'User not found'], 404);
+        }
+
+        $offeredServices = Products::where('user_id',$userId)->where('active',1)->get();
+
+        return response()->json($offeredServices,200);
 
     }
 
