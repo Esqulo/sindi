@@ -31,7 +31,8 @@ class Deal extends Model
         'starts_at',
         'expires_at',
         'place',
-        'message'
+        'message',
+        'purchase_id'
     ];
 
     protected $hidden = [
@@ -52,6 +53,7 @@ class Deal extends Model
         'starts_at' => 'date',
         'expires_at' => 'date',
         'place' => 'integer',
-        'message' => 'string'
+        'message' => 'string',
+        'purchase_id' => 'integer'
     ];
 }
