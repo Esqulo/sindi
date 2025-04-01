@@ -34,6 +34,9 @@ return new class extends Migration
             $table->unsignedBigInteger('place')->nullable();
             $table->foreign('place')->references('id')->on('places')->onDelete('set null');
             $table->text('message');
+            $table->boolean('paid')->default(0);
+            $table->unsignedBigInteger('purchase_id')->nullable();
+            $table->foreign('purchase_id')->references('id')->on('purchases')->onDelete('no action');
         });
         
         Schema::create('meetings', function (Blueprint $table) {
