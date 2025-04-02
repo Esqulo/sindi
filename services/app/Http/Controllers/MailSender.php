@@ -80,4 +80,24 @@ class MailSender extends Controller
 
     }
 
+    public function sendPaymentEmail($paymentData){
+        $user_email = $paymentData['payer']['email'];
+        $link = $paymentData['init_point'];
+        $template = "
+            <div style=\"width:100%\">
+                <h1 style=\"text-align:center; font-family:Arial;\">Link para pagamento - Sindi</h1>
+                <span style=\"font-family:Arial;\">
+                    Você está recebendo este email devido ao contrato assinado em <a href=\"sindibr.com.br\">sindibr.com.br</a>.
+                </span>
+                <br><br>
+                <span style=\"font-family:Arial;\">
+                    Para prosseguir com o pagamento <a href=\"$link\">clique aqui</a>
+                </span>
+                <br><br>
+                <i>Você pode encontrar mais informações sobre seu contrato no nosso site, caso necessário, entre em contato com o suporte.</i>
+                <br>
+            </div>
+        ";
+        $this->sendEmail($user_email,'Sindi - Link para pagamento',$template);
+    }
 }
