@@ -1,6 +1,4 @@
-// const BASE_URL = '/services/api';
-// const BASE_URL = 'http://127.0.0.1:80/sindi/services/api';
-const BASE_URL = 'https://127.0.0.1:443/sindi/services/api';
+const BASE_URL = process.env.REACT_APP_BASE_API_URL;
 
 const Api = {
     login: async ({username, password}) => {
@@ -118,6 +116,7 @@ const Api = {
         }
     },
     getMyChats: async (page = 1) => {
+        console.log(BASE_URL);
         try{
             const req = await fetch(`${BASE_URL}/chat?page=${page}`,{
                 'method': 'GET',
