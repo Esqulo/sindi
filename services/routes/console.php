@@ -11,6 +11,13 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote')->hourly();
 
+Artisan::command('test:send_email', function () {
+
+    $mailSender = new MailSender;
+    $mailSender->sendEmail('juan.elias.cunha@gmail.com','Email Teste', 'Email Teste');
+
+})->purpose('send payment links to purchases of 30 days or older that haven`t been paid.');
+
 Artisan::command('process:payment_links', function () {
 
     $unpaidPurchasesQuery =
