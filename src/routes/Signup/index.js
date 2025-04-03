@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./styles.css";
 
 import CustomForm from "../../components/CustomForm";
@@ -7,6 +8,8 @@ import CustomRadioContainer from "../../components/CustomRadioContainer";
 import Api from "../../Api";
 
 function Signup() {
+
+	const navigate = useNavigate();
 
 	const [selectedRadio, setSelectedRadio] = useState("");
 	const [formError, setFormError] = useState("");
@@ -88,7 +91,7 @@ function Signup() {
 			let api_response = await Api.newUser(formValues);
 			if(api_response.status !== 201) throw api_response;
 
-			window.location.href = '/login?welcome=true';
+			navigate('/login?welcome=true');
 
 		} catch (error) {
 			setFormError(`Erro: Operação não realizada. <br><br> Mensagem: ${error.message}. cod.: ${error.status}.`);

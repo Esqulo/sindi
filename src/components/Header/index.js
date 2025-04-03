@@ -1,8 +1,12 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./styles.css";
 import Logo from "../../assets/logo-with-name.png";
 
 function Banner(){
+
+    const navigate = useNavigate();
+
     const [openDropdown, setOpenDropdown] = useState(null);
 
     const toggleDropdown = (menu) => {
@@ -15,7 +19,7 @@ function Banner(){
                 <img src={Logo} className="mainheader-logo" alt="Logo"/>
                 <div className="mainheader-option-container">
                     
-                    <a href="/"><div className="mainheader-item">Início</div></a>
+                    <a href="#/"><div className="mainheader-item">Início</div></a>
 
                     <div className="mainheader-item" onClick={() => toggleDropdown("services")}>
                         Conheça a Sindi
@@ -30,8 +34,8 @@ function Banner(){
 
                 </div>
                 <div className="mainheader-account-container">
-                    <button className="mainheader-account-sign clickable" onClick={() => {window.location.href = "/signup"}}>Criar conta</button>
-                    <button className="mainheader-account-log clickable" onClick={() => {window.location.href = "/login"}}>Entrar</button>
+                    <button className="mainheader-account-sign clickable" onClick={() => {navigate("/signup")}}>Criar conta</button>
+                    <button className="mainheader-account-log clickable" onClick={() => {navigate("/login")}}>Entrar</button>
                 </div>
             </div>
         </div>
