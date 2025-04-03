@@ -116,7 +116,6 @@ const Api = {
         }
     },
     getMyChats: async (page = 1) => {
-        console.log(BASE_URL);
         try{
             const req = await fetch(`${BASE_URL}/chat?page=${page}`,{
                 'method': 'GET',
