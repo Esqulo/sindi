@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Artisan;
 
 use App\Http\Controllers\PurchasesController;
 use App\Http\Controllers\MailSender;
+use Google\Service\CloudControlsPartnerService\Console;
 use Illuminate\Support\Facades\DB;
 
 Artisan::command('inspire', function () {
@@ -37,7 +38,13 @@ Artisan::command('process:payment_links', function () {
 
     foreach($unpaidPurchases as $purchase){
         try{
-            $paymentData = $purchasesController->generatePayment($purchase->purchase_id);
+            $paymentResponse = $purchasesController->generatePayment($purchase->purchase_id);
+            $paymentData = [
+                'payer' => [
+                    'email' => $paymentResponse->payer->email,
+                ],
+                'init_point' => $paymentResponse->init_point
+            ];
             $mailSender->sendPaymentEmail($paymentData);
         }catch(Exception $e){
             //log error
