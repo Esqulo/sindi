@@ -190,4 +190,13 @@ class DealsController extends Controller
         $deal = Deal::find($id);
         $deal->update($data);
     }
+
+    public function checkIfUserHasPendingDeals($userId){
+        $hasPendingDeals = Deal::where('to', $userId)
+            ->where('answer', null)
+            ->where('created_at', '<=', Carbon::now()->subDays(env('LIMIT_DAYS_TO_ANWER_DEAL')))
+            ->first();
+
+        return (bool) $hasPendingDeals;
+    }
 }
