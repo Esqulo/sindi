@@ -13,20 +13,83 @@ use App\Http\Controllers\PurchasesController;
 class DealsController extends Controller
 {
     public function listDeals(Request $request){
-        try{
-            $userId = $this->validateUser($request);
-        }catch(Exception $e){
-            return response([
-                'success' => false,
-                'message' => $e->getMessage()
-            ], 401);
+       
+        $userId = $this->retrieveId($request->header('Authorization'));
+        if(!$userId) return response()->json(['success' => false, 'message' => 'Not allowed.'], 403);
+
+        $page = (int) $request->query('page', 1);
+        $perPage = 10;
+
+        $deals = Deal::whereNull('counter_prev')
+            ->where(function ($query) use ($userId) {
+                $query->where('from', $userId)
+                    ->orWhere('to', $userId);
+            })
+            ->orderBy('created_at', 'desc')
+            ->forPage($page, $perPage)
+            ->get();
+
+        $dealsData = [];
+
+        forEach($deals as $deal){
+
+            $otherUserData = [];
+             
+            if($deal->from == $userId){
+                $otherUserData = $this->getUserData($deal->to);
+            }else if($deal->to == $userId){
+                $otherUserData = $this->getUserData($deal->from);
+            }
+
+            switch ($deal->answer) {
+                case 0:
+                    $status = "recusado";
+                    $last_update = $deal->answered_at;
+                break;
+                case 1:
+                    $status = "aceito";
+                    $last_update = $deal->answered_at;
+                break;
+                case 2:
+                    $currentStatus = $this->getCurrentDealData($deal->id);
+                    $status = $currentStatus->answer == 0 ? "recusado" : "aceito";
+                    $last_update = $currentStatus->created_at;
+                break;
+                default:
+                    $status = "pendente";
+                    $last_update = $deal->created_at;
+                break;
+            }
+
+            $dealsData[] = [
+                'id' => $deal->id,
+                'title' => $otherUserData->name ?? 'desconhecido',
+                'image' => $otherUserData->avatar ?? null,
+                'status' => $status ?? 'desconhecido',
+                'last_update' => $last_update ?? 'desconhecido'
+            ];
+        }
+
+        return [
+            'data' => $dealsData
+        ];
+    }
+
+    private function getCurrentDealData($dealId){
+
+        $baseDeal = Deal::find($dealId);
+        if($baseDeal->counter_next == null) return $baseDeal;
+
+        $nextDeal = Deal::find($baseDeal->counter_next);
+        $currentDeal = null;
+
+        while($currentDeal == null){
+            if($nextDeal->counter_next == null) $currentDeal = $nextDeal;
+            else $nextDeal = Deal::find($nextDeal->counter_next);
         }
         
-        return Deal::where('from', $userId)
-                ->orWhere('to', $userId)
-                ->where('expires_at', '>=', Carbon::now())
-                ->orderBy('created_at', 'desc') 
-                ->paginate(10);
+       return $currentDeal;
+
     }
 
     public function viewDealDetails(Request $request,int $id){
