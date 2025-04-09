@@ -84,4 +84,10 @@ abstract class Controller
         ->value('email');
     }
 
+    public function getUserFullName($user_id){
+        return DB::table('users')
+        ->where('id', $user_id)
+        ->value('name');
+    }
+
 }
