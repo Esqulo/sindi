@@ -93,25 +93,72 @@ class DealsController extends Controller
     }
 
     public function viewDealDetails(Request $request,int $id){
-        try{
-            $userId = $this->validateUser($request);
-        }catch(Exception $e){
-            return response([
-                'success' => false,
-                'message' => $e->getMessage()
-            ], 401);
-        }
+
+        $userId = $this->retrieveId($request->header('Authorization'));
+        if(!$userId) return response()->json(['success' => false, 'message' => 'Not allowed.'], 403);
 
         $deal = Deal::find($id);
 
-        if($deal->from != $userId && $deal->to != $userId){
-            return response([
-                'success' => false,
-                'message' => 'not allowed'
-            ], 403);
+        if($deal->from != $userId && $deal->to != $userId) return response([
+            'success' => false,
+            'message' => 'not allowed'
+        ], 403);
+
+        $root_deal = $deal;
+
+        while($root_deal->counter_prev != null){
+            $root_deal = Deal::find($root_deal->counter_prev);
         }
 
-        return $deal;
+        $current_deal = [];
+        $temp_deal = $root_deal;
+        $current_deal = $root_deal;
+        $reached_end = false;
+
+        while(!$reached_end){
+
+            if($temp_deal->counter_next == null){
+                $current_deal = $this->parseDealDetails($temp_deal);
+                $reached_end = true;
+            }else{
+                $history[] = $this->parseDealDetails($temp_deal);
+                $temp_deal = Deal::find($temp_deal->counter_next);
+            } 
+
+        }
+
+        return [
+            'current_deal'=> $current_deal,
+            'history' => $history
+        ];
+    }
+
+    private function parseDealDetails($deal){
+        $response = [
+            'id' => $deal->id,
+            'from' => $this->getUserFullName($deal->from),
+            'to' => $this->getUserFullName($deal->to),
+            'message' => $deal->message,
+            'value' => $deal->value,
+            'answered_at' => $deal->answered_at->format('d/m/Y H:i') ?? null,
+        ];
+
+        switch ($deal->answer) {
+            case 0:
+                $response['status'] = "recusado";
+            break;
+            case 1:
+                $response['status'] = "aceito";
+            break;
+            case 2:
+                $response['status'] = "contraproposta";
+            break;
+            default:
+                $response['status'] = "pendente";
+            break;
+        }
+
+        return $response;
     }
 
     public function createDeal(Request $request){
