@@ -42,15 +42,15 @@ class DealsController extends Controller
             }
 
             switch ($deal->answer) {
-                case 0:
+                case '0':
                     $status = "recusado";
                     $last_update = $deal->answered_at;
                 break;
-                case 1:
+                case '1':
                     $status = "aceito";
                     $last_update = $deal->answered_at;
                 break;
-                case 2:
+                case '2':
                     $currentStatus = $this->getCurrentDealData($deal->id);
                     $status = $currentStatus->answer == 0 ? "recusado" : "aceito";
                     $last_update = $currentStatus->created_at;
