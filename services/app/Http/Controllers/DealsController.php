@@ -114,6 +114,7 @@ class DealsController extends Controller
         $temp_deal = $root_deal;
         $current_deal = $root_deal;
         $reached_end = false;
+        $history = [];
 
         while(!$reached_end){
 
