@@ -141,7 +141,7 @@ class DealsController extends Controller
             'to' => $this->getUserFullName($deal->to),
             'message' => $deal->message,
             'value' => $deal->value,
-            'answered_at' => $deal->answered_at->format('d/m/Y H:i') ?? null,
+            'answered_at' => $deal->answered_at ? $deal->answered_at->format('d/m/Y H:i') : null
         ];
 
         switch ($deal->answer) {
