@@ -56,7 +56,7 @@ function Profile(){
             <Certificates certificatesItems={certificates}/>
             <Reviews/>
             <Similar/>
-            <Comments/>
+            {/* <Comments/> */}
         </div>
     );
 }
