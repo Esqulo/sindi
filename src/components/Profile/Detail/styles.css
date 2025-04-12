@@ -1,0 +1,71 @@
+.profile-detail-content{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+.profile-detail{
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    margin-left: 1rem;
+    margin-top: 1rem;
+}
+
+
+.avatar-content {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    width: 30%;
+    position: relative; 
+    top: -135px;
+}
+
+.avatar-area {
+    background-color: transparent;
+    border-radius: 50%;
+    position: relative;
+    display: inline-block;
+}
+  
+.avatar-img {
+    width: 250px;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.avatar-seal {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    width: 50px;
+    height: 50px;
+}
+
+
+ul{
+    list-style: none;
+}
+
+.profile-info{
+    font-size: 16px;
+    color: #555;
+    margin: 10px 0;
+    line-height: 1.5;
+}
+
+.biografia{
+    display: flex;
+    align-items: center;
+    max-width: 80%;
+    
+}
+
+.description {
+    font-size: 14px;
+    color: #444;
+    margin-top: 20px;
+    line-height: 1.6;
+}

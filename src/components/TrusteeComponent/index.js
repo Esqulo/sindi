@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import { Link } from 'react-router-dom';
 import "./styles.css";
 
 import CustomImgComponent from "../CustomImgComponent";
@@ -48,14 +49,15 @@ function TrusteeComponent({trusteeData}){
                 </div>
                 <div className="tsc-right-content">
                     {trusteeData.username &&
-                        <a href={`/profile/${trusteeData.username}`}>
+                                <Link to="/profile"state={{ id_user: trusteeData.name }}>
+                                    
                             <div className="tsc-see-profile" onMouseEnter={()=>setchevronColor("#000")} onMouseLeave={()=>setchevronColor("#555")}>
                                 <span>ver perfil</span>
                                 <div className="tsc-chevron-container">
                                     <Chevron color={chevronColor}/>
                                 </div>
                             </div>
-                        </a>
+                            </Link>
                     }
                 </div>
             </div>
