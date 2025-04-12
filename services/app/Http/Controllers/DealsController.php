@@ -211,19 +211,23 @@ class DealsController extends Controller
 
             $validatedData = $request->validate([
                 "answer" => "required|numeric|min:0|max:2",
-                "value" => "numeric|min:0|required_if:answer,2",
-                "starts_at" => "date|after_or_equal:now|required_if:answer,2",
-                "expires_at" => "date|required_if:answer,2",
+                "value" => "nullable|numeric|min:0|required_if:answer,2",
+                "starts_at" => "nullable|date|after_or_equal:now|required_if:answer,2",
+                "expires_at" => "nullable|date|required_if:answer,2",
                 "place" => "sometimes|numeric|min:0",
-                "message" => "string|required_if:answer,2",
+                "message" => "nullable|string|required_if:answer,2",
             ]);
         
             switch($validatedData['answer']){
                 case 0: //Denied: save denied
-                    
-                    $validatedData['answered_at'] = Carbon::now();
 
-                    $this->runUpdate($dealId,$validatedData);
+                    //Avoid updateing other fields in case they are sent with answer 0 ex.: value null
+                    $dataToUpdate = [
+                        'answered_at' => Carbon::now(),
+                        'answer' => $validatedData['answer'],
+                    ];
+
+                    $this->runUpdate($dealId,$dataToUpdate);
 
                     return response()->json([
                         "success" => true,
@@ -233,9 +237,13 @@ class DealsController extends Controller
                 case 1: //Accepted: save accepted and create new purchase
                    
                     $alreadyMadeADeal = Deal::where('worker',$deal->worker)->where('answer',1)->first();
-                    $validatedData['answered_at'] = Carbon::now();
+
+                    $dataToUpdate = [
+                        'answered_at' => Carbon::now(),
+                        'answer' => $validatedData['answer'],
+                    ];
                     
-                    $this->runUpdate($dealId,$validatedData);
+                    $this->runUpdate($dealId,$dataToUpdate);
 
                     //Create a new payment to be processed later
                     $purchasesController = new PurchasesController;
