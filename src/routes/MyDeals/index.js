@@ -81,7 +81,6 @@ function MyDeals() {
         getDealDetails(answeredDealId);
     }
 
-
     return (
         <div className="deals-container column-centered">
             <div className="deals-content row-centered">
