@@ -172,7 +172,7 @@ class DealsController extends Controller
             break;
             default:
                 $response['status'] = "pendente";
-                $deal->to == $userId ? $response['requestingUserShouldAnswer'] = true : $response['requestingUserShouldAnswer'] = false;
+                $response['requestingUserShouldAnswer'] = $deal->to == $userId ? true : false;
             break;
         }
 
