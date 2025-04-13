@@ -52,8 +52,24 @@ class DealsController extends Controller
                 break;
                 case '2':
                     $currentStatus = $this->getCurrentDealData($deal->id);
-                    $status = $currentStatus->answer == 0 ? "recusado" : "aceito";
-                    $last_update = $currentStatus->created_at;
+                    switch($currentStatus->answer){
+                        case '0':
+                            $status = "recusado";
+                            $last_update = $currentStatus->answered_at;
+                        break;
+                        case '1':
+                            $status = "aceito";
+                            $last_update = $currentStatus->answered_at;
+                        break;
+                        case '2':
+                            $status = "contraproposta";
+                            $last_update = $currentStatus->answered_at;
+                        break;
+                        default:
+                            $status = "pendente";
+                            $last_update = $currentStatus->created_at;
+                        break;
+                    }
                 break;
                 default:
                     $status = "pendente";
@@ -110,31 +126,28 @@ class DealsController extends Controller
             $root_deal = Deal::find($root_deal->counter_prev);
         }
 
-        $current_deal = [];
         $temp_deal = $root_deal;
-        $current_deal = $root_deal;
         $reached_end = false;
         $history = [];
 
         while(!$reached_end){
 
+            $history[] = $this->parseDealDetails($temp_deal, $userId);
+
             if($temp_deal->counter_next == null){
-                $current_deal = $this->parseDealDetails($temp_deal);
                 $reached_end = true;
             }else{
-                $history[] = $this->parseDealDetails($temp_deal);
                 $temp_deal = Deal::find($temp_deal->counter_next);
             } 
 
         }
 
         return [
-            'current_deal'=> $current_deal,
-            'history' => $history
+            'deals' => $history
         ];
     }
 
-    private function parseDealDetails($deal){
+    private function parseDealDetails($deal, $userId){
         $response = [
             'id' => $deal->id,
             'from' => $this->getUserFullName($deal->from),
@@ -145,17 +158,18 @@ class DealsController extends Controller
         ];
 
         switch ($deal->answer) {
-            case 0:
+            case '0':
                 $response['status'] = "recusado";
             break;
-            case 1:
+            case '1':
                 $response['status'] = "aceito";
             break;
-            case 2:
+            case '2':
                 $response['status'] = "contraproposta";
             break;
             default:
                 $response['status'] = "pendente";
+                $deal->to == $userId ? $response['requestingUserShouldAnswer'] = true : $response['requestingUserShouldAnswer'] = false;
             break;
         }
 
