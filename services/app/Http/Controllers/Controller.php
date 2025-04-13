@@ -78,10 +78,22 @@ abstract class Controller
 
     }
 
+    public function getUserData($user_id){
+        return DB::table('users')
+        ->where('id', $user_id)
+        ->first();
+    }
+
     public function getUserEmail($user_id){
         return DB::table('users')
         ->where('id', $user_id)
         ->value('email');
+    }
+
+    public function getUserFullName($user_id){
+        return DB::table('users')
+        ->where('id', $user_id)
+        ->value('name');
     }
 
 }

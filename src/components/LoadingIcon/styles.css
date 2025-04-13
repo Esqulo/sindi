@@ -3,6 +3,8 @@
     border-radius: 50%;
     position: relative;
     animation: rotate 2s linear infinite;
+    flex-grow: 0;
+    flex-shrink: 0;
 }
 
 .loader::before {

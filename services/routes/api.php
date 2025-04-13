@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Middleware\CheckPendingDeals;
+
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\NearbyController;
 use App\Http\Controllers\AuthController;
@@ -14,6 +16,11 @@ use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\MercadoPagoController;
 use Illuminate\Support\Facades\Route;
+
+// Route::middleware(['PendingDealsGroup'])->group(function () {
+
+
+// });
 
 Route::resources([
     'user' => UserController::class,

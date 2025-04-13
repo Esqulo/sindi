@@ -13,42 +13,170 @@ use App\Http\Controllers\PurchasesController;
 class DealsController extends Controller
 {
     public function listDeals(Request $request){
-        try{
-            $userId = $this->validateUser($request);
-        }catch(Exception $e){
-            return response([
-                'success' => false,
-                'message' => $e->getMessage()
-            ], 401);
+       
+        $userId = $this->retrieveId($request->header('Authorization'));
+        if(!$userId) return response()->json(['success' => false, 'message' => 'Not allowed.'], 403);
+
+        $page = (int) $request->query('page', 1);
+        $perPage = 10;
+
+        $deals = Deal::whereNull('counter_prev')
+            ->where(function ($query) use ($userId) {
+                $query->where('from', $userId)
+                    ->orWhere('to', $userId);
+            })
+            ->orderBy('created_at', 'desc')
+            ->forPage($page, $perPage)
+            ->get();
+
+        $dealsData = [];
+
+        forEach($deals as $deal){
+
+            $otherUserData = [];
+             
+            if($deal->from == $userId){
+                $otherUserData = $this->getUserData($deal->to);
+            }else if($deal->to == $userId){
+                $otherUserData = $this->getUserData($deal->from);
+            }
+
+            switch ($deal->answer) {
+                case '0':
+                    $status = "recusado";
+                    $last_update = $deal->answered_at;
+                break;
+                case '1':
+                    $status = "aceito";
+                    $last_update = $deal->answered_at;
+                break;
+                case '2':
+                    $currentStatus = $this->getCurrentDealData($deal->id);
+                    switch($currentStatus->answer){
+                        case '0':
+                            $status = "recusado";
+                            $last_update = $currentStatus->answered_at;
+                        break;
+                        case '1':
+                            $status = "aceito";
+                            $last_update = $currentStatus->answered_at;
+                        break;
+                        case '2':
+                            $status = "contraproposta";
+                            $last_update = $currentStatus->answered_at;
+                        break;
+                        default:
+                            $status = "pendente";
+                            $last_update = $currentStatus->created_at;
+                        break;
+                    }
+                break;
+                default:
+                    $status = "pendente";
+                    $last_update = $deal->created_at;
+                break;
+            }
+
+            $dealsData[] = [
+                'id' => $deal->id,
+                'title' => $otherUserData->name ?? 'desconhecido',
+                'image' => $otherUserData->avatar ?? null,
+                'status' => $status ?? 'desconhecido',
+                'last_update' => $last_update->format('d/m/Y H:i')?? 'desconhecido'
+            ];
+        }
+
+        return [
+            'data' => $dealsData
+        ];
+    }
+
+    private function getCurrentDealData($dealId){
+
+        $baseDeal = Deal::find($dealId);
+        if($baseDeal->counter_next == null) return $baseDeal;
+
+        $nextDeal = Deal::find($baseDeal->counter_next);
+        $currentDeal = null;
+
+        while($currentDeal == null){
+            if($nextDeal->counter_next == null) $currentDeal = $nextDeal;
+            else $nextDeal = Deal::find($nextDeal->counter_next);
         }
         
-        return Deal::where('from', $userId)
-                ->orWhere('to', $userId)
-                ->where('expires_at', '>=', Carbon::now())
-                ->orderBy('created_at', 'desc') 
-                ->paginate(10);
+       return $currentDeal;
+
     }
 
     public function viewDealDetails(Request $request,int $id){
-        try{
-            $userId = $this->validateUser($request);
-        }catch(Exception $e){
-            return response([
-                'success' => false,
-                'message' => $e->getMessage()
-            ], 401);
-        }
+
+        $userId = $this->retrieveId($request->header('Authorization'));
+        if(!$userId) return response()->json(['success' => false, 'message' => 'Not allowed.'], 403);
 
         $deal = Deal::find($id);
 
-        if($deal->from != $userId && $deal->to != $userId){
-            return response([
-                'success' => false,
-                'message' => 'not allowed'
-            ], 403);
+        if($deal->from != $userId && $deal->to != $userId) return response([
+            'success' => false,
+            'message' => 'not allowed'
+        ], 403);
+
+        $root_deal = $deal;
+
+        while($root_deal->counter_prev != null){
+            $root_deal = Deal::find($root_deal->counter_prev);
         }
 
-        return $deal;
+        $temp_deal = $root_deal;
+        $reached_end = false;
+        $history = [];
+
+        while(!$reached_end){
+
+            $history[] = $this->parseDealDetails($temp_deal, $userId);
+
+            if($temp_deal->counter_next == null){
+                $reached_end = true;
+            }else{
+                $temp_deal = Deal::find($temp_deal->counter_next);
+            } 
+
+        }
+
+        return [
+            'deals' => $history
+        ];
+    }
+
+    private function parseDealDetails($deal, $userId){
+        $response = [
+            'id' => $deal->id,
+            'from' => $this->getUserFullName($deal->from),
+            'to' => $this->getUserFullName($deal->to),
+            'message' => $deal->message,
+            'value' => $deal->value,
+            'starts_at' => $deal->starts_at->format('d/m/Y H:i'),
+            'expires_at' => $deal->expires_at->format('d/m/Y H:i'),
+            'created_at' => $deal->created_at->format('d/m/Y H:i'),
+            'answered_at' => $deal->answered_at ? $deal->answered_at->format('d/m/Y H:i') : null
+        ];
+
+        switch ($deal->answer) {
+            case '0':
+                $response['status'] = "recusado";
+            break;
+            case '1':
+                $response['status'] = "aceito";
+            break;
+            case '2':
+                $response['status'] = "contraproposta";
+            break;
+            default:
+                $response['status'] = "pendente";
+                $response['requestingUserShouldAnswer'] = $deal->to == $userId ? true : false;
+            break;
+        }
+
+        return $response;
     }
 
     public function createDeal(Request $request){
@@ -100,19 +228,23 @@ class DealsController extends Controller
 
             $validatedData = $request->validate([
                 "answer" => "required|numeric|min:0|max:2",
-                "value" => "numeric|min:0|required_if:answer,2",
-                "starts_at" => "date|after_or_equal:now|required_if:answer,2",
-                "expires_at" => "date|required_if:answer,2",
+                "value" => "nullable|numeric|min:0|required_if:answer,2",
+                "starts_at" => "nullable|date|after_or_equal:now|required_if:answer,2",
+                "expires_at" => "nullable|date|required_if:answer,2",
                 "place" => "sometimes|numeric|min:0",
-                "message" => "string|required_if:answer,2",
+                "message" => "nullable|string|required_if:answer,2",
             ]);
         
             switch($validatedData['answer']){
                 case 0: //Denied: save denied
-                    
-                    $validatedData['answered_at'] = Carbon::now();
 
-                    $this->runUpdate($dealId,$validatedData);
+                    //Avoid updateing other fields in case they are sent with answer 0 ex.: value null
+                    $dataToUpdate = [
+                        'answered_at' => Carbon::now(),
+                        'answer' => $validatedData['answer'],
+                    ];
+
+                    $this->runUpdate($dealId,$dataToUpdate);
 
                     return response()->json([
                         "success" => true,
@@ -122,9 +254,13 @@ class DealsController extends Controller
                 case 1: //Accepted: save accepted and create new purchase
                    
                     $alreadyMadeADeal = Deal::where('worker',$deal->worker)->where('answer',1)->first();
-                    $validatedData['answered_at'] = Carbon::now();
+
+                    $dataToUpdate = [
+                        'answered_at' => Carbon::now(),
+                        'answer' => $validatedData['answer'],
+                    ];
                     
-                    $this->runUpdate($dealId,$validatedData);
+                    $this->runUpdate($dealId,$dataToUpdate);
 
                     //Create a new payment to be processed later
                     $purchasesController = new PurchasesController;
@@ -189,5 +325,14 @@ class DealsController extends Controller
     private function runUpdate($id,$data){
         $deal = Deal::find($id);
         $deal->update($data);
+    }
+
+    public function checkIfUserHasPendingDeals($userId){
+        $hasPendingDeals = Deal::where('to', $userId)
+            ->where('answer', null)
+            ->where('created_at', '<=', Carbon::now()->subDays(env('LIMIT_DAYS_TO_ANWER_DEAL')))
+            ->first();
+
+        return (bool) $hasPendingDeals;
     }
 }

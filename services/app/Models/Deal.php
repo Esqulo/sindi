@@ -50,8 +50,8 @@ class Deal extends Model
         'answered_at' => 'datetime',
         'counter_prev' => 'integer',
         'counter_next' => 'integer',
-        'starts_at' => 'date',
-        'expires_at' => 'date',
+        'starts_at' => 'datetime',
+        'expires_at' => 'datetime',
         'place' => 'integer',
         'message' => 'string',
         'purchase_id' => 'integer'

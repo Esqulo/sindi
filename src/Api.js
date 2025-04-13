@@ -191,7 +191,66 @@ const Api = {
                 error: error
             };
         }
-    }
+    },
+    getDeals: async (page = 1) => {
+        try{
+            const req = await fetch(`${BASE_URL}/deal?page=${page}`,{
+                method: 'GET',
+                headers: { 
+                    'Accept': 'application/json', 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem("token")}`
+                },
+            });
+            const json = await req.json();
+            return json.data;
+        }
+        catch(error){
+            return {
+                error: error
+            };
+        }
+    },
+    getDealDetails: async (dealId) => {
+        try{
+            const req = await fetch(`${BASE_URL}/deal/${dealId}`,{
+                method: 'GET',
+                headers: { 
+                    'Accept': 'application/json', 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem("token")}`
+                },
+            });
+            const json = await req.json();
+            return json;
+        }
+        catch(error){
+            return {
+                error: error
+            };
+        }
+    },
+    answerDeal: async (dealId,dealData) => {
+        try{
+            const req = await fetch(`${BASE_URL}/deal/answer/${dealId}`,{
+                method: 'PUT',
+                headers: { 
+                    'Accept': 'application/json', 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem("token")}`
+                },
+                body: JSON.stringify(dealData)
+            });
+            const json = await req.json();
+            return json;
+        }
+        catch(error){
+            return {
+                error: error
+            };
+        }
+    },
+    // createDeal: async (dealData) => {},
 }
 
 export default Api;

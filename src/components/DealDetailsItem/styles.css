@@ -1,0 +1,171 @@
+.deal_details_item{
+    box-shadow: 0 0 10px 3px #94949454;
+    width: 100%;
+    border-radius: 10px;
+}
+
+.deal_details_item-header{
+    text-align: left;
+    justify-content: space-between;
+    border-bottom: 2px solid #000;
+    width: 100%;
+    padding: 10px;
+}
+
+.deal_details_item-message{
+    width: 100%;
+    padding: 10px;
+    border-bottom: 2px solid #000;
+}
+
+.deal_details_item-footer{
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.deal_details_item-footer-price{
+    font-size: 20px;
+    font-weight: bold;
+    color: #000;
+}
+
+.deal_details_item-footer-buttons{
+    gap: 5px;
+}
+
+.deal_details-button{
+    width: 30px;
+    height: 30px;
+    border-radius: 10px;
+    transition: transform 0.2s ease;
+}
+
+.deal_details_item-footer-buttons button{
+    cursor: pointer;
+}
+
+.deal_details_answered-container button{
+    cursor: default;
+}
+
+.deal_details_item-footer-buttons button:hover{
+    transform: scale(1.05);
+}
+
+.deal_details_item-footer-buttons button:active{
+    transform: scale(0.95);
+}
+
+.deal_details-button.aceitar{
+    border: 2px solid #22b573;
+}
+
+.deal_details-button.recusar{
+    border: 2px solid #e01d1d;
+}
+
+.deal_details-button.send-back{
+    border: 2px solid #ffd900;
+}
+
+.deal_details_answered-container{
+    gap: 10px;
+}
+
+.deal_details_answered-container button.aceitar{
+    background: #22b573;
+}
+
+.deal_details_answered-container button.recusar{
+    background: #e01d1d;
+}
+
+.deal_details_answered-container button.send-back{
+    background: #ffd900;
+}
+
+.deal_details_modal{
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    gap: 20px;
+}
+
+.deal_details_modal-header{
+    width: 100%;
+    justify-content: space-between;
+    height: 10%;
+}
+
+.input_block{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.input_block span{
+    font-size: 18px;
+}
+
+.input_block input{
+    border: 1px solid black;
+    padding: 10px 5px;
+    border-radius: 10px;
+    width: 150px;
+}
+
+.deal_details_modal-message{
+    height: 70%;
+    overflow: hidden;
+    border-radius: 10px;
+    width: 100%;
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+
+.deal_details_modal-message textarea{
+    border: 1px solid black;
+    padding: 10px 5px;
+    border-radius: 10px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    resize: none;
+}
+
+.deal_details_modal-options{
+    height: 10%;
+    display: flex;
+    flex-shrink: 0;
+    justify-content: space-evenly;
+    width: 100%;
+}
+
+.deal_items_shadow{
+    box-shadow: 0 0 5px 2px #94949454;
+}
+
+.deal_details_modal-options button{
+    max-width: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 10px 50px; 
+    border-radius: 10px;
+    cursor: pointer;
+    color: #FFF;
+    border: none;
+}
+
+.deal_details_modal-options .button_send{
+    background-color: #22b573;
+}
+
+.deal_details_modal-options .button_cancel{
+    background-color: #e01d1d;
+}

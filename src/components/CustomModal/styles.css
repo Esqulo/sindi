@@ -1,0 +1,49 @@
+.custom-modal-container.show-background{
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.custom-modal-container{
+    position: fixed;
+    height: 100dvh;
+    width: 100dvw;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.custom-modal-content{
+    background-color: #FFF;
+    width: 50%;
+    min-width: 500px;
+    height: 50%;
+    min-height: 500px;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.custom-modal-close-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    border: none;
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    outline: none;
+    background-color: #FFF;
+}
+
+.close-button-x{
+    width: 2px;
+    background-color: #000;
+    height: 85%;
+    border-radius: 10px;
+    position: absolute;
+}
