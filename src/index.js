@@ -12,6 +12,7 @@ import Signup from './routes/Signup';
 import MyCards from './routes/MyCards';
 import Chat from './routes/Chat';
 import MyDeals from './routes/MyDeals';
+import Profile from './routes/Profile';
 
 const router = createHashRouter([
   {
@@ -45,6 +46,10 @@ const router = createHashRouter([
       {
         path: "/deals",
         element: <MyDeals/>
+      },
+      {
+        path: "/profile",
+        element: <Profile/>
       }
     ]
   }

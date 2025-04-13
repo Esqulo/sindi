@@ -1,0 +1,21 @@
+.homebanner-container{
+    display: flex;
+    width: 100%;
+    height: calc((100vw / 1920) * 300);
+    max-height: 300px;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+@media (max-width: 1100px) {
+    .homebanner-container{
+        height: 175px;
+    }
+}
+
+@media (max-width: 900px) {
+    .homebanner-container{
+        display: none;
+    }
+}
