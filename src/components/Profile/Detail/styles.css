@@ -1,72 +1,67 @@
-.profile-detail-content{
+.profile-detail-container{
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: row;
     width: 100%;
+    padding: 10px 0 0 15%;
+    position: relative;
 }
 
-.profile-detail{
+.profile-detail-avatar{
+    width: 150px;
+    height: 150px;
     display: flex;
-    flex-direction: column;
-    width: 70%;
-    margin-left: 1rem;
-    margin-top: 1rem;
-}
-
-
-.avatar-content {
-    display: flex;
-    align-items: center;
-    justify-content: end;
-    width: 30%;
-    position: relative; 
-    top: -135px;
-}
-
-.avatar-area {
-    background-color: transparent;
+    flex-grow: 0;
+    flex-shrink: 0;
     border-radius: 50%;
     position: relative;
-    display: inline-block;
+    transform: translateY(-50%);
+    border: 2px solid #000;
+    background-color: #FFF;
 }
   
-.avatar-img {
-    width: 250px;
-    height: 250px;
+.profile-details-avatar-image {
     object-fit: cover;
     border-radius: 50%;
 }
 
-.avatar-seal {
+.profile-detail-avatar-highlight {
     position: absolute;
-    bottom: -15px;
-    right: -15px;
+    bottom: -30px;
+    right: -30px;
     width: 100px;
     height: 100px;
 }
 
-
-ul{
-    list-style: none;
+.profile-detail-userdata{
+    display: flex;
+    flex-direction: column;
+    padding: 0 20px 10px 30px;
 }
 
-.profile-info{
+.profile-detail-userdata-name{
+    font-weight: bold;
+    font-size: 26px;
+}
+
+.profile-detail-userdata-rating{
+    gap: 5px;
+}
+
+.profile-detail-userdata-skills{
     font-size: 16px;
-    color: #555;
+    color: #000;
     margin: 10px 0;
     line-height: 1.5;
 }
 
-.biografia{
-    display: flex;
-    align-items: center;
-    max-width: 80%;
-    
+.profile-detail-userdata-skills ul{
+    list-style: none;
 }
 
-.description {
+.profile-detail-bio{
+    max-width: 80%;
     font-size: 14px;
-    color: #444;
+    color: #000;
     margin-top: 20px;
     line-height: 1.6;
 }
