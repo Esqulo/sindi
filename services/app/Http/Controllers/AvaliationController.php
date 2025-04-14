@@ -21,7 +21,7 @@ class AvaliationController extends Controller
         $page = (int) $request->query('page', 1);
         $perPage = 10;
 
-        $avaliations = Avaliation::with('author:id,name')
+        $avaliations = Avaliation::with('author:id,name,avatar')
         ->where('to', $id)
         ->orderBy('created_at', 'desc')
         ->forPage($page, $perPage)
@@ -30,7 +30,8 @@ class AvaliationController extends Controller
             return [
                 'id' => $item->id,
                 'from' => $item->author->name ?? 'desconhecido',
-                'stars' => $item->stars,
+                'avatar' => $item->author->avatar,
+                'rating' => $item->stars,
                 'message' => $item->message,
                 'created_at' => $item->created_at->format('d/m/Y H:i'),
             ];
