@@ -27,6 +27,7 @@ class CheckPendingDeals
 
         if ($hasPending) return response()->json([
             'success' => false,
+            'action' => 'redirectToDeals',
             'message' => 'Você possui acordos pendentes e não pode continuar.'
         ], 403);
 
