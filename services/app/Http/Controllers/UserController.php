@@ -9,6 +9,7 @@ use Exception;
 
 use App\Http\Controllers\MercadoPagoController;
 use App\Models\Avaliation;
+use App\Models\Products;
 
 class UserController extends Controller
 {
@@ -102,6 +103,10 @@ class UserController extends Controller
 
         if(!$userData) return response()->json(['message' => 'User not found'], 404);
 
+        $services = Products::where('user_id', $userToFind)
+            ->where('active', 1)
+            ->get();
+
         $userRating = Avaliation::where('to', $userToFind)
             ->selectRaw('AVG(stars) as rating')
             ->first();
@@ -113,7 +118,8 @@ class UserController extends Controller
             'reviews' => $userData->reviews_count,
             'avatar' => $userData->avatar,
             'highlight' => false, //future feature
-            'bio' => $userData->bio
+            'bio' => $userData->bio,
+            'services' => $services
         ]);
 
         return response()->json($response, 200);
