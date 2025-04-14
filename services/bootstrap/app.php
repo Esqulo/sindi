@@ -15,14 +15,14 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         //create a group to use the middleware
-        // $middleware->appendToGroup('PendingDealsGroup', [
-        //     CheckPendingDeals::class
-        // ]);
-
-        // to use globally on /api
-        $middleware->api(prepend: [
+        $middleware->appendToGroup('PendingDealsGroup', [
             CheckPendingDeals::class
         ]);
+
+        // to use globally on /api
+        // $middleware->api(prepend: [
+        //     CheckPendingDeals::class
+        // ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

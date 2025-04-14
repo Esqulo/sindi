@@ -17,19 +17,48 @@ use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\MercadoPagoController;
 use Illuminate\Support\Facades\Route;
 
-// Route::middleware(['PendingDealsGroup'])->group(function () {
+Route::middleware(['PendingDealsGroup'])->group(function () {
+    Route::resources([
+        'user' => UserController::class,
+        'product' => ProductsController::class,
+        'meeting' => MeetingsController::class
+    ]);
 
+    Route::prefix('nearby')->group(function(){
+        Route::get('users/{id}',[NearbyController::class, 'users']);
+    });
 
-// });
+    Route::prefix('chat')->group(function(){
+        Route::get('/',[ChatController::class, 'getUserChats']);
+        Route::get('/{chat_id}',[ChatController::class, 'getChatMessages']);
+        Route::post('/message',[ChatController::class, 'sendMessage']);
+        Route::post('/new',[ChatController::class, 'createNewChat']);
+    });
+    
+    Route::prefix('offeredservices')->group(function(){
+        Route::get('/',[ProductsController::class, 'getUserOfferedServices']);
+        Route::get('/{user_id}',[ProductsController::class, 'getUserOfferedServices']);
+        Route::get('/service/{service_id}',[ProductsController::class, 'getServiceDetails']);
+        Route::post('/',[ProductsController::class, 'createOfferedService']);
+        Route::put('/{service_id}',[ProductsController::class, 'updateOfferedService']);
+        Route::delete('/{service_id}',[ProductsController::class, 'deleteOfferedService']);
+    });
 
-Route::resources([
-    'user' => UserController::class,
-    'product' => ProductsController::class,
-    'meeting' => MeetingsController::class
-]);
+    Route::prefix('avaliation')->group(function(){
+        Route::get('/user/{id}',[AvaliationController::class, 'listUserAvaliations']);
+        Route::get('/{id}',[AvaliationController::class, 'getAvaliationDetails']);
+        Route::post('/new',[AvaliationController::class, 'newAvaliation']);
+    });
 
-Route::prefix('nearby')->group(function(){
-    Route::get('users/{id}',[NearbyController::class, 'users']);
+    Route::prefix('calendar')->group(function(){
+        Route::get('/events', [GoogleController::class, 'listEvents']);
+        Route::post('/events/create', [GoogleController::class, 'createEvent']);
+    });
+
+    Route::prefix('newsletter')->group(function(){
+        Route::post('/', [NewsletterController::class, 'insert']);
+    });
+
 });
 
 Route::prefix('auth')->group(function(){
@@ -42,26 +71,10 @@ Route::prefix('auth')->group(function(){
     Route::get('callback', [GoogleController::class, 'handleGoogleCallback']);
 });
 
-Route::prefix('chat')->group(function(){
-    Route::get('/',[ChatController::class, 'getUserChats']);
-    Route::get('/{chat_id}',[ChatController::class, 'getChatMessages']);
-    Route::post('/message',[ChatController::class, 'sendMessage']);
-    Route::post('/new',[ChatController::class, 'createNewChat']);
-});
-
 Route::prefix('payment')->group(function(){
     Route::post('/new',[PurchasesController::class, 'newPurchase']);
     Route::get('/retrieve/{transaction_id}',[PurchasesController::class, 'retrieve']);
     Route::post('/update',[PurchasesController::class, 'updateStatus']);
-});
-
-Route::prefix('offeredservices')->group(function(){
-    Route::get('/',[ProductsController::class, 'getUserOfferedServices']);
-    Route::get('/{user_id}',[ProductsController::class, 'getUserOfferedServices']);
-    Route::get('/service/{service_id}',[ProductsController::class, 'getServiceDetails']);
-    Route::post('/',[ProductsController::class, 'createOfferedService']);
-    Route::put('/{service_id}',[ProductsController::class, 'updateOfferedService']);
-    Route::delete('/{service_id}',[ProductsController::class, 'deleteOfferedService']);
 });
 
 Route::prefix('deal')->group(function(){
@@ -69,21 +82,6 @@ Route::prefix('deal')->group(function(){
     Route::get('/{id}',[DealsController::class, 'viewDealDetails']);
     Route::post('/create',[DealsController::class, 'createDeal']);
     Route::put('/answer/{id}',[DealsController::class, 'answerDeal']);
-});
-
-Route::prefix('avaliation')->group(function(){
-    Route::get('/user/{id}',[AvaliationController::class, 'listUserAvaliations']);
-    Route::get('/{id}',[AvaliationController::class, 'getAvaliationDetails']);
-    Route::post('/new',[AvaliationController::class, 'newAvaliation']);
-});
-
-Route::prefix('calendar')->group(function(){
-    Route::get('/events', [GoogleController::class, 'listEvents']);
-    Route::post('/events/create', [GoogleController::class, 'createEvent']);
-});
-
-Route::prefix('newsletter')->group(function(){
-    Route::post('/', [NewsletterController::class, 'insert']);
 });
 
 Route::prefix('mp')->group(function(){
