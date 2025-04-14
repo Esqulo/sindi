@@ -1,0 +1,50 @@
+.stars-container {
+	display: inline-flex;
+	align-items: center;
+	position: relative;
+}
+
+.star-icon {
+	position: relative;
+	display: inline-block;
+	margin-right: 2px;
+}
+
+.star-icon.full,
+.star-icon.half .star-overlay,
+.star-icon.quarter .star-overlay,
+.star-icon.three-quarter .star-overlay {
+	color: inherit; /* Usa a cor passada para o componente */
+}
+
+.star-icon.empty,
+.star-icon.half .star-bg,
+.star-icon.quarter .star-bg,
+.star-icon.three-quarter .star-bg {
+	color: #ccc; /* Cor para estrelas vazias */
+}
+
+.star-icon.half,
+.star-icon.quarter,
+.star-icon.three-quarter {
+	position: relative;
+}
+
+.star-overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	overflow: hidden;
+	z-index: 1;
+}
+
+.star-bg {
+	position: relative;
+	z-index: 0;
+}
+
+.star-value {
+	margin-left: 6px;
+	font-size: 0.8em;
+	color: #000;
+}
