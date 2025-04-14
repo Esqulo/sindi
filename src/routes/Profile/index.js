@@ -4,6 +4,7 @@ import "./styles.css";
 
 import BannerComponent from '../../components/Profile/Banner';
 import DetailComponent from '../../components/Profile/Detail';
+import CustomCarouselServices from '../../components/CustomCarouselServices';
 // import CustomCarousel from '../../components/CustomCarousel';
 import Reviews from '../../components/Profile/Reviews';
 import Comments from '../../components/Profile/Comments';
@@ -32,6 +33,7 @@ function Profile() {
 			<BannerComponent bannerImg={banner} />
 			<DetailComponent userData={userData} />
 
+			<CustomCarouselServices title={"Serviços"} items={userData.services}/>
 			{/* future feature */}
 			{/* <CustomCarousel title={"Portfólio"} items={portfolio}/> */}
 			{/* <CustomCarousel title={"Certificados"} items={certificates}/> */}
