@@ -270,6 +270,25 @@ const Api = {
             };
         }
     },
+    getComments: async ({userId, page = 1}) => {
+        try{
+            const req = await fetch(`${BASE_URL}/avaliation/user/${userId}?page=${page}`,{
+                method: 'GET',
+                headers: { 
+                    'Accept': 'application/json', 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem("token")}`
+                },
+            });
+            const json = await req.json();
+            return json;
+        }
+        catch(error){
+            return {
+                error: error
+            };
+        }
+    },
 }
 
 export default Api;
