@@ -33,7 +33,7 @@ class AvaliationController extends Controller
                 'avatar' => $item->author->avatar,
                 'rating' => $item->stars,
                 'message' => $item->message,
-                'created_at' => $item->created_at->format('d/m/Y H:i'),
+                'created_at' => $item->created_at->format('d/m/Y'),
             ];
         });
 
