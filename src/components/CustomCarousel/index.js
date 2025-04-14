@@ -1,6 +1,8 @@
 import React, { useRef } from "react";
 import './styles.css';
 
+import noImage from '../../assets/images/profile/img001.jpg';
+
 const CustomCarousel = ({ items, title }) => {
 
     const carouselRef = useRef(null);
@@ -38,8 +40,8 @@ const CustomCarousel = ({ items, title }) => {
                 <div className="custom_carousel-items row-centered" ref={carouselRef}>
                     {items.map((item, index) => (
                         <div key={index} className="custom_carousel-item column-centered">
-                            <img src={item.image} alt={item.name} />
-                            <span className="custom_carousel_card-text">{item.name}</span>
+                            <img src={item.image || noImage} alt={item.name} />
+                            <span className="custom_carousel_card-text">{item.name || ''}</span>
                         </div>
                     ))}
                 </div>
