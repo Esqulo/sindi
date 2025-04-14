@@ -40,13 +40,13 @@ const Reviews = () => {
           </div>
           <div className="info-box">
             <span>Com a sindi desde 2024</span>
-            <span className="verified">Identidade verificada <img src={verificado} className="verificado-img"/></span>
+            <span className="verified">Identidade verificada <img src={verificado} className="verificado-img" alt="verified"/></span>
           </div>
           <div className="negotiation">Disponível para negociação</div>
             <button className="contact-button">Entrar em contato</button>
         </div>
         <div className="super-sindico">
-          <img src={super_sindico} className="icon" />
+          <img src={super_sindico} className="icon" alt="highlight_trustee"/>
           <div>
             <strong>Este é um <span className="highlight">SuperSíndico</span></strong>
             <p>Beltrano possui ótima reputação no mercado e excelentes avaliações.</p>

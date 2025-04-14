@@ -34,7 +34,7 @@ Route::middleware(['PendingDealsGroup'])->group(function () {
         Route::post('/message',[ChatController::class, 'sendMessage']);
         Route::post('/new',[ChatController::class, 'createNewChat']);
     });
-    
+
     Route::prefix('offeredservices')->group(function(){
         Route::get('/',[ProductsController::class, 'getUserOfferedServices']);
         Route::get('/{user_id}',[ProductsController::class, 'getUserOfferedServices']);
