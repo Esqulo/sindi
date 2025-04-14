@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
+import { useParams } from 'react-router-dom';
 import "./styles.css";
 
 import BannerComponent from '../../components/Profile/Banner';
@@ -9,17 +10,21 @@ import Comments from '../../components/Profile/Comments';
 
 import banner from '../../assets/images/profile/banner-profile.png';
 
+import Api from '../../Api';
+
 function Profile() {
 
-	const userData = {
-		id: 1,
-		name: "Usuário Teste",
-		rating: 5.89,
-		reviews: 128,
-		avatar: 'https://picsum.photos/300/300',
-		highlight: true,
-		bio: "Os condomínios hoje em dia são como empresas, então ter um profissional competente cuidando do seu imóvel é essencial para o bom funcionamento deste. Sou um profissional competente, empenhado, sério e extremamente engajado com meus condomínios. Tenho certificação em diversas áreas como Economia, Direito, Administração e Contabilidade. Me sinto capaz de gerir diversos condomínios. Mande agora uma proposta e vamos conversar! Os condomínios hoje em dia são como empresas, então ter um profissional competente cuidando do seu imóvel é essencial para o bom funcionamento deste. Sou um profissional competente, empenhado, sério e extremamente engajado com meus condomínios. Tenho certificação em diversas áreas como Economia, Direito, Administração e Contabilidade. Me sinto capaz de gerir diversos condomínios. Mande agora uma proposta e vamos conversar! Os condomínios hoje em dia são como empresas, então ter um profissional competente cuidando do seu imóvel é essencial para o bom funcionamento deste. Sou um profissional competente, empenhado, sério e extremamente engajado com meus condomínios. Tenho certificação em diversas áreas como Economia, Direito, Administração e Contabilidade. Me sinto capaz de gerir diversos condomínios. Mande agora uma proposta e vamos conversar!"
-	}
+	const { user_id } = useParams();
+
+	const [userData, setUserData] = useState({});
+
+	useEffect(()=>{
+		async function getUserData() {
+			let apiResponse = await Api.getUserProfile(user_id);
+			setUserData(apiResponse);
+		}
+		getUserData();
+	},[user_id]);
 
 	return (
 		<div className='home-container column-centered shadow-default'>

@@ -48,7 +48,7 @@ const router = createHashRouter([
         element: <MyDeals/>
       },
       {
-        path: "/profile",
+        path: "/profile/:user_id?",
         element: <Profile/>
       }
     ]
