@@ -8,6 +8,7 @@ use App\Http\Controllers\MailSender;
 use Exception;
 
 use App\Http\Controllers\MercadoPagoController;
+use App\Models\Avaliation;
 
 class UserController extends Controller
 {
@@ -64,11 +65,58 @@ class UserController extends Controller
         return response()->json(true,201);
     }
 
-    public function show(int $id)
+    public function show(Request $request, $id)
     {
-        $user = User::find($id);
-        if(!$user) return response()->json(['message' => 'User not found'], 404);
-        return $user;
+        $requesterId = $this->retrieveId($request->header('Authorization'));
+
+        $response = [];
+
+        //if not logged and not requesting anything send to home
+        if(!$requesterId && !$id) {
+            $response = [
+                'success' => true,
+                'action' => 'redirectToHome'
+            ];
+
+            return response()->json($response, 200);
+        }
+
+        $userToFind = 0;
+
+        //if not logged but requested a profile, retrieve it
+        if($id > 0) {
+            $userToFind = $id;
+        }
+
+        //if logged and not requesting anything, return logged user
+        if(($requesterId == $id) || ($requesterId && !$id) ) {
+            $userToFind = $requesterId;
+            $response = [
+                'userIsOwner' => true
+            ];
+        }
+
+        $userData = User::where('id', $userToFind)
+            ->where('active', 1)
+            ->first();
+
+        if(!$userData) return response()->json(['message' => 'User not found'], 404);
+
+        $userRating = Avaliation::where('to', $userToFind)
+            ->selectRaw('AVG(stars) as rating')
+            ->first();
+
+        $response = array_merge($response, [
+            'id' => $userData->id,
+            'name' => $userData->name,
+            'rating' => $userRating->rating ?? 0,
+            'reviews' => $userData->reviews_count,
+            'avatar' => $userData->avatar,
+            'highlight' => false, //future feature
+            'bio' => $userData->bio
+        ]);
+
+        return response()->json($response, 200);
     }
 
     public function update(string $id, Request $request)
