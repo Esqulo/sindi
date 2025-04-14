@@ -38,4 +38,9 @@ class Avaliation extends Model
         'message' => 'string',
         'created_at' => 'datetime'
     ];
+
+    public function author()
+    {
+        return $this->belongsTo(User::class, 'from');
+    }
 }

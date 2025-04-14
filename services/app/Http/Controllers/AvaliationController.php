@@ -11,26 +11,33 @@ use Exception;
 
 class AvaliationController extends Controller
 {
-
-    public function listUserAvaliations(Request $request, int $id){
-        try{
-            $userId = $this->validateUser($request);
-        }catch(Exception $e){
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage()
-            ], 401);
-        }
+    public function listUserAvaliations(Request $request, $id){
 
         if(!User::find($id)) return response()->json([
             'success' => false,
             'message' => 'user does not exists'
         ],404);
-        
 
-        $avaliations = Avaliation::where('to', $id)->get();
+        $page = (int) $request->query('page', 1);
+        $perPage = 10;
 
-        return response()->json($avaliations, 200);
+        $avaliations = Avaliation::with('author:id,name')
+        ->where('to', $id)
+        ->orderBy('created_at', 'desc')
+        ->forPage($page, $perPage)
+        ->get()
+        ->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'from' => $item->author->name ?? 'desconhecido',
+                'stars' => $item->stars,
+                'message' => $item->message,
+                'created_at' => $item->created_at->format('d/m/Y H:i'),
+            ];
+        });
+
+        return response()->json($avaliations);
+
     }
 
     public function getAvaliationDetails(Request $request, string $id){
