@@ -3,7 +3,7 @@ import './styles.css';
 import super_sindico from '../../../assets/images/profile/super-sindico.png';
 import verificado from  '../../../assets/images/profile/verificado.png';
 
-const Reviews = () => {
+const Ratings = () => {
   const ratings = [
     "Conhecimento da legislação condominial",
     "Gestão de finanças",
@@ -57,4 +57,4 @@ const Reviews = () => {
   );
 };
 
-export default Reviews;
+export default Ratings;
