@@ -24,7 +24,7 @@ function DetailComponent({ userData }) {
 				</span>
 
 				<div className='profile-detail-userdata-rating row-centered'>
-					<img src={star} alt="Estrela" /> {userData.rating} ({userData.reviews})
+					<img src={star} alt="Estrela" /> {userData.rating} ({userData.reviews || 0})
 				</div>
 				
 				{/* future feature
