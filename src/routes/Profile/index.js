@@ -41,7 +41,7 @@ function Profile() {
 			{/* <CustomCarousel title={"Certificados"} items={certificates}/> */}
 			{/* <Ratings /> */}
 
-			<Comments/>
+			<Comments userId={user_id}/>
 
 		</div>
 	);

@@ -1,83 +1,89 @@
-import React from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import './styles.css';
-import avatar from '../../../assets/images/profile/person/person1.jpg'
 
-const reviews = [
-  {
-    name: "José Ricardo",
-    location: "Rio de Janeiro, Brasil",
-    rating: 5,
-    date: "7 dias atrás",
-    comment:
-      "Profissional competente e extremamente capacitado. Sempre disponível para tirar dúvidas e responder rapidamente sobre qualquer questionamento. Recomendo muito!",
-    image: avatar // Certifique-se de que a imagem está no diretório correto
-  },
-  {
-    name: "José Ricardo",
-    location: "Rio de Janeiro, Brasil",
-    rating: 5,
-    date: "7 dias atrás",
-    comment:
-      "Profissional competente e extremamente capacitado. Sempre disponível para tirar dúvidas e responder rapidamente sobre qualquer questionamento. Recomendo muito!",
-    image: avatar
-  },
-  {
-    name: "José Ricardo",
-    location: "Rio de Janeiro, Brasil",
-    rating: 5,
-    date: "7 dias atrás",
-    comment:
-      "Profissional competente e extremamente capacitado. Sempre disponível para tirar dúvidas e responder rapidamente sobre qualquer questionamento. Recomendo muito!",
-    image: avatar
-  },
-  {
-    name: "José Ricardo",
-    location: "Rio de Janeiro, Brasil",
-    rating: 5,
-    date: "7 dias atrás",
-    comment:
-      "Profissional competente e extremamente capacitado. Sempre disponível para tirar dúvidas e responder rapidamente sobre qualquer questionamento. Recomendo muito!",
-    image: avatar
-  },
-];
+import Stars from "../../Stars"
+import noUserImage from '../../../assets/images/icons/no-image-profile.png';
+import LoadingIcon from '../../LoadingIcon';
 
-const StarIcon = () => <span className="star-icon">★</span>;
+import Api from '../../../Api'
 
-const Comments = () => {
-  return (
-    <div className="reviews-container">
-      <div className="reviews-header">
-        <h2 className="rating-score">4.89 🏅</h2>
-        <h3>Preferido dos condôminos</h3>
-        <p>Um dos profissionais com maior número de avaliações positivas na sindi</p>
-      </div>
+function Comments({userId}){
 
-      <div className="reviews-grid">
-        {reviews.map((review, index) => (
-          <div key={index} className="review-card">
-            <img
-              src={review.image}
-              alt={review.name}
-              className="review-image"
-            />
-            <div className="review-content">
-              <h4>{review.name}</h4>
-              <p className="review-location">{review.location}</p>
-              <div className="review-rating">
-                {Array(review.rating).fill(0).map((_, i) => (
-                  <StarIcon key={i} />
-                ))}
-                <span className="review-date">• {review.date}</span>
-              </div>
-              <p className="review-text">{review.comment}</p>
-            </div>
-          </div>
-        ))}
-      </div>
+	const reachedEnd = useRef(false);
+	const initialLoadDone = useRef(false);
+	const [currentPage, setCurrentPage] = useState(1);
+	const [loading, setLoading] = useState(false);
+	const [reviews, setReviews] = useState([]);
 
-      <button className="show-more-button">Mostrar mais comentários</button>
-    </div>
-  );
+	const getComments = useCallback(async (currentPage) => {
+        if (loading || reachedEnd.current) return;
+    
+        setLoading(true);
+
+        const newComments = await Api.getComments({
+			userId,
+			page: currentPage
+		});
+    
+        if (!newComments || newComments.length === 0 || newComments.length < 10 || newComments.error) {
+            reachedEnd.current = true;
+        }
+    
+        setReviews((prevComments) => [...prevComments, ...newComments]);
+        setLoading(false);
+    }, [userId,loading]);
+    
+    useEffect(() => {
+        if (!initialLoadDone.current) {
+            initialLoadDone.current = true;
+            getComments(1);
+        }
+    }, [getComments]);
+
+    useEffect(() => {
+        if (currentPage <= 1) return;
+        getComments(currentPage);
+    }, [currentPage,getComments]);
+
+	async function loadMoreReviews(){
+		console.log('bla')
+		setCurrentPage(currentPage+1);
+	}
+
+	return (
+		<div className="reviews-container column-centered">
+			<span className="reviews-title">Comentários e avaliações</span>
+			{/* <div className="reviews-header">
+				<h2 className="rating-score">4.89 🏅</h2>
+				<h3>Preferido dos condôminos</h3>
+				<p>Um dos profissionais com maior número de avaliações positivas na sindi</p>
+			</div> */}
+			
+			<div className="reviews-grid">
+				{reviews.map((review, index) => (
+					<div key={index} className="review-card">
+						<img src={review.avatar || noUserImage} alt={review.from} className="review-image" />
+						<div className="review-content">
+							<h4>{review.from}</h4>
+							{/* <p className="review-location">{review.location}</p> */}
+							<div className="review-rating">
+								<Stars stars={review.rating} size={20} color="#FF9900" />
+								<span className="review-date">• {review.created_at}</span>
+							</div>
+							<p className="review-text">{review.message || ""}</p>
+						</div>
+					</div>
+				))}
+			</div>
+
+			{loading && <LoadingIcon color="#000"/>}
+			{!loading && 
+				<button className="reviews-show-more-button" onClick={loadMoreReviews} disabled={reachedEnd.current}>
+					{reachedEnd.current ? 'sem mais comentário' : 'Mostrar mais comentários'}
+				</button>}
+			
+		</div>
+	);
 };
 
 export default Comments;
