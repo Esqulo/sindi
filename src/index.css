@@ -98,7 +98,8 @@ body {
   border: 15px;
 }
 
-.prevent-select {
+.prevent-select,
+.material-symbols-outlined {
   -webkit-user-select: none;
   -ms-user-select: none;
   user-select: none;
