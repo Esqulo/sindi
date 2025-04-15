@@ -308,6 +308,26 @@ const Api = {
             };
         }
     },
+    createChat: async ({users,message}) => {
+        try{
+            const req = await fetch(`${BASE_URL}/chat/new`,{
+                method: 'POST',
+                headers: { 
+                    'Accept': 'application/json', 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem("token")}`
+                },
+                body: JSON.stringify({users,message})
+            });
+            const json = await req.json();
+            return json;
+        }
+        catch(error){
+            return {
+                error: error
+            };
+        }
+    },
 }
 
 export default Api;

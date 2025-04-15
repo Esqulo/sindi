@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./styles.css";
 import { useNavigate } from "react-router-dom";
 
@@ -10,22 +10,62 @@ import CustomModal from "../../CustomModal";
 
 import Api from "../../../Api";
 
+// Sim, este código precisa ser refatorado...
+
 function DetailComponent({ userData }) {
 
 	const navigate = useNavigate();
 
 	const [showDealModal, setShowDealModal] = useState(false);
+	const [showChatModal, setShowChatModal] = useState(false);
 	const [sendingDeal, setSendingDeal] = useState(false);
+	const [sendingMessage, setSendingMessage] = useState(false);
+	const [messageSentSuccess, setMessageSentSuccess] = useState(false);
+
 
 	const [newDealValue, setNewDealValue] = useState(0);
 	const [newDealMessage, setNewDealMessage] = useState("");
 	const [newDealStartDate, setNewDealStartDate] = useState("");
 	const [newDealEndDate, setNewDealEndDate] = useState("");
+	const [chatMessage, setChatMessage] = useState("");
 
-	function handleToggleModal(){
+	function handleToggleDealsModal(){
         if(sendingDeal && showDealModal) return;
         setShowDealModal(!showDealModal);
     }
+
+	function handleToggleChatModal(){
+        if(sendingMessage && showChatModal) return;
+        setShowChatModal(!showChatModal);
+    }
+
+	async function sendMessage(){
+		if(sendingMessage) return;
+		try{
+			setSendingMessage(true);
+			if(!chatMessage.trim()) throw new Error('mensagem em branco');
+
+			let apiResponse = await Api.createChat({
+				users: [userData.id],
+				message: chatMessage
+			});
+
+			if (apiResponse !== true) throw new Error("algo deu errado ao enviar a mensagem");
+			
+			setChatMessage("");
+			setMessageSentSuccess(true);
+			alert('mensagem enviada com sucesso');
+
+		}catch(err){
+
+			alert(err.message);
+
+		}finally{
+			setSendingMessage(false);
+			setShowChatModal(false);
+		}
+		
+	}
 
 	function validateFields(){
         try{
@@ -83,7 +123,7 @@ function DetailComponent({ userData }) {
             console.error("Error answering deal:", error);
         }finally{
 			alert("enviado com sucesso");
-			handleToggleModal();
+			handleToggleDealsModal();
 			setNewDealValue(0);
 			setNewDealMessage("");
 			setNewDealStartDate("");
@@ -109,8 +149,25 @@ function DetailComponent({ userData }) {
     }
 
 	function handleDealsClick(){
-		userData.userIsOwner ? navigate("/deals") : handleToggleModal();
+		userData.userIsOwner ? navigate("/deals") : handleToggleDealsModal();
 	}
+
+	function handleChatClick(){
+		userData.userIsOwner || messageSentSuccess ? navigate("/chat") : handleToggleChatModal();
+	}
+
+	useEffect(()=>{
+		setShowDealModal(false);
+		setShowChatModal(false);
+		setSendingDeal(false);
+		setSendingMessage(false);
+		setMessageSentSuccess(false);
+		setNewDealValue(0);
+		setNewDealMessage("");
+		setNewDealStartDate("");
+		setNewDealEndDate("");
+		setChatMessage("");
+	},[userData]);
 
 	return (
 		<div className='profile-detail-container'>
@@ -129,7 +186,7 @@ function DetailComponent({ userData }) {
 						{userData.name}
 					</span>
 					<div className='profile-detail-options row-centered'>
-						<span className="material-symbols-outlined" title='Enviar mensagem' >
+						<span className="material-symbols-outlined" title={ userData.userIsOwner ? 'Ver minhas mensagens' : 'Enviar mensagem'} onClick={handleChatClick}>
 							chat
 						</span>
 						<span className="material-symbols-outlined" title={ userData.userIsOwner ? 'Ver minhas propostas' : 'Fazer uma proposta' } onClick={handleDealsClick}>
@@ -157,7 +214,7 @@ function DetailComponent({ userData }) {
 				</span>
 
 			</div>
-			<CustomModal toggle={handleToggleModal} show={showDealModal} showCloseButton={false} >
+			<CustomModal toggle={handleToggleDealsModal} show={showDealModal} showCloseButton={false} >
 				<div className="deal_details_modal column-centered default-shadow">
 					<div className="deal_details_modal-header row-centered">
 						<div className="input_block">
@@ -178,7 +235,21 @@ function DetailComponent({ userData }) {
 					</div>
 					<div className="deal_details_modal-options row-centered">
 						<button className="button_send clickable deal_items_shadow prevent-select" onClick={()=>{createDeal()}}>Enviar</button>
-						<button className="button_cancel clickable deal_items_shadow prevent-select" onClick={handleToggleModal}>Cancelar</button>
+						<button className="button_cancel clickable deal_items_shadow prevent-select" onClick={handleToggleDealsModal}>Cancelar</button>
+					</div>
+				</div>
+			</CustomModal>
+			<CustomModal toggle={handleToggleChatModal} show={showChatModal} showCloseButton={false} >
+				<div className="deal_details_modal column-centered default-shadow">
+					<div className="deal_details_modal-header row-centered">
+						<span className="chat-modal-header">Enviar mensagem</span>
+					</div>
+					<div className="deal_details_modal-message row-centered">
+						<textarea className="deal_details_modal-input deal_items_shadow" placeholder="digite uma mensagem" value={chatMessage} onChange={(e)=>{setChatMessage(e.target.value)}}></textarea>
+					</div>
+					<div className="deal_details_modal-options row-centered">
+						<button className="button_send clickable deal_items_shadow prevent-select" onClick={()=>{sendMessage()}}>Enviar</button>
+						<button className="button_cancel clickable deal_items_shadow prevent-select" onClick={handleToggleChatModal}>Cancelar</button>
 					</div>
 				</div>
 			</CustomModal>

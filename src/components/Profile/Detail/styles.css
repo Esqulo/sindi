@@ -81,3 +81,8 @@
 .profile-detail-options span:hover{
     color: #555;
 }
+
+.chat-modal-header{
+    font-weight: bold;
+    font-size: 24px;
+}
