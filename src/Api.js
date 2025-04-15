@@ -250,7 +250,26 @@ const Api = {
             };
         }
     },
-    // createDeal: async (dealData) => {},
+    createDeal: async (dealData) => {
+        try{
+            const req = await fetch(`${BASE_URL}/deal/create`,{
+                method: 'POST',
+                headers: { 
+                    'Accept': 'application/json', 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem("token")}`
+                },
+                body: JSON.stringify(dealData)
+            });
+            const json = await req.json();
+            return json;
+        }
+        catch(error){
+            return {
+                error: error
+            };
+        }
+    },
     getUserProfile: async (userId) => {
         try{
             const req = await fetch(`${BASE_URL}/user/${userId || 0}`,{

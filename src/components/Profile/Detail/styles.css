@@ -65,3 +65,19 @@
     margin-top: 20px;
     line-height: 1.6;
 }
+
+.profile-detail-options{
+    padding: 0 10px;
+    gap: 10px;
+}
+
+.profile-detail-options span{
+    color: #000;
+    font-size: 30px;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.profile-detail-options span:hover{
+    color: #555;
+}
