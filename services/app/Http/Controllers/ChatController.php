@@ -24,8 +24,22 @@ class ChatController extends Controller
 
         if(!$user_id) return response()->json(['success' => false, 'message' => 'Not allowed.'], 403);
 
+        $users = is_array($request->users) ? $request->users : [];
+        
+        $users = array_filter($users, fn($u) => $u != $user_id);
+
+        if(count($users) == 0) return response()->json(['success' => false, 'message' => 'Usuários insuficientes.'], 400);
+
+        $isGroup = count($users) > 1;
+        $chatType = $isGroup ? 1 : 0;
+
+        if ($isGroup && empty($request->title)) {
+            return response()->json(['success' => false, 'message' => 'O título é obrigatório para grupos.'], 422);
+        }
+
         $chat = Chat::create([
-            'type' => '0'
+            'type' => $chatType,
+            'title' => $isGroup ? $request->title : null
         ]);
 
         ChatAccess::create([
@@ -33,10 +47,18 @@ class ChatController extends Controller
             'chat_id' => $chat->id
         ]);
 
-        foreach($request->users as $user){
+        foreach($users as $user){
             ChatAccess::create([
                 'user_id' => $user,
                 'chat_id' => $chat->id
+            ]);
+        }
+
+        if (!empty($request->message)) {
+            ChatMessages::create([
+                'chat_id' => $chat->id,
+                'from' => $user_id,
+                'message' => $request->message
             ]);
         }
 
