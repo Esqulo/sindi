@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./styles.css";
+import { useNavigate } from "react-router-dom";
 
 import noUserImage from "../../../assets/images/icons/no-image-profile.png";
 import star from '../../../assets/images/profile/star.png';
@@ -10,6 +11,8 @@ import CustomModal from "../../CustomModal";
 import Api from "../../../Api";
 
 function DetailComponent({ userData }) {
+
+	const navigate = useNavigate();
 
 	const [showDealModal, setShowDealModal] = useState(false);
 	const [sendingDeal, setSendingDeal] = useState(false);
@@ -105,6 +108,10 @@ function DetailComponent({ userData }) {
         setNewDealValue(formatted);
     }
 
+	function handleDealsClick(){
+		userData.userIsOwner ? navigate("/deals") : handleToggleModal();
+	}
+
 	return (
 		<div className='profile-detail-container'>
 
@@ -125,7 +132,7 @@ function DetailComponent({ userData }) {
 						<span className="material-symbols-outlined" title='Enviar mensagem' >
 							chat
 						</span>
-						<span className="material-symbols-outlined" title='Fazer uma proposta' onClick={handleToggleModal}>
+						<span className="material-symbols-outlined" title={ userData.userIsOwner ? 'Ver minhas propostas' : 'Fazer uma proposta' } onClick={handleDealsClick}>
 							handshake
 						</span>
 					</div>
