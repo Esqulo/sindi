@@ -1,9 +1,13 @@
 import React, {useState} from "react";
+import { useSearchParams  } from 'react-router-dom';
 import "./styles.css";
 
 import MyCards from "../MyCards";
 
 function Settings(){
+
+    const [searchParams] = useSearchParams();
+    const menuParam = searchParams.get('menu');
 
     const menuItems = {
         "cards": {
@@ -13,8 +17,8 @@ function Settings(){
         },
     };
     
-    const [selectedMenu, setSelectedMenu] = useState("cards");
-    const SelectedComponent = menuItems[selectedMenu].component;
+    const [selectedMenu, setSelectedMenu] = useState(menuParam || "cards");
+    const SelectedComponent = menuItems[selectedMenu]?.component;
 
     return (
         <div className="settings-container">
