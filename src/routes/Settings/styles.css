@@ -1,0 +1,44 @@
+.settings-container{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    max-width: 1920px;
+    height: 90dvh;
+    box-shadow: 0 0 10px 10px #94949454;
+}
+
+.settings-left-panel{
+    display: flex;
+    box-shadow: 10px 0px 10px -2px #94949454;
+    width: 200px;
+    height: 100%;
+    flex: 1;
+}
+
+.settings-left-panel button{
+    background: none;
+    width: 100%;
+    padding: 20px 15px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px !important;
+    border: none;
+    border-bottom: 1px solid black;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.settings-left-panel button:hover,
+.settings-left-panel button.selected{
+    background: #aaaaaa94;
+}
+
+.settings-view{
+    flex: 6;
+}
+
+.settings-view>div{
+    box-shadow: none;
+}

@@ -13,6 +13,7 @@ import MyCards from './routes/MyCards';
 import Chat from './routes/Chat';
 import MyDeals from './routes/MyDeals';
 import Profile from './routes/Profile';
+import Settings from './routes/Settings';
 
 const router = createHashRouter([
   {
@@ -50,6 +51,10 @@ const router = createHashRouter([
       {
         path: "/profile/:user_id?",
         element: <Profile/>
+      },
+      {
+        path: "/settings",
+        element: <Settings/>
       }
     ]
   }
