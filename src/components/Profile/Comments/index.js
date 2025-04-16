@@ -7,13 +7,18 @@ import LoadingIcon from '../../LoadingIcon';
 
 import Api from '../../../Api'
 
-function Comments({userId}){
+function Comments({userData}){
 
 	const reachedEnd = useRef(false);
 	const initialLoadDone = useRef(false);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [loading, setLoading] = useState(false);
 	const [reviews, setReviews] = useState([]);
+	const [userId, setUserId] = useState(userData.id);
+
+	useEffect(() => {
+        setUserId(userData.id);
+    }, [userData]);
 
 	const getComments = useCallback(async (currentPage) => {
         if (loading || reachedEnd.current) return;
@@ -28,25 +33,29 @@ function Comments({userId}){
         if (!newComments || newComments.length === 0 || newComments.length < 10 || newComments.error) {
             reachedEnd.current = true;
         }
-    
-        setReviews((prevComments) => [...prevComments, ...newComments]);
+		if(newComments.length) setReviews((prevComments) => [...prevComments, ...newComments]);
+
         setLoading(false);
+
     }, [userId,loading]);
     
-    useEffect(() => {
-        if (!initialLoadDone.current) {
-            initialLoadDone.current = true;
-            getComments(1);
-        }
-    }, [getComments]);
+	useEffect(() => {
+		if (!userId) return;
+	
+		setReviews([]);
+		setCurrentPage(1);
+		reachedEnd.current = false;
+		initialLoadDone.current = false;
+	
+		getComments(1);
+	}, [userId]);
 
     useEffect(() => {
         if (currentPage <= 1) return;
         getComments(currentPage);
     }, [currentPage,getComments]);
-
+	
 	async function loadMoreReviews(){
-		console.log('bla')
 		setCurrentPage(currentPage+1);
 	}
 
