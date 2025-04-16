@@ -46,7 +46,7 @@ class MailSender extends Controller
             <div style="
                 width: 80px;
                 height: 80px;
-                background: url(\'sindi-logo.png\') no-repeat center center;
+                background: url(\'https://sindibr.com.br/favicon.png\') no-repeat center center;
                 background-size: contain;
             "></div>
     
