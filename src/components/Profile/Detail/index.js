@@ -192,6 +192,11 @@ function DetailComponent({ userData }) {
 						<span className="material-symbols-outlined" title={ userData.userIsOwner ? 'Ver minhas propostas' : 'Fazer uma proposta' } onClick={handleDealsClick}>
 							handshake
 						</span>
+						{ userData.userIsOwner &&
+						<span className="material-symbols-outlined" title="Configurações" onClick={() => {navigate("/settings")}}>
+							settings
+						</span>
+						}
 					</div>
 				</div>
 

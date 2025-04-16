@@ -48,6 +48,8 @@ function Comments({userData}){
 		initialLoadDone.current = false;
 	
 		getComments(1);
+		// thre will be a refactoring on this very soon
+		// eslint-disable-next-line
 	}, [userId]);
 
     useEffect(() => {
