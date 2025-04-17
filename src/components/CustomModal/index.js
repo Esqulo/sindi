@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import "./styles.css";
 
 function CustomModal({ show, toggle, children, onClose, showBrackground = true, showCloseButton = true }) {
