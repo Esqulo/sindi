@@ -1,25 +1,25 @@
-import React, { useState } from "react";
+// import React, { useState } from "react";
 import "./styles.css";
 
-import CustomForm from "../CustomForm";
+// import CustomForm from "../CustomForm";
 
 function EditProfile() {
-    const [formData, setFormData] = useState({
-        name: "",
-        email: "",
-        password: "",
-        avatar: ""
-    });
+    // const [formData, setFormData] = useState({
+    //     name: "",
+    //     email: "",
+    //     password: "",
+    //     avatar: ""
+    // });
 
-    const handleChange = (field, value) => {
-        setFormData((prev) => ({ ...prev, [field]: value }));
-    };
+    // const handleChange = (field, value) => {
+    //     setFormData((prev) => ({ ...prev, [field]: value }));
+    // };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log("Enviando dados atualizados:", formData);
-        // Aqui você pode integrar com sua API
-    };
+    // const handleSubmit = (e) => {
+    //     e.preventDefault();
+    //     console.log("Enviando dados atualizados:", formData);
+    //     // Aqui você pode integrar com sua API
+    // };
 /*
     const trustee_fields = {
 		name: { label: "Nome", placeholder: "José da Silva", type: "text", required: true },
