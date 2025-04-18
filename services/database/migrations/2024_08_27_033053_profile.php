@@ -13,12 +13,9 @@ return new class extends Migration
     {
         Schema::create('avaliations', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('from');
-            $table->foreign('from')->references('id')->on('users')->onDelete('no action');
-            $table->unsignedBigInteger('to');
-            $table->foreign('to')->references('id')->on('users')->onDelete('no action');
-            $table->unsignedBigInteger('deal');
-            $table->foreign('deal')->references('id')->on('deals')->onDelete('no action');
+            $table->unsignedBigInteger('from')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('to')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('deal')->references('id')->on('deals')->onDelete('cascade');
             $table->integer('stars');
             $table->string('message',3000);
             $table->dateTime('created_at')->useCurrent();

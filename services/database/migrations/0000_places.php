@@ -13,13 +13,18 @@ return new class extends Migration
     {
         Schema::create('places', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('geolocation');
-            $table->string('cep');
+            $table->string('name')->nullable();
+            $table->integer('owner_id')->references('id')->on('users')->onDelete('cascade');
+            $table->string('state');
+            $table->string('city');
+            $table->string('neighbourhood');
             $table->string('address');
             $table->string('number');
-            $table->string('neighborhood');
-            $table->string('city');
+            $table->string('cep');
+            $table->integer('units');
+            $table->string('coordinates')->nullable();
+            $table->boolean('third_party_services')->default(0);
+            $table->boolean('had_professional_trustee_before')->default(0);
         });
 
         Schema::create('place_images', function (Blueprint $table) {

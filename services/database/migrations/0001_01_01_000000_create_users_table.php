@@ -13,17 +13,20 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('email')->unique();
+            $table->integer('user_type');
+            $table->boolean('is_admin')->default(0);
             $table->string('name');
-            $table->string('doc_number')->unique();
-            $table->string('phone')->unique();
-            $table->string('password');
+            $table->string('email')->unique();
             $table->dateTime('email_verified_at')->nullable();
+            $table->string('phone')->unique();
             $table->dateTime('phone_verified_at')->nullable();
-            $table->dateTime('created_at')->useCurrent();
-            $table->dateTime('updated_at')->nullable()->useCurrentOnUpdate();
-            $table->boolean('active')->default(1);
             $table->date('birthdate');
+            $table->string('avatar')->nullable();
+            $table->string('doc_number')->unique();
+            $table->string('id_number')->unique();
+            $table->string('password');
+            $table->string('position')->nullable();
+            $table->boolean('active')->default(1);
             $table->string('state');
             $table->string('city');
             $table->string('neighbourhood');
@@ -31,14 +34,33 @@ return new class extends Migration
             $table->string('number');
             $table->string('complement')->nullable();
             $table->string('cep');
-            $table->string('avatar')->nullable();
             $table->text('bio')->nullable();
             $table->integer('reviews_count')->nullable();
+            $table->string('gender')->nullable();
+            $table->string('marital_status')->nullable();
+            $table->date('work_since')->nullable();
             $table->dateTime('last_accepted_terms')->nullable();
-            $table->integer('user_type');
-            $table->boolean('is_admin')->default(0);
+            $table->dateTime('created_at')->useCurrent();
+            $table->dateTime('updated_at')->nullable()->useCurrentOnUpdate();
+        });
+
+        Schema::create('user_academic_data', function (Blueprint $table) {
+            $table->id()->primary()->autoIncrement();
+            $table->integer('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->string('graduation_level');
+            $table->string('graduation_title');
+            $table->date('achieved_at');
+            $table->dateTime('created_at')->useCurrent();
         });
         
+        Schema::create('work_fields', function (Blueprint $table) {
+            $table->id()->primary()->autoIncrement();
+            $table->integer('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->string('work_field');
+            $table->boolean('highlight')->nullable()->default(1);
+            $table->dateTime('created_at')->useCurrent();
+        });
+
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->id()->primary()->autoIncrement();
             $table->integer('user_id')->references('id')->on('users')->onDelete('cascade');

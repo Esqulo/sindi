@@ -14,28 +14,20 @@ return new class extends Migration
         Schema::create('deals', function (Blueprint $table) {
             $table->id();
             $table->float('value');
-            $table->unsignedBigInteger('from');
-            $table->foreign('from')->references('id')->on('users')->onDelete('no action');
-            $table->unsignedBigInteger('to');
-            $table->foreign('to')->references('id')->on('users')->onDelete('no action');
-            $table->unsignedBigInteger('worker');
-            $table->foreign('worker')->references('id')->on('users')->onDelete('no action');
-            $table->unsignedBigInteger('hirer');
-            $table->foreign('hirer')->references('id')->on('users')->onDelete('no action');
-            $table->dateTime('created_at')->useCurrent();
-            $table->integer('answer')->nullable();
-            $table->dateTime('answered_at')->nullable();
-            $table->unsignedBigInteger('counter_next')->nullable();
-            $table->foreign('counter_next')->references('id')->on('deals')->onDelete('no action');
-            $table->unsignedBigInteger('counter_prev')->nullable();
-            $table->foreign('counter_prev')->references('id')->on('deals')->onDelete('no action');
+            $table->unsignedBigInteger('from')->references('id')->on('users')->onDelete('no action');
+            $table->unsignedBigInteger('to')->references('id')->on('users')->onDelete('no action');
+            $table->unsignedBigInteger('worker')->references('id')->on('users')->onDelete('no action');
+            $table->unsignedBigInteger('hirer')->references('id')->on('users')->onDelete('no action');
             $table->dateTime('starts_at');
             $table->dateTime('expires_at');
-            $table->unsignedBigInteger('place')->nullable();
-            $table->foreign('place')->references('id')->on('places')->onDelete('set null');
+            $table->integer('answer')->nullable();
+            $table->dateTime('answered_at')->nullable();
+            $table->unsignedBigInteger('counter_next')->references('id')->on('deals')->onDelete('no action')->nullable();
+            $table->unsignedBigInteger('counter_prev')->references('id')->on('deals')->onDelete('no action')->nullable();
+            $table->integer('place')->references('id')->on('places')->onDelete('set null')->nullable();
+            $table->unsignedBigInteger('purchase_id')->references('id')->on('purchases')->onDelete('no action')->nullable();
             $table->text('message');
-            $table->unsignedBigInteger('purchase_id')->nullable();
-            $table->foreign('purchase_id')->references('id')->on('purchases')->onDelete('no action');
+            $table->dateTime('created_at')->useCurrent();
         });
         
         Schema::create('meetings', function (Blueprint $table) {
