@@ -86,3 +86,18 @@
     font-weight: bold;
     font-size: 24px;
 }
+
+.comments_details_modal {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    gap: 10px;
+}
+
+.comment_details_modal-stars{
+    padding: 10px 0;
+    width: 100%;
+    gap: 20px;
+    line-height: 1.6px;
+    justify-content: flex-start
+}

@@ -7,6 +7,7 @@ import star from '../../../assets/images/profile/star.png';
 import badge from '../../../assets/images/profile/badge.png';
 
 import CustomModal from "../../CustomModal";
+import StarsInput from '../../StarsInput';
 
 import Api from "../../../Api";
 
@@ -18,16 +19,19 @@ function DetailComponent({ userData }) {
 
 	const [showDealModal, setShowDealModal] = useState(false);
 	const [showChatModal, setShowChatModal] = useState(false);
+	const [showCommentsModal, setShowCommentsModal] = useState(false);
 	const [sendingDeal, setSendingDeal] = useState(false);
 	const [sendingMessage, setSendingMessage] = useState(false);
+	const [sendingComment, setSendingComment] = useState(false);
 	const [messageSentSuccess, setMessageSentSuccess] = useState(false);
-
 
 	const [newDealValue, setNewDealValue] = useState(0);
 	const [newDealMessage, setNewDealMessage] = useState("");
 	const [newDealStartDate, setNewDealStartDate] = useState("");
 	const [newDealEndDate, setNewDealEndDate] = useState("");
 	const [chatMessage, setChatMessage] = useState("");
+	const [commentText, setCommentText] = useState("");
+	const [rating, setRating] = useState(0);
 
 	function handleToggleDealsModal(){
         if(sendingDeal && showDealModal) return;
@@ -37,6 +41,11 @@ function DetailComponent({ userData }) {
 	function handleToggleChatModal(){
         if(sendingMessage && showChatModal) return;
         setShowChatModal(!showChatModal);
+    }
+
+	function handleToggleCommentsModal(){
+        if(sendingComment && showCommentsModal) return;
+        setShowCommentsModal(!showCommentsModal);
     }
 
 	async function sendMessage(){
@@ -63,6 +72,35 @@ function DetailComponent({ userData }) {
 		}finally{
 			setSendingMessage(false);
 			setShowChatModal(false);
+		}
+		
+	}
+
+	async function sendComment(){
+		if(sendingComment) return;
+		try{
+			setSendingComment(true);
+			if(!commentText.trim()) throw new Error('mensagem em branco');
+
+			let apiResponse = await Api.avaliateUser({
+				to: userData.id,
+				message: commentText,
+				stars: rating
+			});
+
+			if (apiResponse !== true) throw new Error("algo deu errado ao enviar a avaliação");
+			
+			setChatMessage("");
+			setMessageSentSuccess(true);
+			alert('avaliação enviada com sucesso');
+
+		}catch(err){
+
+			alert(err.message);
+
+		}finally{
+			setSendingComment(false);
+			handleToggleCommentsModal();
 		}
 		
 	}
@@ -192,6 +230,11 @@ function DetailComponent({ userData }) {
 						<span className="material-symbols-outlined" title={ userData.userIsOwner ? 'Ver minhas propostas' : 'Fazer uma proposta' } onClick={handleDealsClick}>
 							handshake
 						</span>
+						{ !userData.userIsOwner &&
+						<span className="material-symbols-outlined" title="Fazer comentário" onClick={handleToggleCommentsModal}>
+							thumbs_up_down
+						</span>
+						}
 						{ userData.userIsOwner &&
 						<span className="material-symbols-outlined" title="Configurações" onClick={() => {navigate("/settings")}}>
 							settings
@@ -255,6 +298,24 @@ function DetailComponent({ userData }) {
 					<div className="deal_details_modal-options row-centered">
 						<button className="button_send clickable deal_items_shadow prevent-select" onClick={()=>{sendMessage()}}>Enviar</button>
 						<button className="button_cancel clickable deal_items_shadow prevent-select" onClick={handleToggleChatModal}>Cancelar</button>
+					</div>
+				</div>
+			</CustomModal>
+			<CustomModal toggle={handleToggleCommentsModal} show={showCommentsModal} showCloseButton={false} >
+				<div className="comments_details_modal column-centered default-shadow">
+					<div className="deal_details_modal-header row-centered">
+						<span className="chat-modal-header">Fazer avaliação</span>
+					</div>
+					<div className="comment_details_modal-stars row-centered">
+						Selecione a nota:
+						<StarsInput value={rating} onChange={setRating} />
+					</div>
+					<div className="deal_details_modal-message row-centered">
+						<textarea className="deal_details_modal-input deal_items_shadow" placeholder="digite uma mensagem" value={commentText} onChange={(e)=>{setCommentText(e.target.value)}}></textarea>
+					</div>
+					<div className="deal_details_modal-options row-centered">
+						<button className="button_send clickable deal_items_shadow prevent-select" onClick={()=>{sendComment()}}>Enviar</button>
+						<button className="button_cancel clickable deal_items_shadow prevent-select" onClick={handleToggleCommentsModal}>Cancelar</button>
 					</div>
 				</div>
 			</CustomModal>
