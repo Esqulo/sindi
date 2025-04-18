@@ -20,7 +20,7 @@ function EditProfile() {
         console.log("Enviando dados atualizados:", formData);
         // Aqui você pode integrar com sua API
     };
-
+/*
     const trustee_fields = {
 		name: { label: "Nome", placeholder: "José da Silva", type: "text", required: true },
 		birthdate: { label: "Data de nascimento", placeholder: "31/12/1999", type: "date", min: "1920-01-01", max: getCurrentDate(), required: true },
@@ -67,7 +67,7 @@ function EditProfile() {
 		confirmPassword: { label: "Confirme a senha", placeholder: "**********", type: "password", required: true },
 		terms: { label: 'Eu concordo com os <a href="/terms">termos</a> de serviço e <a href="/privacy">privacidade</a>', type: "checkbox", required: true },
 	};
-
+*/
     return (
         <div className="edit-profile-container">
             <h2>Editar Perfil</h2>
