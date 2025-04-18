@@ -89,6 +89,8 @@ class AvaliationController extends Controller
 
             Avaliation::create($validatedData);
 
+            User::where('id', $validatedData['to'])->increment('reviews_count');
+
         } catch (Exception $e) {
             $statusCode = $e->getCode();
 
