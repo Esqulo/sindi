@@ -3,6 +3,7 @@ import { useSearchParams  } from 'react-router-dom';
 import "./styles.css";
 
 import MyCards from "../MyCards";
+import EditProfile from "../../components/EditProfile";
 
 function Settings(){
 
@@ -14,6 +15,11 @@ function Settings(){
             label: "Cartões",
             icon: "credit_card",
             component: MyCards
+        },
+        "profile": {
+            label: "Perfil",
+            icon: "person",
+            component: EditProfile
         },
     };
     
