@@ -63,32 +63,29 @@ class AvaliationController extends Controller
     }
 
     public function newAvaliation(Request $request){
-        try{
-            $userId = $this->validateUser($request);
-        }catch(Exception $e){
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage()
-            ], 401);
-        }
+        
+        $user_id = $this->retrieveId($request->header('Authorization'));
 
         try{
 
-            if(Avaliation::where('deal',$request->deal)->exists()) throw new Exception("already avaliated",409);
+            // if(Avaliation::where('deal',$request->deal)->exists()) throw new Exception("already avaliated",409);
 
             $validatedData = $request->validate([
-                "deal" => "required|numeric|exists:deals,id",
+                // "deal" => "required|numeric|exists:deals,id",
                 "stars" => "required|integer|min:1|max:5",
-                "message" => "required|string|max:3000"
+                "message" => "required|string|max:3000",
+                "to" => "required|numeric|min:1"
             ]); 
 
-            $dealData = Deal::find($validatedData['deal']);
-            
-            if($dealData['answer'] != 1) throw new Exception("cannot avaliate this deal",409);
-            if($dealData['expires_at'] >= Carbon::now()) throw new Exception("cannot avaliate a deal before it expires",409);
+            $validatedData['from'] = $user_id;
 
-            $validatedData['from'] = $dealData['hirer'];
-            $validatedData['to'] = $dealData['worker'];
+            // $dealData = Deal::find($validatedData['deal']);
+            
+            // if($dealData['answer'] != 1) throw new Exception("cannot avaliate this deal",409);
+            // if($dealData['expires_at'] >= Carbon::now()) throw new Exception("cannot avaliate a deal before it expires",409);
+
+            // $validatedData['from'] = $dealData['hirer'];
+            // $validatedData['to'] = $dealData['worker'];
 
             Avaliation::create($validatedData);
 

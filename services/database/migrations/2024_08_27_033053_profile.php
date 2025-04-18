@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('from')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('to')->references('id')->on('users')->onDelete('cascade');
-            $table->unsignedBigInteger('deal')->references('id')->on('deals')->onDelete('cascade');
+            $table->unsignedBigInteger('deal')->references('id')->on('deals')->onDelete('cascade')->nullable();
             $table->integer('stars');
             $table->string('message',3000);
             $table->dateTime('created_at')->useCurrent();
