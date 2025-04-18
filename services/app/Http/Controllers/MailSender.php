@@ -29,6 +29,77 @@ class MailSender extends Controller
 
     }
 
+    private function appendSignature($template){
+        //recebendo meu template original para concatenar a "assinatura"
+        $template .= '
+        <div style="
+            width: 500px;
+            height: 220px;
+            display: flex;
+            border: 1px solid #ddd;
+            padding: 30px;
+            align-items: center;
+            gap: 30px;
+            font-size: 16px;
+        ">
+            <!-- Logo -->
+            <div style="
+                width: 80px;
+                height: 80px;
+                background: url(\'https://sindibr.com.br/favicon.png\') no-repeat center center;
+                background-size: contain;
+            "></div>
+    
+            <!-- Divisor -->
+            <div style="
+                width: 2px;
+                height: 100%;
+                background-color: #aaa;
+            "></div>
+    
+            <!-- Conteudo -->
+            <div style="flex: 1;">
+                <div style="
+                    font-size: 22px;
+                    font-weight: bold;
+                    letter-spacing: 2px;
+                    text-transform: lowercase;
+                ">
+                    sindi
+                </div>
+                <div style="
+                    font-size: 12px;
+                    margin-top: 3px;
+                    margin-bottom: 15px;
+                    letter-spacing: 1px;
+                    text-transform: lowercase;
+                    color: #555;
+                ">
+                    conectando síndicos, transformando <br> condomínios
+                </div>
+                <div style="
+                    display: flex;
+                    flex-direction: column;
+                    gap: 12px;
+                    font-size: 16px;
+                ">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span>✉️</span> suporte@sindibr.com.br
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span>📍</span> Rio de Janeiro, Brasil
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span>🌐</span> sindibr.com.br
+                    </div>
+                </div>
+            </div>
+        </div>
+        ';
+
+        return $template;
+    }
+
     public function sendEmailConfirmation($user_id){
 
         $user_email = $this->getUserEmail($user_id);
@@ -75,6 +146,8 @@ class MailSender extends Controller
                 sugerimos revisar a segurança do seu email.</i><br>
             </div>
         ";
+
+        $template = $this->appendSignature($template);
 
         $this->sendEmail($user_email,'Sindi - Confirmação de email',$template);
 
