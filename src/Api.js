@@ -1,18 +1,27 @@
 const BASE_URL = process.env.REACT_APP_BASE_API_URL;
 
-function handleAction(json){
-    if (json?.action) {
-        switch (json.action) {
-            case 'redirect_login':
-                window.location.href = '/login';
-                break;
-            case 'reload':
-                window.location.reload();
-                break;
-            default:
-                console.warn('Ação desconhecida:', json.action);
-        }
+const actions = {
+    redirectToLogin: function (){
+        console.log('#redirectToLogin')
+    },
+    redirectToDeals: function (){
+        console.log('#redirectToDeals')
+    },
+    redirectToCards: function (){
+        alert("para navegar é necessário cadastrar um cartão");
+        window.location.href = "#/settings?menu=cards";
     }
+}
+
+function handleAction(json){
+    if (!json.action) return;
+
+    try{
+        actions[json.action]();
+    }catch(err){
+        console.error('error:', err);
+    }
+
 };
 
 async function apiFetch(url, options = {}){
