@@ -2,10 +2,12 @@ const BASE_URL = process.env.REACT_APP_BASE_API_URL;
 
 const actions = {
     redirectToLogin: function (){
-        console.log('#redirectToLogin')
+        localStorage.removeItem('token');
+        window.location.href = "#/login";
     },
     redirectToDeals: function (){
-        console.log('#redirectToDeals')
+        alert("Você possui ofertas não respondidas a mais de 7 dias.");
+        window.location.href = "#/deals";
     },
     redirectToCards: function (){
         alert("para navegar é necessário cadastrar um cartão");
