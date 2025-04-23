@@ -1,379 +1,170 @@
 const BASE_URL = process.env.REACT_APP_BASE_API_URL;
 
-const Api = {
-    login: async ({username, password}) => {
-        try{
-            const req = await fetch(`${BASE_URL}/auth/login`,{
-                method: 'POST',
-                headers:{ Accept: 'application/json', 'Content-Type': 'application/json' },
-                body: JSON.stringify({username, password})
-            });
-            const json = await req.json();
-            return {
-                token: json?.token,
-                success: json?.success,
-                status: req.status
-            };
-        }
-        catch(error){
-            return {
-                error: error
-            };
-        }
-    },
-    cep: async ({cep}) => {
-        try{
-            const req = await fetch(`https://viacep.com.br/ws/${cep}/json/`,{
-                method: 'GET',
-                headers:{ Accept: 'application/json', 'Content-Type': 'application/json' }
-            });
-            const json = await req.json();
-            return json;
-        }
-        catch(error){
-            return {
-                error: error
-            };
-        }
-    },
-    newUser: async (userData) => {
-        try{
-            const req = await fetch(`${BASE_URL}/user`,{
-                method: 'POST',
-                headers:{ Accept: 'application/json', 'Content-Type': 'application/json' },
-                body: JSON.stringify(userData)
-            });
-            const json = await req.json();
-            return {
-                message: json?.message,
-                success: json?.success,
-                status: req.status,
-                data: json?.data
-            };
-        }
-        catch(error){
-            return {
-                error: error
-            };
-        }
-    },
-    newCard: async (cardToken) => {
-        try{
-            const req = await fetch(`${BASE_URL}/mp/card`,{
-                method: 'POST',
-                headers:{ 
-                    'Accept': 'application/json', 
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem("token")}`
-                },
-                body: JSON.stringify({card_token: cardToken})
-            });
-            const json = await req.json();
-            return json;
-        }
-        catch(error){
-            return {
-                error: error
-            };
-        }
-    },
-    getMyCards: async () => {
-        try{
-            const req = await fetch(`${BASE_URL}/mp/card`,{
-                method: 'GET',
-                headers:{ 
-                    'Accept': 'application/json', 
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem("token")}`
-                }
-            });
-            const json = await req.json();
-            return json;
-        }
-        catch(error){
-            return {
-                error: error
-            };
-        }
-    },
-    deleteCard: async (cardId) => {
-        try{
-            const req = await fetch(`${BASE_URL}/mp/card/${cardId}`,{
-                method: 'DELETE',
-                headers:{ 
-                    'Accept': 'application/json', 
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem("token")}`
-                }
-            });
-            const json = await req.json();
-            return json;
-        }
-        catch(error){
-            return {
-                error: error
-            };
-        }
-    },
-    getMyChats: async (page = 1) => {
-        try{
-            const req = await fetch(`${BASE_URL}/chat?page=${page}`,{
-                'method': 'GET',
-                headers: { 
-                    'Accept': 'application/json', 
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem("token")}`
-                }
-            });
-            const json = await req.json();
-            return json;
-        }
-        catch(error){
-            return {
-                error: error
-            };
-        }
-    },
-    getChatMessages: async ({chat_id,page = 1,begin_date}) => {
-        try{
-            const req = await fetch(`${BASE_URL}/chat/${chat_id}?begin_date=${begin_date}`,{
-                'method': 'GET',
-                headers: { 
-                    'Accept': 'application/json', 
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem("token")}`
-                }
-            });
-            const json = await req.json();
-            return json;
-        }
-        catch(error){
-            return {
-                error: error
-            };
-        }
-    },
-    getCurrentUserId: async () => {
-        try{
-            const req = await fetch(`${BASE_URL}/auth/currentUserId`,{
-                'method': 'GET',
-                headers: { 
-                    'Accept': 'application/json', 
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem("token")}`
-                }
-            });
-            const json = await req.json();
-            return json;
-        }
-        catch(error){
-            return {
-                error: error
-            };
-        }
-    },
-    sendMessage: async ({message, to}) => {
-        try{
-            const req = await fetch(`${BASE_URL}/chat/message`,{
-                method: 'POST',
-                headers: { 
-                    'Accept': 'application/json', 
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem("token")}`
-                },
-                body: JSON.stringify({message,to})
-            });
-            const json = await req.json();
-            return json;
-        }
-        catch(error){
-            return {
-                error: error
-            };
-        }
-    },
-    getDeals: async (page = 1) => {
-        try{
-            const req = await fetch(`${BASE_URL}/deal?page=${page}`,{
-                method: 'GET',
-                headers: { 
-                    'Accept': 'application/json', 
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem("token")}`
-                },
-            });
-            const json = await req.json();
-            return json.data;
-        }
-        catch(error){
-            return {
-                error: error
-            };
-        }
-    },
-    getDealDetails: async (dealId) => {
-        try{
-            const req = await fetch(`${BASE_URL}/deal/${dealId}`,{
-                method: 'GET',
-                headers: { 
-                    'Accept': 'application/json', 
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem("token")}`
-                },
-            });
-            const json = await req.json();
-            return json;
-        }
-        catch(error){
-            return {
-                error: error
-            };
-        }
-    },
-    answerDeal: async (dealId,dealData) => {
-        try{
-            const req = await fetch(`${BASE_URL}/deal/answer/${dealId}`,{
-                method: 'PUT',
-                headers: { 
-                    'Accept': 'application/json', 
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem("token")}`
-                },
-                body: JSON.stringify(dealData)
-            });
-            const json = await req.json();
-            return json;
-        }
-        catch(error){
-            return {
-                error: error
-            };
-        }
-    },
-    createDeal: async (dealData) => {
-        try{
-            const req = await fetch(`${BASE_URL}/deal/create`,{
-                method: 'POST',
-                headers: { 
-                    'Accept': 'application/json', 
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem("token")}`
-                },
-                body: JSON.stringify(dealData)
-            });
-            const json = await req.json();
-            return json;
-        }
-        catch(error){
-            return {
-                error: error
-            };
-        }
-    },
-    getUserProfile: async (userId) => {
-        try{
-            const req = await fetch(`${BASE_URL}/user/${userId || 0}`,{
-                method: 'GET',
-                headers: { 
-                    'Accept': 'application/json', 
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem("token")}`
-                },
-            });
-            const json = await req.json();
-            return json;
-        }
-        catch(error){
-            return {
-                error: error
-            };
-        }
-    },
-    getComments: async ({userId, page = 1}) => {
-        try{
-            const req = await fetch(`${BASE_URL}/avaliation/user/${userId}?page=${page}`,{
-                method: 'GET',
-                headers: { 
-                    'Accept': 'application/json', 
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem("token")}`
-                },
-            });
-            const json = await req.json();
-            return json;
-        }
-        catch(error){
-            return {
-                error: error
-            };
-        }
-    },
-    createChat: async ({users,message}) => {
-        try{
-            const req = await fetch(`${BASE_URL}/chat/new`,{
-                method: 'POST',
-                headers: { 
-                    'Accept': 'application/json', 
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem("token")}`
-                },
-                body: JSON.stringify({users,message})
-            });
-            const json = await req.json();
-            return json;
-        }
-        catch(error){
-            return {
-                error: error
-            };
-        }
-    },
-    avaliateUser: async ({to,message,stars}) => {
-        try{
-            const req = await fetch(`${BASE_URL}/avaliation/new`,{
-                method: 'POST',
-                headers: { 
-                    'Accept': 'application/json', 
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem("token")}`
-                },
-                body: JSON.stringify({
-                    to,message,stars
-                })
-            });
-            const json = await req.json();
-            return json;
-        }
-        catch(error){
-            return {
-                error: error
-            };
-        }
-    },
-    newService: async ({title,price,description}) => {
-        try{
-            const req = await fetch(`${BASE_URL}/offeredservices`,{
-                method: 'POST',
-                headers: { 
-                    'Accept': 'application/json', 
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem("token")}`
-                },
-                body: JSON.stringify({
-                    name:title,
-                    description,
-                    price
-                })
-            });
-            const json = await req.json();
-            return json;
-        }
-        catch(error){
-            return {
-                error: error
-            };
+function handleAction(json){
+    if (json?.action) {
+        switch (json.action) {
+            case 'redirect_login':
+                window.location.href = '/login';
+                break;
+            case 'reload':
+                window.location.reload();
+                break;
+            default:
+                console.warn('Ação desconhecida:', json.action);
         }
     }
-}
+};
+
+async function apiFetch(url, options = {}){
+    try {
+        const response = await fetch(url, options);
+        const json = await response.json();
+
+        handleAction(json);
+
+        return { ...json, status: response.status };
+    } catch (error) {
+        return { error };
+    }
+};
+
+function getAuthHeaders(){
+    return {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem("token")}`
+    }
+};
+
+const Api = {
+    login: async ({ username, password }) =>
+        apiFetch(`${BASE_URL}/auth/login`, {
+            method: 'POST',
+            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+        }),
+
+    cep: async ({ cep }) =>
+        apiFetch(`https://viacep.com.br/ws/${cep}/json/`, {
+            method: 'GET',
+            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }
+        }),
+
+    newUser: async (userData) =>
+        apiFetch(`${BASE_URL}/user`, {
+            method: 'POST',
+            headers: getAuthHeaders(),
+            body: JSON.stringify(userData)
+        }),
+
+    newCard: async (cardToken) =>
+        apiFetch(`${BASE_URL}/mp/card`, {
+            method: 'POST',
+            headers: getAuthHeaders(),
+            body: JSON.stringify({ card_token: cardToken })
+        }),
+
+    getMyCards: async () =>
+        apiFetch(`${BASE_URL}/mp/card`, {
+            method: 'GET',
+            headers: getAuthHeaders()
+        }),
+
+    deleteCard: async (cardId) =>
+        apiFetch(`${BASE_URL}/mp/card/${cardId}`, {
+            method: 'DELETE',
+            headers: getAuthHeaders()
+        }),
+
+    getMyChats: async (page = 1) =>
+        apiFetch(`${BASE_URL}/chat?page=${page}`, {
+            method: 'GET',
+            headers: getAuthHeaders()
+        }),
+
+    getChatMessages: async ({ chat_id, begin_date }) =>
+        apiFetch(`${BASE_URL}/chat/${chat_id}?begin_date=${begin_date}`, {
+            method: 'GET',
+            headers: getAuthHeaders()
+        }),
+
+    getCurrentUserId: async () =>
+        apiFetch(`${BASE_URL}/auth/currentUserId`, {
+            method: 'GET',
+            headers: getAuthHeaders()
+        }),
+
+    sendMessage: async ({ message, to }) =>
+        apiFetch(`${BASE_URL}/chat/message`, {
+            method: 'POST',
+            headers: getAuthHeaders(),
+            body: JSON.stringify({ message, to })
+        }),
+
+    getDeals: async (page = 1) => {
+        const res = await apiFetch(`${BASE_URL}/deal?page=${page}`, {
+            method: 'GET',
+            headers: getAuthHeaders()
+        });
+        return res.data ?? res;
+    },
+
+    getDealDetails: async (dealId) =>
+        apiFetch(`${BASE_URL}/deal/${dealId}`, {
+            method: 'GET',
+            headers: getAuthHeaders()
+        }),
+
+    answerDeal: async (dealId, dealData) =>
+        apiFetch(`${BASE_URL}/deal/answer/${dealId}`, {
+            method: 'PUT',
+            headers: getAuthHeaders(),
+            body: JSON.stringify(dealData)
+        }),
+
+    createDeal: async (dealData) =>
+        apiFetch(`${BASE_URL}/deal/create`, {
+            method: 'POST',
+            headers: getAuthHeaders(),
+            body: JSON.stringify(dealData)
+        }),
+
+    getUserProfile: async (userId) =>
+        apiFetch(`${BASE_URL}/user/${userId || 0}`, {
+            method: 'GET',
+            headers: getAuthHeaders()
+        }),
+
+    getComments: async ({ userId, page = 1 }) =>
+        apiFetch(`${BASE_URL}/avaliation/user/${userId}?page=${page}`, {
+            method: 'GET',
+            headers: getAuthHeaders()
+        }),
+
+    createChat: async ({ users, message }) =>
+        apiFetch(`${BASE_URL}/chat/new`, {
+            method: 'POST',
+            headers: getAuthHeaders(),
+            body: JSON.stringify({ users, message })
+        }),
+
+    avaliateUser: async ({ to, message, stars }) =>
+        apiFetch(`${BASE_URL}/avaliation/new`, {
+            method: 'POST',
+            headers: getAuthHeaders(),
+            body: JSON.stringify({ to, message, stars })
+        }),
+
+    newService: async ({ title, price, description }) =>
+        apiFetch(`${BASE_URL}/offeredservices`, {
+            method: 'POST',
+            headers: getAuthHeaders(),
+            body: JSON.stringify({
+                name: title,
+                description,
+                price
+            })
+        })
+};
 
 export default Api;
