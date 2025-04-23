@@ -20,9 +20,11 @@ function DetailComponent({ userData }) {
 	const [showDealModal, setShowDealModal] = useState(false);
 	const [showChatModal, setShowChatModal] = useState(false);
 	const [showCommentsModal, setShowCommentsModal] = useState(false);
+	const [showNewServiceModal, setShowNewServiceModal] = useState(false);
 	const [sendingDeal, setSendingDeal] = useState(false);
 	const [sendingMessage, setSendingMessage] = useState(false);
 	const [sendingComment, setSendingComment] = useState(false);
+	const [sendingNewService, setSendingNewService] = useState(false);
 	const [messageSentSuccess, setMessageSentSuccess] = useState(false);
 
 	const [newDealValue, setNewDealValue] = useState(0);
@@ -31,11 +33,19 @@ function DetailComponent({ userData }) {
 	const [newDealEndDate, setNewDealEndDate] = useState("");
 	const [chatMessage, setChatMessage] = useState("");
 	const [commentText, setCommentText] = useState("");
+	const [newServiceTitle, setNewServiceTitle] = useState("");
+	const [newServicePrice, setNewServicePrice] = useState("");
+	const [newServiceDescription, setNewServiceDescription] = useState("");
 	const [rating, setRating] = useState(0);
 
 	function handleToggleDealsModal(){
         if(sendingDeal && showDealModal) return;
         setShowDealModal(!showDealModal);
+    }
+
+	function handleToggleServicesModal(){
+        // if(sendingDeal && showDealModal) return;
+        setShowNewServiceModal(!showNewServiceModal);
     }
 
 	function handleToggleChatModal(){
@@ -170,6 +180,43 @@ function DetailComponent({ userData }) {
         }
     }
 
+	async function createService(){
+
+		console.log('newServiceTitle',newServiceTitle);
+		console.log('newServicePrice',newServicePrice);
+		console.log('newServiceDescription',newServiceDescription);
+
+        if(sendingNewService) return;
+		
+        try{
+            setSendingNewService(true);
+
+			if(!newServiceTitle || !newServicePrice || !newServiceDescription){
+				alert("Preencha todos os campos!");
+				return;
+			}
+            
+            let response = await Api.newService({
+				title: newServiceTitle,
+                price: parseCurrency(newServicePrice),
+                description: newServiceDescription
+            });
+
+            if(response !== true) throw new Error("Error creating deal");
+
+        }catch(error){
+            alert("Algo deu errado, verifique os dados e tente novamente.");
+            console.error("Error creating service:", error);
+        }finally{
+			alert("criado com sucesso");
+			handleToggleServicesModal();
+			setNewServiceTitle("");
+			setNewServicePrice(0);
+			setNewServiceDescription("");
+            setSendingNewService(false);
+        }
+    }
+
 	function handleValueChange(value) {
         const numeric = value.replace(/\D/g, '');
 
@@ -186,6 +233,22 @@ function DetailComponent({ userData }) {
         setNewDealValue(formatted);
     }
 
+	function handleNewServicePrice(value) {
+		const numeric = value.replace(/\D/g, "");
+
+		if (!numeric) {
+			setNewServicePrice("");
+			return;
+		}
+
+		const integer = numeric.slice(0, -2) || "0";
+		const decimal = numeric.slice(-2);
+
+		const formatted = parseInt(integer).toLocaleString("pt-BR") + "," + decimal;
+
+		setNewServicePrice(formatted);
+	}
+
 	function handleDealsClick(){
 		userData.userIsOwner ? navigate("/deals") : handleToggleDealsModal();
 	}
@@ -200,6 +263,7 @@ function DetailComponent({ userData }) {
 		setSendingDeal(false);
 		setSendingMessage(false);
 		setMessageSentSuccess(false);
+		setShowNewServiceModal(false);
 		setNewDealValue(0);
 		setNewDealMessage("");
 		setNewDealStartDate("");
@@ -233,6 +297,11 @@ function DetailComponent({ userData }) {
 						{ !userData.userIsOwner &&
 						<span className="material-symbols-outlined" title="Fazer comentário" onClick={handleToggleCommentsModal}>
 							thumbs_up_down
+						</span>
+						}
+						{ (userData.userIsOwner && userData.type === 1) &&
+						<span className="material-symbols-outlined" title="Cadastrar serviços" onClick={handleToggleServicesModal}>
+							enterprise
 						</span>
 						}
 						{ userData.userIsOwner &&
@@ -319,6 +388,28 @@ function DetailComponent({ userData }) {
 					</div>
 				</div>
 			</CustomModal>
+			<CustomModal toggle={handleToggleServicesModal} show={showNewServiceModal} showCloseButton={false} >
+				<div className="deal_details_modal column-centered default-shadow">
+					<div className="deal_details_modal-header row-centered" style={{justifyContent: "normal" }}>
+						<div className="input_block" >
+							<span>Título</span>
+							<input type="text" placeholder="digite o título" className="deal_details_modal-input deal_items_shadow" value={newServiceTitle} onChange={(e) => setNewServiceTitle(e.target.value)} style={{width: "400px" }}/>
+						</div>
+						<div className="input_block" style={{marginLeft: "20px" }}>
+							<span>R$</span>
+							<input type="numeric" placeholder="digite o valor" className="deal_details_modal-input deal_items_shadow" value={newServicePrice} onChange={(e) => handleNewServicePrice(e.target.value)} style={{width: "190px" }}/>
+						</div>
+					</div>
+					<div className="deal_details_modal-message row-centered">
+						<textarea className="deal_details_modal-input deal_items_shadow" placeholder="digite uma mensagem" value={newServiceDescription} onChange={(e)=>{setNewServiceDescription(e.target.value)}}></textarea>
+					</div>
+					<div className="deal_details_modal-options row-centered">
+						<button className="button_send clickable deal_items_shadow prevent-select" onClick={createService}>Enviar</button>
+						<button className="button_cancel clickable deal_items_shadow prevent-select" onClick={handleToggleServicesModal}>Cancelar</button>
+					</div>
+				</div>
+			</CustomModal>
+			
 		</div>
 	);
 }

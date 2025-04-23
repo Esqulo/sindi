@@ -350,6 +350,30 @@ const Api = {
             };
         }
     },
+    newService: async ({title,price,description}) => {
+        try{
+            const req = await fetch(`${BASE_URL}/offeredservices`,{
+                method: 'POST',
+                headers: { 
+                    'Accept': 'application/json', 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem("token")}`
+                },
+                body: JSON.stringify({
+                    name:title,
+                    description,
+                    price
+                })
+            });
+            const json = await req.json();
+            return json;
+        }
+        catch(error){
+            return {
+                error: error
+            };
+        }
+    }
 }
 
 export default Api;
