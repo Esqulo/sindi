@@ -113,6 +113,7 @@ class UserController extends Controller
 
         $response = array_merge($response, [
             'id' => $userData->id,
+            'type' => $userData->user_type,
             'name' => $userData->name,
             'rating' => $userRating->rating ?? 0,
             'reviews' => $userData->reviews_count,
