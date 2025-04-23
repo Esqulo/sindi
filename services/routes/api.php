@@ -17,16 +17,11 @@ use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\MercadoPagoController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['PendingDealsGroup'])->group(function () {
+Route::middleware(['CheckCardsGroup','PendingDealsGroup'])->group(function () {
     Route::resources([
-        'user' => UserController::class,
         'product' => ProductsController::class,
         'meeting' => MeetingsController::class
     ]);
-
-    Route::prefix('nearby')->group(function(){
-        Route::get('users/{id}',[NearbyController::class, 'users']);
-    });
 
     Route::prefix('chat')->group(function(){
         Route::get('/',[ChatController::class, 'getUserChats']);
@@ -59,6 +54,14 @@ Route::middleware(['PendingDealsGroup'])->group(function () {
         Route::post('/', [NewsletterController::class, 'insert']);
     });
 
+});
+
+Route::resources([
+    'user' => UserController::class
+]);
+
+Route::prefix('nearby')->group(function(){
+    Route::get('users/{id}',[NearbyController::class, 'users']);
 });
 
 Route::prefix('auth')->group(function(){
