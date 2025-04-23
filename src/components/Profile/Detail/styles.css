@@ -20,6 +20,7 @@
 }
   
 .profile-details-avatar-image {
+    box-shadow: 0 0 10px 10px #00000045;
     object-fit: cover;
     border-radius: 50%;
 }
