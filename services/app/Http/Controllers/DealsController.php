@@ -82,7 +82,7 @@ class DealsController extends Controller
                 'title' => $otherUserData->name ?? 'desconhecido',
                 'image' => $otherUserData->avatar ?? null,
                 'status' => $status ?? 'desconhecido',
-                'last_update' => $last_update->format('d/m/Y H:i')?? 'desconhecido'
+                'last_update' => $last_update ? $last_update->format('d/m/Y H:i') : 'desconhecido'
             ];
         }
 
