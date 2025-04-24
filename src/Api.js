@@ -3,15 +3,15 @@ const BASE_URL = process.env.REACT_APP_BASE_API_URL;
 const actions = {
     redirectToLogin: function (){
         localStorage.removeItem('token');
-        window.location.href = "#/login";
+        window.location.href = "/login";
     },
     redirectToDeals: function (){
         alert("Você possui ofertas não respondidas a mais de 7 dias.");
-        window.location.href = "#/deals";
+        window.location.href = "/deals";
     },
     redirectToCards: function (){
         alert("para navegar é necessário cadastrar um cartão");
-        window.location.href = "#/settings?menu=cards";
+        window.location.href = "/settings?menu=cards";
     }
 }
 
