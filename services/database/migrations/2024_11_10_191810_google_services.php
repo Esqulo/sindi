@@ -13,8 +13,7 @@ return new class extends Migration
     {
         Schema::create('google_user_credentials', function (Blueprint $table) {
             $table->id();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('no action');
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('user_id')->references('id')->on('users')->onDelete('no action');
             $table->string('calendar_token',250);
             $table->string('calendar_refresh_token',250)->nullable();
             $table->dateTime('calendar_expires_in');
