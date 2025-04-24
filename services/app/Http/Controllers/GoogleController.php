@@ -46,7 +46,7 @@ class GoogleController extends Controller
         ], 500);
 
         try{
-            $userId = $this->validateUser($request);
+            $userId = $this->retrieveId($request->header('Authorization'));
         }catch(Exception $e){
             return response()->json([
                 'success' => false,
@@ -72,7 +72,7 @@ class GoogleController extends Controller
             GoogleUserCredential::create([
                 'user_id' => $user_id,
                 'calendar_token' => $tokenData['access_token'],
-                'calendar_refresh_token' => $tokenData['calendar_refresh_token'],
+                'calendar_refresh_token' => $tokenData['refresh_token'],
                 'calendar_expires_in' => Carbon::now()->addSeconds($tokenData['expires_in'])->toDateTimeString(),
                 'calendar_created_at' => Carbon::now()
             ]);
