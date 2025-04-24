@@ -31,7 +31,7 @@ class GoogleController extends Controller
     {
         $userId = $this->retrieveId($request->header('Authorization'));
         if(!$userId) return response()->json(['success' => false, 'message' => 'Not allowed.'], 403);
-        
+
         $client = new GoogleClient();
         $client->setClientId(config('services.google.client_id'));
         $client->setClientSecret(config('services.google.client_secret'));
@@ -286,7 +286,8 @@ class GoogleController extends Controller
 
     public function checkAccountIsLinked(Request $request){
         $userId = $this->retrieveId($request->header('Authorization'));
-
+        if(!$userId) return response()->json(['success' => false, 'message' => 'Not allowed.'], 403);
+        
         $credential = GoogleUserCredential::where('user_id', $userId)->first();
 
         return response()->json([
