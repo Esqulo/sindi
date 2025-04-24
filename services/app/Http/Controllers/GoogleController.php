@@ -56,7 +56,9 @@ class GoogleController extends Controller
 
         $this->syncCalendarAccount($userId,$token);
 
-        return response()->json($token, 200);
+        return response()->json([
+            "success" => true
+        ], 200);
     }
 
     public function syncCalendarAccount($user_id,$tokenData){
