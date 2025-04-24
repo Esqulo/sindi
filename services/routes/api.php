@@ -74,6 +74,11 @@ Route::prefix('auth')->group(function(){
     Route::get('callback', [GoogleController::class, 'handleGoogleCallback']);
 });
 
+Route::prefix('google')->group(function(){
+    Route::get('accountIsLinked', [GoogleController::class, 'checkAccountIsLinked']);
+    Route::get('unlinkAccount', [GoogleController::class, 'unlinkAccount']);
+});
+
 Route::prefix('payment')->group(function(){
     Route::post('/new',[PurchasesController::class, 'newPurchase']);
     Route::get('/retrieve/{transaction_id}',[PurchasesController::class, 'retrieve']);

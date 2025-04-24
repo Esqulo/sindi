@@ -29,6 +29,9 @@ class GoogleController extends Controller
 
     public function handleGoogleCallback(Request $request)
     {
+        $userId = $this->retrieveId($request->header('Authorization'));
+        if(!$userId) return response()->json(['success' => false, 'message' => 'Not allowed.'], 403);
+        
         $client = new GoogleClient();
         $client->setClientId(config('services.google.client_id'));
         $client->setClientSecret(config('services.google.client_secret'));
@@ -44,15 +47,6 @@ class GoogleController extends Controller
         if (!isset($token['access_token'])) return response()->json([
             'error' => 'Erro ao obter token de acesso'
         ], 500);
-
-        try{
-            $userId = $this->retrieveId($request->header('Authorization'));
-        }catch(Exception $e){
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage()
-            ], 401);
-        }
 
         $this->syncCalendarAccount($userId,$token);
 
@@ -288,5 +282,27 @@ class GoogleController extends Controller
 
     public function retrieveUserGoogleCredentials($user_id){
         return GoogleUserCredential::where('user_id',$user_id)->first();
+    }
+
+    public function checkAccountIsLinked(Request $request){
+        $userId = $this->retrieveId($request->header('Authorization'));
+
+        $credential = GoogleUserCredential::where('user_id', $userId)->first();
+
+        return response()->json([
+            "isLinked" => $credential ? true : false
+        ],200);
+    }
+
+    public function unlinkAccount(Request $request){
+        $userId = $this->retrieveId($request->header('Authorization'));
+        if(!$userId) return response()->json(['success' => false, 'message' => 'Not allowed.'], 403);
+
+        $deleted = GoogleUserCredential::where('user_id', $userId)->delete();
+
+        return response()->json([
+            'success' => $deleted > 0,
+            'message' => $deleted > 0 ? 'Account unlinked successfully' : 'No linked account found'
+        ], 200);
     }
 }
