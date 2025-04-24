@@ -175,6 +175,24 @@ const Api = {
                 description,
                 price
             })
+        }),
+
+    LinkGoogle: async (code) =>
+        apiFetch(`${BASE_URL}/auth/callback?code=${code}`, {
+            method: 'GET',
+            headers: getAuthHeaders()
+        }),
+
+    checkGoogleIsLinked: async () =>
+        apiFetch(`${BASE_URL}/google/accountIsLinked`, {
+            method: 'GET',
+            headers: getAuthHeaders()
+        }),
+
+    unlinkGoogleAccount: async () =>
+        apiFetch(`${BASE_URL}/google/unlinkAccount`, {
+            method: 'GET',
+            headers: getAuthHeaders()
         })
 };
 

@@ -1,0 +1,36 @@
+.link_google-container{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 30px;
+    gap: 20px;
+}
+
+.link_google-header{
+    font-weight: bold;
+}
+
+.link_google-account_status,
+.loading_container{
+    margin-top: 20px;
+}
+
+.link_google-actions{
+    width: 100%;
+    gap: 20px;
+}
+
+.link_google-actions button{
+    background-color: #000;
+    color: #FFF;
+    border: none;
+    padding: 10px 30px;
+    border-radius: 10px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.link_google-actions button:hover{
+    opacity: 75%;
+}

@@ -4,6 +4,7 @@ import "./styles.css";
 
 import MyCards from "../MyCards";
 import EditProfile from "../../components/EditProfile";
+import LinkGoogleAccount from "../LinkGoogleAccount";
 
 function Settings(){
 
@@ -20,6 +21,11 @@ function Settings(){
             label: "Perfil",
             icon: "person",
             component: EditProfile
+        },
+        "google": {
+            label: "Google",
+            icon: "link",
+            component: LinkGoogleAccount
         },
     };
     
