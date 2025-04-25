@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./styles.css";
 
 import CustomTextInput from "../../components/CustomTextInput";
@@ -14,6 +15,8 @@ function Login() {
 	const [formError, setformError] = useState("");
 	const [loading, setLoading] = useState(false);
 	const formRef = useRef(null);
+
+	const navigate = useNavigate();
 
 	async function validateFields() {
 
@@ -133,7 +136,7 @@ function Login() {
 						{formError}
 					</span>
 				}
-				<a href="/forgotpassword" className="login-form-forgotpassword"><span>Esqueci a senha</span></a>
+				<span onClick={() => navigate("/forgotpassword")} className="login-form-forgotpassword">Esqueci a senha</span>
 			</div>
 		</div>
 	);
