@@ -22,10 +22,13 @@ function DetailComponent({ userData }) {
 	const [showChatModal, setShowChatModal] = useState(false);
 	const [showCommentsModal, setShowCommentsModal] = useState(false);
 	const [showNewServiceModal, setShowNewServiceModal] = useState(false);
+	const [showMeetingModal, setShowMeetingModal] = useState(false);
+	
 	const [sendingDeal, setSendingDeal] = useState(false);
 	const [sendingMessage, setSendingMessage] = useState(false);
 	const [sendingComment, setSendingComment] = useState(false);
 	const [sendingNewService, setSendingNewService] = useState(false);
+	const [sendingMeeting, setSendingMeeting] = useState(false);
 	const [messageSentSuccess, setMessageSentSuccess] = useState(false);
 
 	const [newDealValue, setNewDealValue] = useState(0);
@@ -38,6 +41,9 @@ function DetailComponent({ userData }) {
 	const [newServicePrice, setNewServicePrice] = useState("");
 	const [newServiceDescription, setNewServiceDescription] = useState("");
 	const [rating, setRating] = useState(0);
+	const [newMeetingAddress, setNewMeetingAddress] = useState("");
+	const [newMeetingType, setNewMeetingType] = useState(0);
+	const [newMeetingDateTime, setNewMeetingDateTime] = useState("");
 
 	function handleToggleDealsModal(){
         if(sendingDeal && showDealModal) return;
@@ -57,6 +63,11 @@ function DetailComponent({ userData }) {
 	function handleToggleCommentsModal(){
         if(sendingComment && showCommentsModal) return;
         setShowCommentsModal(!showCommentsModal);
+    }
+
+	function handleToggleMeetingModal(){
+        if(sendingMeeting && showMeetingModal) return;
+        setShowMeetingModal(!showMeetingModal);
     }
 
 	async function sendMessage(){
@@ -183,10 +194,6 @@ function DetailComponent({ userData }) {
 
 	async function createService(){
 
-		console.log('newServiceTitle',newServiceTitle);
-		console.log('newServicePrice',newServicePrice);
-		console.log('newServiceDescription',newServiceDescription);
-
         if(sendingNewService) return;
 		
         try{
@@ -215,6 +222,40 @@ function DetailComponent({ userData }) {
 			setNewServicePrice(0);
 			setNewServiceDescription("");
             setSendingNewService(false);
+        }
+    }
+
+	async function createMeeting(){
+		if(sendingMeeting) return;
+        try{
+
+			setSendingMeeting(true);
+			if(!newMeetingAddress || (!newMeetingType && newMeetingType !== 0 ) || !newMeetingDateTime) throw new Error("Preencha todos os campos!");
+
+            let response = await Api.createMeeting({
+				address: newMeetingAddress,
+				type: newMeetingType,
+				time: newMeetingDateTime.replace("T"," "),
+				to: userData.id,
+            });
+
+            if(!response.success) throw new Error("Falha na requisição");
+			
+			alert("criado com sucesso");
+			handleToggleMeetingModal();
+			setNewMeetingAddress("");
+			setNewMeetingDateTime("");
+			setNewMeetingType(0);
+
+        }catch(error){
+
+			let message = error.message || "Algo deu errado, verifique os dados e tente novamente.";
+            alert(message);
+			
+            console.error("Error creating meeting:", error);
+
+        }finally{
+            setSendingMeeting(false);
         }
     }
 
@@ -303,6 +344,11 @@ function DetailComponent({ userData }) {
 						{ (userData.userIsOwner && userData.type === 1) &&
 						<span className="material-symbols-outlined" title="Cadastrar serviços" onClick={handleToggleServicesModal}>
 							enterprise
+						</span>
+						}
+						{ (!userData.userIsOwner) &&
+						<span className="material-symbols-outlined" title="Agendar reunião" onClick={handleToggleMeetingModal}>
+							calendar_add_on
 						</span>
 						}
 						{ userData.userIsOwner &&
@@ -410,7 +456,34 @@ function DetailComponent({ userData }) {
 					</div>
 				</div>
 			</CustomModal>
-			
+			<CustomModal toggle={handleToggleMeetingModal} show={showMeetingModal} showCloseButton={false} customStyle={{height: 'auto', minHeight: "auto"}}>
+				<div className="deal_details_modal column-centered default-shadow">
+					<div className="deal_details_modal-header row-centered" style={{justifyContent: "normal"}}>
+						<div className="input_block" style={{width: "100%" }}>
+							<span style={{whiteSpace: "nowrap"}}>Data e hora</span>
+							<input type="datetime-local" className="deal_details_modal-input deal_items_shadow" value={newMeetingDateTime} onChange={(e) => setNewMeetingDateTime(e.target.value)} style={{width: "100%" }}/>
+						</div>
+						<div className="input_block" style={{marginLeft: "20px"}}>
+							<span>Tipo</span>
+							<select className="deal_details_modal-input deal_items_shadow" value={newMeetingType} onChange={(e) => setNewMeetingType(parseInt(e.target.value))} style={{width: "200px"}}>
+								<option value={0}>On-line</option>
+								<option value={1}>Presencial</option>
+							</select>	
+						</div>
+					</div>					
+					<div className="deal_details_modal-header row-centered" style={{justifyContent: "normal"}}>
+						<div className="input_block" style={{width: "100%" }}>
+							<span>{newMeetingType === 1 ? 'Endereço' : 'Link'}</span>
+							<input type="text" placeholder={newMeetingType === 1 ? 'Avenida Amazonas nº 00, Centro - Belo Horizonte - MG ' : 'https://...'} className="deal_details_modal-input deal_items_shadow" value={newMeetingAddress} onChange={(e) => setNewMeetingAddress(e.target.value)} style={{width: "100%" }}/>
+						</div>
+					</div>
+					<div className="deal_details_modal-options row-centered">
+						<button className="button_send clickable deal_items_shadow prevent-select" onClick={createMeeting}>Enviar</button>
+						<button className="button_cancel clickable deal_items_shadow prevent-select" onClick={handleToggleMeetingModal}>Cancelar</button>
+					</div>
+				</div>
+			</CustomModal>
+
 		</div>
 	);
 }

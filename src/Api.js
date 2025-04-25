@@ -33,7 +33,7 @@ async function apiFetch(url, options = {}){
 
         handleAction(json);
 
-        return { ...json, status: response.status };
+        return json;
     } catch (error) {
         return { error };
     }
@@ -193,6 +193,18 @@ const Api = {
         apiFetch(`${BASE_URL}/google/unlinkAccount`, {
             method: 'GET',
             headers: getAuthHeaders()
+        }),
+
+    createMeeting: async (meetingData) => 
+        apiFetch(`${BASE_URL}/calendar/events/create`, {
+            method: 'POST',
+            headers: getAuthHeaders(),
+            body: JSON.stringify({
+                address: meetingData.address,
+                type: meetingData.type,
+                time: meetingData.time,
+                to: meetingData.to
+            })
         })
 };
 
