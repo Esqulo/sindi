@@ -1,7 +1,7 @@
 import React from "react";
 import "./styles.css";
 
-function CustomModal({ show, toggle, children, onClose, showBrackground = true, showCloseButton = true }) {
+function CustomModal({ show, toggle, children, onClose, showBrackground = true, showCloseButton = true, customStyle }) {
     
     function handleClose(){
         try{
@@ -17,7 +17,7 @@ function CustomModal({ show, toggle, children, onClose, showBrackground = true, 
         <>
         {show &&
             <div className={`custom-modal-container ${showBrackground ? "show-background" : ""}`} onClick={onClose}>
-                <div className="custom-modal-content">
+                <div className="custom-modal-content" style={customStyle}>
                     
                     {children}
 
