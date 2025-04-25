@@ -77,7 +77,7 @@ function Login() {
 				password: fields.password
 			});
 	
-			if(api_response.status !== 200) throw api_response;
+			if(!api_response.success) throw api_response;
 
 			localStorage.setItem('token', api_response.token.toString());
 
