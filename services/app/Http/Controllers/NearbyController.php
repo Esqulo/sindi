@@ -8,35 +8,32 @@ use Exception;
 
 class NearbyController extends Controller
 {
-    public function users($id, Request $request){
+    public function users(Request $request){
+        try{
+            $userId = $this->retrieveId($request->header('Authorization'));
+            if(!$userId) throw new Exception("Not allowed.", 403);
 
-        $token = $request->header('Authorization');
-        if(!$token) return response()->json(['message' => 'Credentials are required'], 401);
-        
-        $hasAccess = $this->checkPermission($token,$id);
-        if(!$hasAccess) return response()->json(['message' => 'not allowed'], 403);
+            $user = User::find($userId);
+            
+            if(!$user->cep) throw new Exception("Localização inválida.", 500);
 
-        $requester = User::where('active', true)->where('id',$id)->first();
-        
-        $cep = $requester->cep;
-
-        $nearbyUsers = User::where('active', true)
-        ->where('id', '!=', $id)
-        ->orderByRaw("CASE 
-                        WHEN cep LIKE '" . substr($cep, 0, 4) . "%' THEN 1
-                        WHEN cep LIKE '" . substr($cep, 0, 3) . "%' THEN 2
-                        WHEN cep LIKE '" . substr($cep, 0, 2) . "%' THEN 3
-                        WHEN cep LIKE '" . substr($cep, 0, 1) . "%' THEN 4
-                        ELSE 5
-                      END")
-        ->paginate(10);
-        
-        return response()->json($nearbyUsers);
-    }
-
-    private function checkPermission($token,$item){
-        if (preg_match('/Bearer\s(\S+)/', $token, $matches)) $token = $matches[1];
-        if(!$this->userIsAdmin($token) && $this->retrieveId($token) != $item) return false;
-        return true;
+            $nearbyUsers = User::where('active', true)
+            ->where('id', '!=', $userId)
+            ->orderByRaw("CASE 
+                            WHEN cep LIKE '" . substr($user->cep, 0, 4) . "%' THEN 1
+                            WHEN cep LIKE '" . substr($user->cep, 0, 3) . "%' THEN 2
+                            WHEN cep LIKE '" . substr($user->cep, 0, 2) . "%' THEN 3
+                            WHEN cep LIKE '" . substr($user->cep, 0, 1) . "%' THEN 4
+                            ELSE 5
+                        END")
+            ->paginate(10);
+            
+            return response()->json($nearbyUsers);
+        }catch(Exception $e){
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage() ?? 'unkown error.'
+            ], $e->getCode() ?: 500);
+        }
     }
 }
