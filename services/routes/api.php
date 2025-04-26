@@ -69,6 +69,9 @@ Route::prefix('auth')->group(function(){
     Route::match(['get','post'],'logout',[AuthController::class, 'logout']);
     Route::post('logoutFromAll',[AuthController::class, 'logoutFromAll']);
     Route::get('currentUserId',[AuthController::class, 'getCurrentUserId']);
+    
+    Route::post('forgotpassword',[AuthController::class, 'forgotPassword']);
+    Route::post('updatepassword',[AuthController::class, 'updatePassword']);
 
     Route::get('google', [GoogleController::class, 'redirectToGoogle']);
     Route::get('callback', [GoogleController::class, 'handleGoogleCallback']);

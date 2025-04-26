@@ -9,6 +9,8 @@ import LandingPage from './routes/LandingPage';
 import Home from './routes/Home';
 import Login from './routes/Login';
 import Signup from './routes/Signup';
+import ForgotPassword from './routes/ForgotPassword';
+import SetNewPassword from './routes/SetNewPassord';
 import MyCards from './routes/MyCards';
 import Chat from './routes/Chat';
 import MyDeals from './routes/MyDeals';
@@ -37,6 +39,10 @@ const router = createBrowserRouter([
         element: <Signup/>
       },
       {
+        path: "/forgotpassword",
+        element: <ForgotPassword/>
+      },
+      {
         path: "/mycards",
         element: <MyCards/>
       },
@@ -55,7 +61,11 @@ const router = createBrowserRouter([
       {
         path: "/settings",
         element: <Settings/>
-      }
+      },
+      {
+        path: "/setpassword",
+        element: <SetNewPassword/>
+      },
     ]
   }
 ]);

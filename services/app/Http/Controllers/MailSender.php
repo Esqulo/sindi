@@ -134,4 +134,47 @@ class MailSender extends Controller
         ";
         $this->sendEmail($user_email,'Sindi - Link para pagamento',$template);
     }
+
+    public function sendRecoverPasswordEmail($user_email, $token){
+
+        $link = env("APP_URL")."/setpassword?t=$token";
+
+        $template = "
+            <div style=\"width: 100%; font-family: Arial, sans-serif; padding: 30px;\">
+                <h2 style=\"text-align: center;\">Redefinição de Senha - Sindi</h2>
+
+                <div style=\"background-color: #ffeb3b; padding: 15px; border-radius: 6px; margin: 20px 0; font-weight: bold;\">
+                    ⚠️ Atenção: Não compartilhe este link com ninguém. Ele dá acesso direto à sua conta!
+                </div>
+
+                <p>Olá,</p>
+
+                <p>Recebemos uma solicitação para redefinir a sua senha de acesso ao <a href=\"https://sindibr.com.br\" target=\"_blank\" style=\"color: #03a9f4;\">sindibr.com.br</a>.</p>
+
+                <p>Para redefinir sua senha, clique no botão abaixo:</p>
+
+                <div style=\"text-align: center; margin: 30px 0;\">
+                    <a href=\"$link\" style=\"background-color: #03a9f4; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;\">Redefinir Senha</a>
+                </div>
+
+                <p>ou acesse no link abaixo no seu navegador:</p>
+                <br>
+                <a href=\"$link\">
+                    <span style=\"font-family:Arial; font-size: 16px\">
+                        $link
+                    </span>
+                </a>
+
+                <p>Se você não solicitou essa alteração, apenas ignore este e-mail. Sua senha permanecerá segura.</p>
+
+                <hr style=\"margin: 40px 0; border: none; border-top: 1px solid #444;\">
+
+                <p style=\"font-size: 12px; color: #aaa;\">
+                    Este link expira em poucos minutos por motivos de segurança. Caso precise de ajuda, entre em contato com o suporte Sindi.
+                </p>
+            </div>
+        ";
+
+        $this->sendEmail($user_email,'Sindi - Redefinição de senha',$template);
+    }
 }

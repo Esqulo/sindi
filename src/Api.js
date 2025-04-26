@@ -205,7 +205,32 @@ const Api = {
                 time: meetingData.time,
                 to: meetingData.to
             })
-        })
+        }),
+
+    forgotPassword: async (email) => 
+        apiFetch(`${BASE_URL}/auth/forgotpassword`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                email: email
+            })
+        }),
+
+    updatePassword: async (token, password) => 
+        apiFetch(`${BASE_URL}/auth/updatepassword`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `${token}`
+            },
+            body: JSON.stringify({
+                newPassword: password
+            })
+        }),
 };
 
 export default Api;
