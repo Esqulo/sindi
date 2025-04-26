@@ -49,12 +49,28 @@ class User extends Model
     ];
 
     protected $hidden = [
-        'user_type',
-        'name',
-        'avatar',
-        'position',
-        'bio',
-        'reviews_count',
+        'email',
+        'email_verified_at',
+        'phone',
+        'phone_verified_at',
+        'birthdate',
+        'doc_number',
+        'id_number',
+        'password',
+        'active',
+        'state',
+        'city',
+        'neighbourhood',
+        'address',
+        'number',
+        'complement',
+        'cep',
+        'gender',
+        'marital_status',
+        'work_since',
+        'last_accepted_terms',
+        'created_at',
+        'updated_at'
     ];
 
     protected $casts = [
