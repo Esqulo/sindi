@@ -55,6 +55,12 @@ const Api = {
             body: JSON.stringify({ username, password })
         }),
 
+    logout: async () =>
+        apiFetch(`${BASE_URL}/auth/logout`, {
+            method: 'GET',
+            headers: getAuthHeaders()
+        }),
+
     cep: async ({ cep }) =>
         apiFetch(`https://viacep.com.br/ws/${cep}/json/`, {
             method: 'GET',
