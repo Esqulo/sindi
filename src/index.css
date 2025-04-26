@@ -29,7 +29,6 @@ html{
 
 body {
   width: 100%;
-  min-width: fit-content;
   max-width: 1920px;
   overflow-x: hidden;
 }
