@@ -8,7 +8,7 @@ use Exception;
 
 class NearbyController extends Controller
 {
-    public function users(Request $request){
+    public function trustee(Request $request){
         try{
             $userId = $this->retrieveId($request->header('Authorization'));
             if(!$userId) throw new Exception("Not allowed.", 403);
@@ -19,6 +19,7 @@ class NearbyController extends Controller
 
             $nearbyUsers = User::where('active', true)
             ->where('id', '!=', $userId)
+            ->where('user_type', '=', 1)
             ->orderByRaw("CASE 
                             WHEN cep LIKE '" . substr($user->cep, 0, 4) . "%' THEN 1
                             WHEN cep LIKE '" . substr($user->cep, 0, 3) . "%' THEN 2

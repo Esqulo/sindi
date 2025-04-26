@@ -61,7 +61,7 @@ Route::resources([
 ]);
 
 Route::prefix('nearby')->group(function(){
-    Route::get('users',[NearbyController::class, 'users']);
+    Route::get('trustee',[NearbyController::class, 'trustee']);
 });
 
 Route::prefix('auth')->group(function(){
