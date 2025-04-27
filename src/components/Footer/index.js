@@ -14,13 +14,13 @@ function Footer() {
             <CustomImgComponent img={Logo} width="206px" height="65px" style={{alignSelf: 'start'}}/>
             <ul className="footer-list">
               <a href="/policy"><li>Politica de privacidade</li></a>
-              <a href="/"><li>Novos recursos</li></a>
+              {/* <a href="/"><li>Novos recursos</li></a>
               <a href="/"><li>Blog</li></a>
               <a href="/"><li>Newsletter</li></a>
-              <a href="/"><li>Informações da empresa</li></a>
+              <a href="/"><li>Informações da empresa</li></a> */}
             </ul>
           </div>
-          <div className="footer-column column-centered">
+          {/* <div className="footer-column column-centered">
             <span className="footer-column-header">Atendimento</span>
             <ul className="footer-list">
               <a href="/"><li>Central de ajuda</li></a>
@@ -28,8 +28,8 @@ function Footer() {
               <a href="/"><li>Apoio à pessoa com deficiência</li></a>
               <a href="/"><li>Reporte um problema</li></a>
             </ul>
-          </div>
-          <div className="footer-column column-centered">
+          </div> */}
+          {/* <div className="footer-column column-centered">
             <span className="footer-column-header">Como funciona</span>
             <ul className="footer-list">
               <a href="/"><li>Anuncie seus serviços na Sindi</li></a>
@@ -37,7 +37,7 @@ function Footer() {
               <a href="/"><li>Como contratar um síndico</li></a>
               <a href="/"><li>Consultorias</li></a>
             </ul>
-          </div>
+          </div> */}
         </div>
         <div className="footer-copyrigth-container row-centered">
           <span>© 2025. Todos os direitos reservados</span>
