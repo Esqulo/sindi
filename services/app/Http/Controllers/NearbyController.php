@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\DB;
 
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -17,16 +18,24 @@ class NearbyController extends Controller
             
             if(!$user->cep) throw new Exception("Localização inválida.", 500);
 
-            $nearbyUsers = User::where('active', true)
-            ->where('id', '!=', $userId)
-            ->where('user_type', '=', 1)
+            DB::statement("SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))");
+            $nearbyUsers = User::select(
+                'users.*',
+                DB::raw('COALESCE(ROUND(AVG(avaliations.stars), 2), 0) as stars'),
+                DB::raw('GREATEST(TIMESTAMPDIFF(YEAR, users.work_since, NOW()), 1) as experience_time')
+            )
+            ->leftJoin('avaliations', 'avaliations.to', '=', 'users.id')
+            ->where('users.active', true)
+            ->where('users.id', '!=', $userId)
+            ->where('users.user_type', '=', 1)
+            ->groupBy('users.id')
             ->orderByRaw("CASE 
-                            WHEN cep LIKE '" . substr($user->cep, 0, 4) . "%' THEN 1
-                            WHEN cep LIKE '" . substr($user->cep, 0, 3) . "%' THEN 2
-                            WHEN cep LIKE '" . substr($user->cep, 0, 2) . "%' THEN 3
-                            WHEN cep LIKE '" . substr($user->cep, 0, 1) . "%' THEN 4
+                            WHEN users.cep LIKE '" . substr($user->cep, 0, 4) . "%' THEN 1
+                            WHEN users.cep LIKE '" . substr($user->cep, 0, 3) . "%' THEN 2
+                            WHEN users.cep LIKE '" . substr($user->cep, 0, 2) . "%' THEN 3
+                            WHEN users.cep LIKE '" . substr($user->cep, 0, 1) . "%' THEN 4
                             ELSE 5
-                        END")
+                          END")
             ->paginate(10);
             
             return response()->json($nearbyUsers);

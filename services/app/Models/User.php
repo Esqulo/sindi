@@ -67,7 +67,6 @@ class User extends Model
         'cep',
         'gender',
         'marital_status',
-        'work_since',
         'last_accepted_terms',
         'created_at',
         'updated_at'

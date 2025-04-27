@@ -237,6 +237,12 @@ const Api = {
                 newPassword: password
             })
         }),
+
+    getNearbyTrustee: async (page) => 
+        apiFetch(`${BASE_URL}/nearby/trustee?page=${page}`, {
+            method: 'GET',
+            headers: getAuthHeaders()
+        }),
 };
 
 export default Api;
