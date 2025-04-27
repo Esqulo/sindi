@@ -1,8 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback} from "react";
 import "./styles.css";
 
-import CustomTextInput from "../CustomTextInput";
-import CustomCheckInput from "../CustomCheckInput";
+import { CustomTextInput, CustomCheckInput, CustomDocInput } from "../CustomInputs";
 
 import LoadingIcon from "../LoadingIcon";
 
@@ -51,7 +50,14 @@ function CustomForm({fields, onSubmit, ButtonText, customStyle, formError}) {
         for (let input of requiredFields) {
             
             const name = input.getAttribute("name");
-            const value = fields[name].mask ? removeMasks(fieldValues[name]) : fieldValues[name];           
+            const value = fields[name].mask ? removeMasks(fieldValues[name]) : fieldValues[name];       
+            
+            console.log(name,value);
+            if(name === 'doc'){
+                if(!value.value) if(!newErrors[name]) newErrors[name] = "Campo obrigatório";
+                if (!firstErrorField) firstErrorField = input;
+                continue;
+            }
             
             if(name === 'terms' && fieldValues[name] === true) continue;
             
@@ -207,27 +213,32 @@ function CustomForm({fields, onSubmit, ButtonText, customStyle, formError}) {
 
         return result === parseInt(digits.charAt(1));
     }
-    
+
     async function sendForm() {
-        setLoading(true);
 
-        let hasErrors = validateForm();
+        try{
+            setLoading(true);
 
-        if(!hasErrors){
-            
-            const fieldsWithoutMask = {};
-            
-            for(let fieldName in fieldValues){
-                fieldsWithoutMask[fieldName] = fields[fieldName].mask ? removeMasks(fieldValues[fieldName]) : fieldValues[fieldName]; 
-            }
-            
-            try {
+            let hasErrors = validateForm();
+
+            if(!hasErrors){
+                
+                const fieldsWithoutMask = {};
+                
+                for(let fieldName in fieldValues){
+                    fieldsWithoutMask[fieldName] = fields[fieldName].mask ? removeMasks(fieldValues[fieldName]) : fieldValues[fieldName]; 
+                }
+
                 await onSubmit(fieldsWithoutMask);
-            } catch (error) {
-                console.error(error);
-            }
-        } 
-        setLoading(false);
+
+            } 
+
+        } catch (error) {
+            console.error(error);
+        }finally{
+            setLoading(false);
+        }
+
     }
 
     const checkPasswordIsStrong = useCallback((password) => {
@@ -329,23 +340,23 @@ function CustomForm({fields, onSubmit, ButtonText, customStyle, formError}) {
 
     }, [fieldValues.cpf,setErrorMessage]);
 
-    const checkCnpj = useCallback(async () => {
+    // const checkCnpj = useCallback(async () => {
 
-        if(!fieldValues.cnpj) return;
+    //     if(!fieldValues.cnpj) return;
 
-        let cnpj = fieldValues.cnpj.replace(/\D/g, '');
-        if(!cnpj || cnpj.length !== 14) return;
+    //     let cnpj = fieldValues.cnpj.replace(/\D/g, '');
+    //     if(!cnpj || cnpj.length !== 14) return;
 
-        let isCnpjValid = validateCNPJ(cnpj);
-        if(isCnpjValid) return;
+    //     let isCnpjValid = validateCNPJ(cnpj);
+    //     if(isCnpjValid) return;
 
-        setErrorMessage('cnpj','CNPJ Inválido')
+    //     setErrorMessage('cnpj','CNPJ Inválido')
 
-    }, [fieldValues.cnpj,setErrorMessage]); 
+    // }, [fieldValues.cnpj,setErrorMessage]); 
 
     useEffect(() => { checkCpf(); }, [checkCpf]);
     
-    useEffect(() => { checkCnpj(); }, [checkCnpj]);
+    // useEffect(() => { checkCnpj(); }, [checkCnpj]);
 
     useEffect(() => { checkCep(); }, [checkCep]);
 
@@ -366,34 +377,49 @@ function CustomForm({fields, onSubmit, ButtonText, customStyle, formError}) {
                 Object.entries(hookFields).map(
                     ([name, field])=>{
 
-                        return field.type === "checkbox" ? (
-                            <CustomCheckInput
-                                key={name}
-                                name={name}
-                                value={fieldValues[name]}
-                                label={field.label}
-                                required={field.required}
-                                disabled={field.disabled}
-                                onChange={(value) => handleChange(name, value)}
-                                errorMessage={errors[name]}
-                            />
-                        ) : (
-                            <CustomTextInput
-                                key={name}
-                                name={name}
-                                value={fieldValues[name]}
-                                label={field.label}
-                                placeholder={field.placeholder}
-                                mask={field.mask}
-                                type={field.type}
-                                required={field.required}
-                                disabled={field.disabled}
-                                min={field.min}
-                                max={field.max}
-                                onChange={(value) => handleChange(name, value)}
-                                errorMessage={errors[name]}
-                            />
-                        );
+                        switch (field.type) {
+                            case "checkbox" :
+                                return (
+                                    <CustomCheckInput
+                                        key={name}
+                                        name={name}
+                                        value={fieldValues[name]}
+                                        label={field.label}
+                                        required={field.required}
+                                        disabled={field.disabled}
+                                        onChange={(value) => handleChange(name, value)}
+                                        errorMessage={errors[name]}
+                                    />
+                                );
+                            case "doc" : 
+                                return (<CustomDocInput
+                                    key={name}
+                                    name={name}
+                                    value={fieldValues[name]}
+                                    label={field.label}
+                                    required={field.required}
+                                    whenChange={(value) => handleChange(name, value)}
+                                />);
+                            default:
+                                return (
+                                    <CustomTextInput
+                                        key={name}
+                                        name={name}
+                                        value={fieldValues[name]}
+                                        label={field.label}
+                                        placeholder={field.placeholder}
+                                        mask={field.mask}
+                                        type={field.type}
+                                        required={field.required}
+                                        disabled={field.disabled}
+                                        min={field.min}
+                                        max={field.max}
+                                        onChange={(value) => handleChange(name, value)}
+                                        errorMessage={errors[name]}
+                                    />
+                                );
+                        }
+                        
                     }
                 )
             }
