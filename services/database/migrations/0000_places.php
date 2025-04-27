@@ -13,15 +13,15 @@ return new class extends Migration
     {
         Schema::create('places', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable();
+            $table->string('name');
             $table->integer('owner_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('state');
-            $table->string('city');
-            $table->string('neighbourhood');
-            $table->string('address');
-            $table->string('number');
+            $table->string('state')->nullable();
+            $table->string('city')->nullable();
+            $table->string('neighbourhood')->nullable();
+            $table->string('address')->nullable();
+            $table->string('number')->nullable();
             $table->string('cep');
-            $table->integer('units');
+            $table->integer('units')->nullable();
             $table->string('coordinates')->nullable();
             $table->boolean('third_party_services')->default(0);
             $table->boolean('had_professional_trustee_before')->default(0);

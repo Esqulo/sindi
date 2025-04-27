@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Place;
 use App\Http\Controllers\MailSender;
 use Exception;
 
@@ -26,29 +27,45 @@ class UserController extends Controller
             $validatedData = $body->validate([
                 "email" => "required|email|unique:users,email",
                 "name" => "required|string",
+                "place_name" => "required_if:user_type,0|string",
+                "units" => "required_if:user_type,0|integer",
+                "doc_type" => "required|string",
                 "doc_number" => "required|string|unique:users,doc_number",
+                "id_number" => "required_if:user_type,1|string",
                 "phone" => "required|string|unique:users,phone",
                 "password" => "required|string|min:8|regex:/[a-z]/|regex:/[A-Z]/|regex:/[0-9]/|regex:/[@$!%*#?&.;?,'\":{}\-\+\=`_^]/",
                 "birthdate" => "required|date|after_or_equal:1900-01-01|before:now",
+                "work_since" => "required_if:user_type,1|date|after_or_equal:1900-01-01|before:now",
+                "cep" => "required|string|regex:/^[0-9]+$/",
                 "state" => "required|string|max:2",
                 "city" => "required|string",
                 "neighbourhood" => "required|string",
                 "address" => "required|string",
-                "number" => "required|string",
+                "number" => "nullable|string",
                 "complement" => "nullable|string",
                 "user_type" => "required|integer|min:0|max:1",
                 "terms" => "required|integer|min:1|max:1",
-                "cep" => "required|string|regex:/^[0-9]+$/",
-                "bio" => "sometimes|string",
+                "bio" => "sometimes|string"
             ]);
             
             $validatedData['last_accepted_terms'] = date("Y-m-d H:i:s");
-
-            if($validatedData['password']) $validatedData['password'] = $this->passwordIntoHash($validatedData['password']);
-
-            if(!$validatedData) throw new Exception('invalid data');
+            $validatedData['password'] = $this->passwordIntoHash($validatedData['password']);
 
             $user = User::create($validatedData);
+
+            if($validatedData['user_type'] == 0){
+                Place::create([
+                    'name' => $validatedData['place_name'],
+                    'owner_id' => $user->id,
+                    'cep' => $validatedData['cep'],
+                    'state' => $validatedData['state'],
+                    'city' => $validatedData['city'],
+                    'neighbourhood' => $validatedData['neighbourhood'],
+                    'address' => $validatedData['address'],
+                    'number' => $validatedData['number'],
+                    'units' => $validatedData['units']
+                ]);
+            }
 
             $mailSender = new MailSender();
             $mailSender->sendEmailConfirmation($user->id);

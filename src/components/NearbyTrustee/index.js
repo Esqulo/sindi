@@ -24,7 +24,6 @@ function NearbyTrustee(){
         try {
             const apiResponse = await Api.getNearbyTrustee(pageRef.current);
             if(!apiResponse.data.length){
-                console.log("a")
                 setKeepLoading(false);
                 return;
             }

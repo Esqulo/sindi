@@ -22,8 +22,9 @@ return new class extends Migration
             $table->dateTime('phone_verified_at')->nullable();
             $table->date('birthdate');
             $table->string('avatar')->nullable();
+            $table->string('doc_type',10);
             $table->string('doc_number')->unique();
-            $table->string('id_number')->unique();
+            $table->string('id_number')->nullable();
             $table->string('password');
             $table->string('position')->nullable();
             $table->boolean('active')->default(1);
@@ -31,7 +32,7 @@ return new class extends Migration
             $table->string('city');
             $table->string('neighbourhood');
             $table->string('address');
-            $table->string('number');
+            $table->string('number')->nullable();
             $table->string('complement')->nullable();
             $table->string('cep');
             $table->text('bio')->nullable();

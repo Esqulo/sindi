@@ -29,11 +29,12 @@ function Signup() {
 	}
 
 	const trustee_fields = {
-		name: { label: "Nome", placeholder: "José da Silva", type: "text", required: true },
-		email: { label: "Email", placeholder: "seuemail@email.com", type: "email", required: true },
+		name: { label: "Nome Completo", placeholder: "José da Silva", type: "text", required: true },
 		birthdate: { label: "Data de nascimento", placeholder: "31/12/1999", type: "date", min: "1920-01-01", max: getCurrentDate(), required: true },
-		cnpj: { label: "CNPJ", placeholder: "12.345.678/0001-99", type: "numeric", mask: "99.999.999/9999-99", required: true },
+		//gender: { label: "Gênero", type: "options", required: true, options: []},
+		marital_status: { label: "Estado Civil", placeholder: "Casado", type: "text", required: false },
 		phone: { label: "Celular", placeholder: "(12) 91234-1234", type: "tel", mask: "(99) 99999-9999", required: true },
+		email: { label: "Email", placeholder: "seuemail@email.com", type: "email", required: true },
 		cep: { label: "Cep", placeholder: "12345-678", type: "numeric", mask: "99999-999", required: true },
 		state: { label: "Estado", placeholder: "MG", type: "text", required: true },
 		city: { label: "Cidade", placeholder: "Belo Horizonte", type: "text", required: true },
@@ -41,17 +42,28 @@ function Signup() {
 		address: { label: "Endereço", placeholder: "Rua das Oliveiras", type: "text", required: true },
 		number: { label: "Número", placeholder: "123", type: "text", required: true },
 		complement: { label: "Complemento", placeholder: "Apto. 201", type: "text" },
+		doc: { label: "CPF/CNPJ", type: "doc", required: true },
+		rg: { label: "RG", placeholder: "00000000", type: "text", required: true },
+		//Formações
+		work_since: { label: "Síndico profissional desde", placeholder: "31/12/1999", type: "date", min: "1920-01-01", max: getCurrentDate(), required: true },
+		//work_fields
 		password: { label: "Senha", placeholder: "**********", type: "password", required: true },
 		confirmPassword: { label: "Confirme a senha", placeholder: "**********", type: "password", required: true },
 		terms: { label: 'Eu concordo com os <a href="/terms">termos</a> de serviço e <a href="/privacy">privacidade</a>', type: "checkbox", required: true },
 	};
 
 	const consumer_fields = {
-		name: { label: "Nome", placeholder: "José da Silva", type: "text", required: true },
+		place_name: { label: "Nome do condomínio", placeholder: "Vila Verde Residencial", type: "text", required: true },
+		//place_type: { label: "Tipo de condomínio", type: "options", required: true, options: []},
+		units: { label: "Número de unidades", placeholder: "100", type: "numeric", required: true },
+		//3rd_party
+		//professionals
+		name: { label: "Nome Completo", placeholder: "José da Silva", type: "text", required: true },
+		cpf: { label: "CPF", placeholder: "111.222.333-12", type: "numeric", mask: "999.999.999-99", required: true },
+		position: { label: "Cargo/Função", placeholder: "Morador / Conselheiro / Síndico", type: "text", required: false },
+		phone: { label: "Celular", placeholder: "(12) 91234-1234", type: "tel", mask: "(99) 99999-9999", required: true },
 		email: { label: "Email", placeholder: "seuemail@email.com", type: "email", required: true },
 		birthdate: { label: "Data de nascimento", placeholder: "31/12/1999", type: "date", min: "1920-01-01", max: getCurrentDate(), required: true },
-		cpf: { label: "CPF", placeholder: "111.222.333-12", type: "numeric", mask: "999.999.999-99", required: true },
-		phone: { label: "Celular", placeholder: "(12) 91234-1234", type: "tel", mask: "(99) 99999-9999", required: true },
 		cep: { label: "Cep", placeholder: "12345-678", type: "numeric", mask: "99999-999", required: true },
 		state: { label: "Estado", placeholder: "MG", type: "text", required: true },
 		city: { label: "Cidade", placeholder: "Belo Horizonte", type: "text", required: true },
@@ -69,15 +81,13 @@ function Signup() {
 	};
 
 	async function sendRegister(values) {
+
 		setFormError('');
+		//looks dumb... will take a look on it later
 		let formValues = {
-			email: values?.email,
 			name: values?.name,
-			password: values?.password,
 			birthdate: values?.birthdate,
-			user_type: selectedRadio === 'consumer' ? '0' : '1',
-			doc_number: selectedRadio === 'consumer' ? values?.cpf : values?.cnpj,
-			phone: values?.phone,
+			email: values?.email,
 			cep: values?.cep,
 			state: values?.state,
 			city: values?.city,
@@ -85,11 +95,21 @@ function Signup() {
 			address: values?.address,
 			number: values?.number,
 			complement: values?.complement,
-			terms: values?.terms
+			password: values?.password,
+			user_type: selectedRadio === 'consumer' ? '0' : '1',
+			doc_type: selectedRadio === 'consumer' ? 'cpf' : values?.doc.type,
+			doc_number: selectedRadio === 'consumer' ? values?.cpf : values?.doc.value,
+			id_number: values?.rg,
+			work_since: values?.work_since,
+			phone: values?.phone,
+			terms: values?.terms,
+			place_name: values?.place_name,
+			units: values?.units
 		};
+
 		try {
 			let api_response = await Api.newUser(formValues);
-			if(api_response.status !== 201) throw api_response;
+			if(api_response !== true) throw api_response;
 
 			navigate('/login?welcome=true');
 

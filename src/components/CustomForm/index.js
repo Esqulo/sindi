@@ -52,7 +52,6 @@ function CustomForm({fields, onSubmit, ButtonText, customStyle, formError}) {
             const name = input.getAttribute("name");
             const value = fields[name].mask ? removeMasks(fieldValues[name]) : fieldValues[name];       
             
-            console.log(name,value);
             if(name === 'doc'){
                 if(!value.value) if(!newErrors[name]) newErrors[name] = "Campo obrigatório";
                 if (!firstErrorField) firstErrorField = input;
