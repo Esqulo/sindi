@@ -53,6 +53,11 @@
     font-size: 22px;
     letter-spacing: -2px;
     text-overflow: ellipsis;
+    cursor: pointer;
+}
+
+.tsc-name:hover{
+    text-decoration: underline;
 }
 
 .tsc-stars-container{
