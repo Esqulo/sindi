@@ -17,13 +17,16 @@ import MyDeals from './routes/MyDeals';
 import Profile from './routes/Profile';
 import Settings from './routes/Settings';
 
+const segments = window.location.pathname.split('/').filter(Boolean);
+const basename = segments.length > 0 ? `/${segments[0]}` : '/';
+
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App/>,
     children:[
       {
-        path: "/newsletter",
+        path: "newsletter",
         element: <LandingPage/>
       },
       {
@@ -31,44 +34,44 @@ const router = createBrowserRouter([
         element: <Home/>
       },
       {
-        path: "/login",
+        path: "login",
         element: <Login/>
       },
       {
-        path: "/signup",
+        path: "signup",
         element: <Signup/>
       },
       {
-        path: "/forgotpassword",
+        path: "forgotpassword",
         element: <ForgotPassword/>
       },
       {
-        path: "/mycards",
+        path: "mycards",
         element: <MyCards/>
       },
       {
-        path: "/chat",
+        path: "chat",
         element: <Chat/>
       },
       {
-        path: "/deals",
+        path: "deals",
         element: <MyDeals/>
       },
       {
-        path: "/profile/:user_id?",
+        path: "profile/:user_id?",
         element: <Profile/>
       },
       {
-        path: "/settings",
+        path: "settings",
         element: <Settings/>
       },
       {
-        path: "/setpassword",
+        path: "setpassword",
         element: <SetNewPassword/>
       },
     ]
   }
-]);
+],{ basename });
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
