@@ -143,6 +143,11 @@ function EditProfile() {
                 <h1>Avatar</h1>
                 <ImageCropper width={500} height={500} onImageCropped={handleImageCropped}/>
             </div>
+            {/* future feature
+             <div className="edit-profile-banner">
+                <h1>Banner</h1>
+                <ImageCropper width={1920} height={300} onImageCropped={handleImageCropped}/>
+            </div> */}
             {accountData.user_type !== undefined ? (
                 accountData.user_type === 1 ? (
                     <CustomForm fields={trustee_fields} onSubmit={handleSubmit} ButtonText={"Enviar"} formError={formError}/>

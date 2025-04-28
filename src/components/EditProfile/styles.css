@@ -5,12 +5,19 @@
     max-height: 100%;
 }
 
-.edit-profile-avatar{
+.edit-profile-avatar,.edit-profile-banner{
     margin: 50px 0;
 }
 
-.edit-profile-avatar h1{
+.edit-profile-avatar h1,
+.edit-profile-banner h1{
     font-size: 18px;
     font-weight: bold;
     margin-left: 20px;
+}
+
+.edit-profile-banner .cropped-image img{
+    border-radius: 5px;
+    width: 100%;
+    height: 100%;
 }
