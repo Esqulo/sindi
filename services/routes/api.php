@@ -60,6 +60,11 @@ Route::resources([
     'user' => UserController::class
 ]);
 
+Route::prefix('profile')->group(function(){
+    Route::get('',[UserController::class, 'getFullProfile']);
+    Route::post('',[UserController::class, 'updateUserData']);
+});
+
 Route::prefix('nearby')->group(function(){
     Route::get('trustee',[NearbyController::class, 'trustee']);
 });

@@ -1,32 +1,6 @@
 .edit-profile-container {
     padding: 20px;
     width: 100%;
-    max-width: 500px;
-}
-
-.edit-profile-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.edit-profile-form label {
-    display: flex;
-    flex-direction: column;
-    font-weight: bold;
-}
-
-.edit-profile-form input {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-.save-button {
-    padding: 10px;
-    background-color: #01427a;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+    overflow-y: auto;
+    max-height: 100%;
 }

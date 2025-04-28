@@ -243,6 +243,21 @@ const Api = {
             method: 'GET',
             headers: getAuthHeaders()
         }),
+
+    requestFullProfile: async() => 
+        apiFetch(`${BASE_URL}/profile`, {
+            method: 'GET',
+            headers: getAuthHeaders()
+        }),
+
+    updateProfile: async (userData) =>
+        apiFetch(`${BASE_URL}/profile`, {
+            method: 'POST',
+            headers: getAuthHeaders(),
+            body: JSON.stringify(
+                userData
+            )
+        }),
 };
 
 export default Api;

@@ -29,6 +29,7 @@ class UserController extends Controller
                 "name" => "required|string",
                 "place_name" => "required_if:user_type,0|string",
                 "units" => "required_if:user_type,0|integer",
+                "position" => "required_if:user_type,0|string",
                 "doc_type" => "required|string",
                 "doc_number" => "required|string|unique:users,doc_number",
                 "id_number" => "required_if:user_type,1|string",
@@ -204,5 +205,87 @@ class UserController extends Controller
 
     private function passwordIntoHash($password){
         return password_hash($password, PASSWORD_BCRYPT);
+    }
+
+    public function getFullProfile(Request $request){
+        
+        $userId = $this->retrieveId($request->header('Authorization'));
+        if(!$userId) return response()->json(['success' => false, 'message' => 'Not allowed.'], 403);
+
+        $user = User::find($userId);
+
+        $response = [
+            "user_type" => $user->user_type,
+            "name" => $user->name,
+            "email" => $user->email,
+            "phone" => $user->phone,
+            "birthdate" => $user->birthdate->format('d/m/Y'),
+            "avatar" => $user->avatar,
+            "doc_type" => $user->doc_type,
+            "doc_number" => $user->doc_number,
+            "id_number" => $user->id_number,
+            "position" => $user->position,
+            "state" => $user->state,
+            "city" => $user->city,
+            "neighbourhood" => $user->neighbourhood,
+            "address" => $user->address,
+            "number" => $user->number,
+            "complement" => $user->complement,
+            "cep" => $user->cep,
+            "bio" => $user->bio,
+            "work_since" => $user->work_since,
+        ];
+
+        if($user->user_type === 0){
+            $place = Place::where('owner_id',$userId)->first();
+            $response = array_merge($response,[
+                "place_name" => $place->name,
+                "place_units" => $place->units
+            ]);
+        }
+
+        return response()->json($response);
+
+    }
+
+    public function updateUserData(Request $request){
+        try{
+            $userId = $this->retrieveId($request->header('Authorization'));
+            if(!$userId) throw new Exception('Not allowed.', 403);
+
+            $user = User::find($userId);
+            $validatedData = $request->validate([
+                "place_name" => "sometimes|string",
+                "units" => "sometimes|integer",
+                "position" => "sometimes|string",
+                "phone" => "sometimes|string",
+                "password" => "sometimes|string|min:8|regex:/[a-z]/|regex:/[A-Z]/|regex:/[0-9]/|regex:/[@$!%*#?&.;?,'\":{}\-\+\=`_^]/",
+                "cep" => "sometimes|string|regex:/^[0-9]+$/",
+                "state" => "sometimes|string|max:2",
+                "city" => "sometimes|string",
+                "neighbourhood" => "sometimes|string",
+                "address" => "sometimes|string",
+                "number" => "sometimes|string",
+                "complement" => "sometimes|string",
+                "bio" => "sometimes|string"
+            ]);
+
+            if (isset($validatedData['password'])) {
+                $validatedData['password'] = $this->passwordIntoHash($validatedData['password']);
+            }
+    
+            $user->update($validatedData);
+    
+            return response()->json([
+                "success" => true,
+                "message" => "Dados atualizados com sucesso."
+            ], 200);
+
+        }catch(Exception $e){
+            return response()->json([
+                "success" => false,
+                "message" => $e->getMessage() ?? "Erro inesperado."
+            ], $e->getCode() ?: 500);
+        }
     }
 }
