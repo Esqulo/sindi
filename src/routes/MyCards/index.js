@@ -107,7 +107,7 @@ function MyCards() {
                 
                 {!cardsLoading ? (
                     <div className="cards-list custom-scroll">
-                        {myCards.length && myCards.map((card, index) => (
+                        {(myCards.length > 0) && myCards.map((card, index) => (
                             <div className="card-list-item" key={String(card.id)}>
                                 
                                 <div className="card-info">
