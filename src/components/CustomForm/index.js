@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback} from "react";
 import "./styles.css";
 
-import { CustomTextInput, CustomCheckInput, CustomDocInput } from "../CustomInputs";
+import { CustomTextInput, CustomCheckInput, CustomDocInput, CustomTextAreaInput } from "../CustomInputs";
 
 import LoadingIcon from "../LoadingIcon";
 
@@ -397,8 +397,23 @@ function CustomForm({fields, onSubmit, ButtonText, customStyle, formError}) {
                                     value={fieldValues[name]}
                                     label={field.label}
                                     required={field.required}
+                                    disabled={field.disabled}
                                     whenChange={(value) => handleChange(name, value)}
                                 />);
+                            case "textarea" : 
+                                return (
+                                    <CustomTextAreaInput
+                                        key={name}
+                                        name={name}
+                                        value={fieldValues[name]}
+                                        label={field.label}
+                                        placeholder={field.placeholder}
+                                        required={field.required}
+                                        disabled={field.disabled}
+                                        onChange={(value) => handleChange(name, value)}
+                                        errorMessage={errors[name]}
+                                    />
+                                );
                             default:
                                 return (
                                     <CustomTextInput

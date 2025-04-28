@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";import "./styles.css";
+import React, { useState, useEffect } from "react";
+import "./styles.css";
 import MaskedInput from "react-input-mask";
 
 const CustomTextInput = function ({name, value, label, placeholder, type="text", required=false, onChange, inputRef, errorMessage, customStyle, mask, disabled, min, max}) {
@@ -20,6 +21,27 @@ const CustomTextInput = function ({name, value, label, placeholder, type="text",
                 ref={inputRef}
                 style={customStyle}
             />
+            {errorMessage && <span className="custom-text-input-error">{errorMessage}</span>}
+        </div>
+    )
+}
+
+const CustomTextAreaInput = function ({name, value, label, placeholder, required=false, onChange, inputRef, errorMessage, customStyle, mask, disabled, min, max}) {
+    return (
+        <div className="custom-text-input">
+            <label className="custom-text-input-label">{label}</label>
+            <textarea 
+                className="custom-textarea-input-field"
+                name={name}
+                value={value}
+                placeholder={placeholder}
+                disabled={disabled}
+                required={required}
+                onChange={(e) => onChange(e.target.value)}
+                ref={inputRef}
+                style={customStyle}
+            >
+            </textarea>
             {errorMessage && <span className="custom-text-input-error">{errorMessage}</span>}
         </div>
     )
@@ -207,6 +229,7 @@ const CustomDocInput = ({ name, value, label, required = false, whenChange, inpu
 
 export {
     CustomTextInput,
+    CustomTextAreaInput,
     CustomCheckInput,
     CustomDocInput
 };
