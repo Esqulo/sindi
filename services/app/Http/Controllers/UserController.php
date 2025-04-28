@@ -288,4 +288,33 @@ class UserController extends Controller
             ], $e->getCode() ?: 500);
         }
     }
+
+    public function updateUserAvatar(Request $request){
+        try{
+            $userId = $this->retrieveId($request->header('Authorization'));
+            if(!$userId) throw new Exception('Not allowed.', 403);
+
+            $request->validate([
+                'avatar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            ]);
+
+            // Salve o arquivo de imagem
+            if ($request->hasFile('avatar')) {
+                $avatarPath = $request->file('avatar')->store('avatars', 'public');
+                
+                // Atualize o usuário com o novo avatar
+                $user = User::find($userId);
+                $user->avatar = '/services/storage/app/public/'. $avatarPath;
+                $user->save();
+
+                return response()->json(['message' => 'Avatar atualizado com sucesso!']);
+            }
+
+        }catch(Exception $e){
+            return response()->json([
+                "success" => false,
+                "message" => $e->getMessage() ?? "Erro inesperado."
+            ], $e->getCode() ?: 500);
+        }
+    }
 }

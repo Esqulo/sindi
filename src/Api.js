@@ -258,6 +258,16 @@ const Api = {
                 userData
             )
         }),
+
+    updateAvatar: async (userData) => 
+        apiFetch(`${BASE_URL}/profile/avatar`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem("token")}`
+            },
+            body: userData
+        })
 };
 
 export default Api;

@@ -4,3 +4,13 @@
     overflow-y: auto;
     max-height: 100%;
 }
+
+.edit-profile-avatar{
+    margin: 50px 0;
+}
+
+.edit-profile-avatar h1{
+    font-size: 18px;
+    font-weight: bold;
+    margin-left: 20px;
+}

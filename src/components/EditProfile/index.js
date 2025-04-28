@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./styles.css";
 
+import ImageCropper from "../ImageCropper";
 import LoadingIcon from "../LoadingIcon";
 import CustomForm from "../CustomForm";
 import Api from "../../Api";
@@ -49,12 +50,17 @@ function EditProfile() {
 		confirmPassword: { label: "Confirme a senha", placeholder: "**********", type: "password" },
 	});
 
+    const [croppedAvatar, setCroppedAvatar] = useState(null);
+
     async function handleSubmit(formValues){
         try {
             setFormError('');
 
             let api_response = await Api.updateProfile(formValues);
 			if(!api_response.success) throw api_response;
+            console.log(croppedAvatar)
+            if(croppedAvatar) updateAvatar();
+
             alert("campos atualizados com sucesso");
 		} catch (error) {
 			setFormError(`Erro: Operação não realizada. <br><br> Mensagem: ${error.message}. cod.: ${error.status}.`);
@@ -113,9 +119,30 @@ function EditProfile() {
         //eslint-disable-next-line
     },[])
 
+    const updateAvatar = async () => {
+        const formData = new FormData();
+        formData.append('avatar', croppedAvatar);
+
+        try {
+            await Api.updateAvatar(formData);
+            // alert('Avatar atualizado com sucesso!');
+        } catch (error) {
+            console.error('Erro ao atualizar avatar:', error);
+            // alert('Erro ao atualizar avatar.');
+        }
+    };
+
+    const handleImageCropped = (croppedBlob) => {
+        setCroppedAvatar(croppedBlob);
+    };
+
     return (
         <div className="edit-profile-container">
             <h2>Editar Perfil</h2>
+            <div className="edit-profile-avatar">
+                <h1>Avatar</h1>
+                <ImageCropper width={500} height={500} onImageCropped={handleImageCropped}/>
+            </div>
             {accountData.user_type !== undefined ? (
                 accountData.user_type === 1 ? (
                     <CustomForm fields={trustee_fields} onSubmit={handleSubmit} ButtonText={"Enviar"} formError={formError}/>
