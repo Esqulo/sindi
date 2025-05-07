@@ -46,7 +46,7 @@ return new class extends Migration
         });
 
         Schema::create('user_academic_data', function (Blueprint $table) {
-            $table->id()->primary()->autoIncrement();
+            $table->id();
             $table->integer('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('graduation_level');
             $table->string('graduation_title');
@@ -55,7 +55,7 @@ return new class extends Migration
         });
         
         Schema::create('work_fields', function (Blueprint $table) {
-            $table->id()->primary()->autoIncrement();
+            $table->id();
             $table->integer('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('work_field');
             $table->boolean('highlight')->nullable()->default(1);
@@ -63,7 +63,7 @@ return new class extends Migration
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
-            $table->id()->primary()->autoIncrement();
+            $table->id();
             $table->integer('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('email');
             $table->string('token');
