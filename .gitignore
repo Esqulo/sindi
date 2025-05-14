@@ -75,7 +75,10 @@ web_modules/
 .yarn-integrity
 
 # dotenv environment variable files
+.env
 .env.*
+/services/.env
+/services/.env.*
 /certs
 
 # parcel-bundler cache (https://parceljs.org/)
@@ -127,3 +130,21 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+/services/.phpunit.cache
+/services/node_modules
+/services/public/build
+/services/public/hot
+/services/public/storage
+/services/storage/*.key
+/services/vendor
+.phpactor.json
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+auth.json
+npm-debug.log
+yarn-error.log
+services/.fleet
+services/.idea
+*.vscode
