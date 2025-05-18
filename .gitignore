@@ -137,6 +137,7 @@ dist
 /services/public/hot
 /services/public/storage
 /services/storage/*.key
+/services/storage/app/public
 /services/vendor
 .phpactor.json
 .phpunit.result.cache
