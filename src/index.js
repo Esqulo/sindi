@@ -17,9 +17,6 @@ import MyDeals from './routes/MyDeals';
 import Profile from './routes/Profile';
 import Settings from './routes/Settings';
 
-const segments = window.location.pathname.split('/').filter(Boolean);
-const basename = segments.length > 0 ? `/${segments[0]}` : '/';
-
 const router = createBrowserRouter([
   {
     path: "/",
@@ -71,7 +68,7 @@ const router = createBrowserRouter([
       },
     ]
   }
-],{ basename });
+]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
