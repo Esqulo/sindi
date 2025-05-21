@@ -298,13 +298,11 @@ class UserController extends Controller
                 'avatar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ]);
 
-            // Salve o arquivo de imagem
             if ($request->hasFile('avatar')) {
                 $avatarPath = $request->file('avatar')->store('avatars', 'public');
-                
-                // Atualize o usuário com o novo avatar
+
                 $user = User::find($userId);
-                $user->avatar = '/services/storage/app/public/'. $avatarPath;
+                $user->avatar = env('APP_URL').'/services/storage/app/public/'. $avatarPath;
                 $user->save();
 
                 return response()->json(['message' => 'Avatar atualizado com sucesso!']);
