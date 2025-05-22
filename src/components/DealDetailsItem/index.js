@@ -177,12 +177,12 @@ function DealDetailsItem({details, onAnswer}) {
                                 <span>R$</span>
                                 <input type="numeric" placeholder="digite o valor" className="deal_details_modal-input deal_items_shadow" value={newDealValue} onChange={(e) => handleValueChange(e.target.value)}/>
                             </div>
-                            <div className="input_block">
-                                <span>Início em:</span>
+                            <div className="input_block small">
+                                <span>Início do mandato previsto em:</span>
                                 <input type="datetime-local" className="deal_details_modal-input deal_items_shadow" value={newDealStartDate} onChange={(e) => setNewDealStartDate(e.target.value)}/>
                             </div>
-                            <div className="input_block">
-                                <span>Fim em:</span>
+                            <div className="input_block small">
+                                <span>Término do mandato previsto em:</span>
                                 <input type="datetime-local" className="deal_details_modal-input deal_items_shadow" value={newDealEndDate} onChange={(e) => setNewDealEndDate(e.target.value)}/>
                             </div>
                         </div>

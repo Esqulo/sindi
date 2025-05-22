@@ -98,6 +98,7 @@
     width: 100%;
     justify-content: space-between;
     height: 10%;
+    gap: 20px;
 }
 
 .input_block{
@@ -109,6 +110,11 @@
 
 .input_block span{
     font-size: 18px;
+}
+
+.input_block.small span{
+    font-size: 16px;
+    text-align: justify;
 }
 
 .input_block input,
