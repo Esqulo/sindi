@@ -27,10 +27,12 @@ class CheckCards
             'action' => 'redirectToLogin',
             'message' => 'Não autenticado'
         ], 401);
+
+        $userData = $controller->getUserData($userId);
         
         $hasCards = UserSavedCard::where('user_id',$userId)->first();
 
-        if (!$hasCards) return response()->json([
+        if (!$hasCards && $userData->user_type != 0) return response()->json([
             'success' => false,
             'action' => 'redirectToCards',
             'message' => 'Nenhum cartão foi encontrado'
