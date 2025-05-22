@@ -271,6 +271,7 @@ function Chat(){
 
     return(
         <div className="chat-container column-centered">
+            <h1 className="title">Chat</h1>
             <div className="chat-content row-centered">
                 <div className="chat-people-container column-centered shadow-default custom-scroll" ref={chatListContainerRef} onScroll={handleChatListScroll}>
                     {chatsList.map((chat,index) => (

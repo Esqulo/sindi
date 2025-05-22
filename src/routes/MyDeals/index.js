@@ -83,6 +83,7 @@ function MyDeals() {
 
     return (
         <div className="deals-container column-centered">
+            <h1 className="title">Propostas</h1>
             <div className="deals-content row-centered">
                 <div className="deals-list column-centered shadow-default custom-scroll" ref={dealsListContainerRef} onScroll={handledealsListScroll}>
                     {dealsList.map((deal) => (
