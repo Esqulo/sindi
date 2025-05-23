@@ -88,7 +88,7 @@ function MyDeals() {
                 <div className="deals-list column-centered shadow-default custom-scroll" ref={dealsListContainerRef} onScroll={handledealsListScroll}>
                     {dealsList.map((deal) => (
                         <div className={`deal-item row-centered prevent-select ${deal.status} ${deal.id === selectedDeal.id ? 'selected' : ''}`} key={String(deal.id)} onClick={() => setSelectedDeal(deal)}>
-                            <CustomImageComponent img={deal.image || noUserImage} width={"80px"} borderRadius={"50%"} style={{ border: '2px solid #FFF', backgroundSize: '120%' }} />
+                            <CustomImageComponent img={deal.image || noUserImage} width={"80px"} borderRadius={"50%"} style={{ border: '2px solid #FFF' }} />
                             <div className="deal-item-info">
                                 <span className="deal-item-name">{deal.title}</span>
                                 <span className={`deal-item-status ${deal.status}`}>{deal.status}</span>
