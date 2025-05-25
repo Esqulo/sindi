@@ -88,14 +88,11 @@ function DetailComponent({ userData }) {
 			alert('mensagem enviada com sucesso');
 
 		}catch(err){
-
 			alert(err.message);
-
 		}finally{
 			setSendingMessage(false);
 			setShowChatModal(false);
 		}
-		
 	}
 
 	async function sendComment(){
@@ -115,16 +112,12 @@ function DetailComponent({ userData }) {
 			setChatMessage("");
 			setMessageSentSuccess(true);
 			alert('avaliação enviada com sucesso');
-
 		}catch(err){
-
 			alert(err.message);
-
 		}finally{
 			setSendingComment(false);
 			handleToggleCommentsModal();
 		}
-		
 	}
 
 	function validateFields(){
