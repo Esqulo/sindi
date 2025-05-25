@@ -33,31 +33,44 @@ class MailSender extends Controller
 
     private function appendSignature($template){
         $template .= '
-        <div style="width: 500px; height: 220px; display: flex; border: 1px solid #ddd; padding: 30px; align-items: center; gap: 30px; font-size: 16px;">
-            <div style="width: 80px; height: 80px;  background: url(\'https://sindibr.com.br/favicon.png\') no-repeat center center; background-size: contain;"></div>
-    
-            <div style=" width: 2px; height: 100%;background-color: #aaa;"></div>
-    
-            <div style="flex: 1;">
-                <div style="font-size: 22px; font-weight: bold; letter-spacing: 2px; text-transform: lowercase;">
-                    sindi
-                </div>
-                <div style="font-size: 12px; margin-top: 3px; margin-bottom: 15px; letter-spacing: 1px; text-transform: lowercase; color: #555;">
-                    conectando síndicos, transformando <br> condomínios
-                </div>
-                <div style=" display: flex; flex-direction: column; gap: 12px; font-size: 16px;">
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <span>✉️</span> suporte@sindibr.com.br
+            <div style="font-family: \'Lexend Exa\', Arial, sans-serif; color: #000;">
+
+                <link href="https://fonts.googleapis.com/css2?family=Lexend+Exa:wght@100..900&display=swap" rel="stylesheet">
+                <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
+                <div style="display: flex; flex-direction: row; align-items: center; box-sizing: border-box; width: 500px; height: 250px; border: 1px solid #ddd; padding: 35px 0;">
+                    
+                    <div style="display: flex; flex: 1.5; align-items: center; justify-content: center; height: 100%; flex-shrink: 0;">
+                    <img src="https://sindibr.com.br/favicon.png" alt="Logo" style="width: 80px; height: 80px; object-fit: cover;" />
                     </div>
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <span>📍</span> Rio de Janeiro, Brasil
+
+                    <div style="display: flex; flex-direction: column; flex: 3; box-sizing: border-box; border-left: 2px solid black; height: 100%; padding: 10px 25px; gap:15px;">
+                    
+                    <div style="display: flex; flex-direction: column;">
+                        <span style="font-size: 22px; font-weight: 500; letter-spacing: 2px;">sindi</span>
+                        <span style="font-size: 12px; color: #555;">
+                        conectando síndicos, transformando condomínios
+                        </span>
                     </div>
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <span>🌐</span> sindibr.com.br
+
+                    <div style="display: flex; flex-direction: column; gap: 1px; font-size: 13px;">
+                        <div style="display: flex; flex-direction: row; align-items: center; gap: 8px;">
+                        <span class="material-symbols-outlined">mail</span>
+                        <span>suporte@sindibr.com.br</span>
+                        </div>
+                        <div style="display: flex; flex-direction: row; align-items: center; gap: 8px;">
+                        <span class="material-symbols-outlined">location_on</span>
+                        <span>Rio de Janeiro, Brasil</span>
+                        </div>
+                        <div style="display: flex; flex-direction: row; align-items: center; gap: 8px;">
+                        <span class="material-symbols-outlined">language</span>
+                        <a href="https://sindibr.com.br" style="text-decoration: none; color: #000;" target="_blank">sindibr.com.br</a>
+                        </div>
+                    </div>
                     </div>
                 </div>
             </div>
-        </div>
+
         ';
 
         return $template;
