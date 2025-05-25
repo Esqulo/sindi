@@ -170,6 +170,15 @@ class ChatController extends Controller
             $chat->image = $this->getChatImage($chat->id, $user_id);
             $chat->last_message = $this->getChatLastMessage($chat->id);
             $chat->title = $this->getChatTitle($chat->id, $user_id);
+
+            if ($chat->type == 0) {
+                $otherUserId = ChatAccess::where('chat_id', $chat->id)
+                    ->where('user_id', '!=', $user_id)
+                    ->value('user_id');
+
+                $chat->user_id = $otherUserId;
+            }
+            
             return $chat;
         });
 

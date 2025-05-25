@@ -4,6 +4,7 @@ import "./styles.css";
 import CustomImageComponent from "../../components/CustomImgComponent";
 import SendIcon from "../../assets/images/icons/send.svg";
 import LoadingIcon from "../../components/LoadingIcon";
+import CustomModal from "../../components/CustomModal";
 
 import noUserImage from "../../assets/images/icons/no-image-profile.png";
 
@@ -21,8 +22,17 @@ function Chat(){
     const [currentMessage,setCurrentMessage] = useState('');
     const [autoScrollEnabled, setAutoScrollEnabled] = useState(true);
 
+    const [sendingDeal, setSendingDeal] = useState(false);
+    const [showDealModal, setShowDealModal] = useState(false);
+    const [newDealValue, setNewDealValue] = useState(0);
+    const [newDealMessage, setNewDealMessage] = useState("");
+    const [newDealStartDate, setNewDealStartDate] = useState("");
+    const [newDealEndDate, setNewDealEndDate] = useState("");
+
     const [loadingChats, setLoadingChats] = useState(false);
     const [loadingMessages, setLoadingMessages] = useState(false);
+    
+    const [showDealsButton, setShowDealsButton] = useState(false);
 
     const currentChatPage = useRef(0);
     let currentChatDataVar = {};
@@ -68,6 +78,91 @@ function Chat(){
         ]);
         
         setCurrentMessage('');
+    }
+
+    function handleValueChange(value) {
+        const numeric = value.replace(/\D/g, '');
+
+        if (!numeric) {
+          setNewDealValue('');
+          return;
+        }
+
+        const integer = numeric.slice(0, -2) || '0';
+        const decimal = numeric.slice(-2);
+
+        const formatted = parseInt(integer).toLocaleString('pt-BR') + ',' + decimal;
+
+        setNewDealValue(formatted);
+    }
+
+    function validateFields(){
+        try{
+            
+            const start = new Date(newDealStartDate);
+            const end = new Date(newDealEndDate);
+            const current = new Date();
+    
+            if (isNaN(start.getTime()) || start < current) throw new Error("Data de início inválida");
+            if (isNaN(end.getTime()) || end < current) throw new Error("Data de fim inválida");
+            if (start > end) throw new Error("Data de início maior que data de fim");
+
+            if(parseFloat(newDealValue) <= 0) throw new Error("Valor inválido");
+            if(!newDealMessage || newDealMessage.length < 5) throw new Error("Mensagem muito curta.");
+
+            return true;
+
+        }catch(error){
+            alert(error.message);
+            return false;
+        }
+    }
+
+    function parseCurrency(value) {
+        if (!value) return 0;
+
+        const onlyDigits = value.replace(/\D/g, '');
+
+        if (!onlyDigits) return 0;
+
+        const integer = parseInt(onlyDigits, 10);
+        return integer / 100;
+    }
+
+    function handleToggleDealsModal(){
+        if(sendingDeal && showDealModal) return;
+        setShowDealModal(!showDealModal);
+    }
+
+    async function createDeal(){
+        if(sendingDeal) return;
+        if(!validateFields()) return;
+
+        try{
+            setSendingDeal(true);
+            
+            let response = await Api.createDeal({
+                to: currentChatData.chatWithUser,
+                value: parseCurrency(newDealValue),
+                message: newDealMessage || null,
+                starts_at: newDealStartDate || null,
+                expires_at: newDealEndDate || null
+            });
+
+            if(response !== true) throw new Error("Error creating deal");
+
+        }catch(error){
+            alert("Algo deu errado, verifique os dados e tente novamente.");
+            console.error("Error answering deal:", error);
+        }finally{
+            alert("enviado com sucesso");
+            handleToggleDealsModal();
+            setNewDealValue(0);
+            setNewDealMessage("");
+            setNewDealStartDate("");
+            setNewDealEndDate("");
+            setSendingDeal(false);
+        }
     }
 
     useEffect(() => {
@@ -210,6 +305,7 @@ function Chat(){
             
             return updatedMessages;
         });
+
     }, [currentChatDataVar.id, storeChatMessages])
 
     async function loadMessagesFromLocalStorage() {
@@ -237,6 +333,11 @@ function Chat(){
                 id: chatData.id,
                 title: chatData.title,
                 image: chatData.image
+            }
+
+            if(chatData.type === 0){
+                setShowDealsButton(true);
+                currentChatDataVar.chatWithUser = chatData.user_id;
             }
             
             setCurrentChatData(currentChatDataVar);
@@ -306,11 +407,39 @@ function Chat(){
                         </div>
                         <div className="chat-conversation-input row-centered">
                             <input type="text" placeholder="Digite uma mensagem" value={currentMessage} onChange={(event)=>{setCurrentMessage(event.target.value)}} onKeyDown={handleKeyDown}/>
-                            <img src={SendIcon} alt="enviar" onClick={sendMessage} className="chat-conversation-send-icon"/>
+                            <div className="chat-conversation-input-options">
+                                <img src={SendIcon} alt="enviar" onClick={sendMessage} className="chat-conversation-send-icon" title="Enviar"/>
+                                {showDealsButton && <span onClick={handleToggleDealsModal} className="material-symbols-outlined chat-conversation-send-icon" title="Realizar proposta">handshake</span>}
+                            </div>
                         </div>
                     </>}
                 </div>
             </div>
+            <CustomModal toggle={handleToggleDealsModal} show={showDealModal} showCloseButton={false} >
+				<div className="deal_details_modal column-centered default-shadow">
+					<div className="deal_details_modal-header row-centered">
+						<div className="input_block">
+							<span>R$</span>
+							<input type="numeric" placeholder="digite o valor" className="deal_details_modal-input deal_items_shadow" value={newDealValue} onChange={(e) => handleValueChange(e.target.value)} style={{width: "120px"}}/>
+						</div>
+						<div className="input_block small">
+							<span>Início do mandato previsto em:</span>
+							<input type="datetime-local" className="deal_details_modal-input deal_items_shadow" value={newDealStartDate} onChange={(e) => setNewDealStartDate(e.target.value)}/>
+						</div>
+						<div className="input_block small">
+							<span>Término do mandato previsto em:</span>
+							<input type="datetime-local" className="deal_details_modal-input deal_items_shadow" value={newDealEndDate} onChange={(e) => setNewDealEndDate(e.target.value)}/>
+						</div>
+					</div>
+					<div className="deal_details_modal-message row-centered">
+						<textarea className="deal_details_modal-input deal_items_shadow" placeholder="digite uma mensagem" value={newDealMessage} onChange={(e)=>{setNewDealMessage(e.target.value)}}></textarea>
+					</div>
+					<div className="deal_details_modal-options row-centered">
+						<button className="button_send clickable deal_items_shadow prevent-select" onClick={()=>{createDeal()}}>Enviar</button>
+						<button className="button_cancel clickable deal_items_shadow prevent-select" onClick={handleToggleDealsModal}>Cancelar</button>
+					</div>
+				</div>
+			</CustomModal>
         </div>
     );
 }
