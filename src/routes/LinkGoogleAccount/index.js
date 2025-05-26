@@ -15,7 +15,7 @@ function LinkGoogleAccount(){
     const [isCheckingLink,setIsCheckingLink] = useState(false);
 
     function navigateToAccountLink(){
-        navigate(process.env.REACT_APP_GOOGLE_LINK_ACCOUNT_URL);
+        window.open(process.env.REACT_APP_GOOGLE_LINK_ACCOUNT_URL, '_blank');
     }
 
     const sendCode = useCallback(async () => {
