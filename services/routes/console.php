@@ -12,12 +12,14 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote')->hourly();
 
-Artisan::command('test:send_email', function () {
+Artisan::command('test:send_email {email}', function ($email) {
 
     $mailSender = new MailSender;
-    $mailSender->sendEmail('juan.elias.cunha@gmail.com','Email Teste', 'Email Teste');
+    $mailSender->sendEmail($email, 'Email Teste', 'Email Teste');
 
-})->purpose('send test email');
+    $this->info("E-mail de teste enviado para: {$email}");
+
+})->purpose('Enviar um e-mail de teste para o endereço especificado');
 
 Artisan::command('process:payment_links', function () {
 
