@@ -7,13 +7,35 @@ use Exception;
 
 class MailSender extends Controller
 {
+    private function buildEmail($subject,$body){
+
+        $signature = $this->buildSignature();
+
+        return  "
+            <!DOCTYPE html>
+            <html lang=\"pt-BR\">
+                <head>
+                    <title>$subject</title>
+                    <meta charset=\"UTF-8\">
+                    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
+                    <link href=\"https://fonts.googleapis.com/css2?family=Lexend+Exa:wght@100..900&display=swap\" rel=\"stylesheet\">
+                    <link href=\"https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined\" rel=\"stylesheet\" />
+                </head>
+                <body>
+                    $body
+                </body>
+                <footer>
+                    $signature
+                </footer>
+            </html>
+        ";
+    }
 
     public function sendEmail($to,$subject,$body){
         
         $from = env('MAIL_FROM_ADDRESS');
-        //$from = env('MAIL_FROM_NAME');
         
-        $body = $this->appendSignature($body);
+        $content = $this->buildEmail($subject,$body);
 
         $headers = 
             "From: <$from>\r\n".
@@ -23,7 +45,7 @@ class MailSender extends Controller
             "Content-type:text/html;charset=UTF-8";
 
         try{
-            mail($to,$subject,$body,$headers);
+            mail($to,$subject,$content,$headers);
             return true;
         }catch(Exception $e){
             return false;
@@ -31,49 +53,80 @@ class MailSender extends Controller
 
     }
 
-    private function appendSignature($template){
-        $template .= '
-            <div style="font-family: \'Lexend Exa\', Arial, sans-serif; color: #000;">
-
-                <link href="https://fonts.googleapis.com/css2?family=Lexend+Exa:wght@100..900&display=swap" rel="stylesheet">
-                <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-
-                <div style="display: flex; flex-direction: row; align-items: center; box-sizing: border-box; width: 500px; height: 250px; border: 1px solid #ddd; padding: 35px 0;">
-                    
-                    <div style="display: flex; flex: 1.5; align-items: center; justify-content: center; height: 100%; flex-shrink: 0;">
-                    <img src="https://sindibr.com.br/favicon.png" alt="Logo" style="width: 80px; height: 80px; object-fit: cover;" />
-                    </div>
-
-                    <div style="display: flex; flex-direction: column; flex: 3; box-sizing: border-box; border-left: 2px solid black; height: 100%; padding: 10px 25px; gap:15px;">
-                    
-                    <div style="display: flex; flex-direction: column;">
-                        <span style="font-size: 22px; font-weight: 500; letter-spacing: 2px;">sindi</span>
-                        <span style="font-size: 12px; color: #555;">
-                        conectando síndicos, transformando condomínios
-                        </span>
-                    </div>
-
-                    <div style="display: flex; flex-direction: column; gap: 1px; font-size: 13px;">
-                        <div style="display: flex; flex-direction: row; align-items: center; gap: 8px;">
-                        <span class="material-symbols-outlined">mail</span>
-                        <span>suporte@sindibr.com.br</span>
-                        </div>
-                        <div style="display: flex; flex-direction: row; align-items: center; gap: 8px;">
-                        <span class="material-symbols-outlined">location_on</span>
-                        <span>Rio de Janeiro, Brasil</span>
-                        </div>
-                        <div style="display: flex; flex-direction: row; align-items: center; gap: 8px;">
-                        <span class="material-symbols-outlined">language</span>
-                        <a href="https://sindibr.com.br" style="text-decoration: none; color: #000;" target="_blank">sindibr.com.br</a>
-                        </div>
-                    </div>
-                    </div>
-                </div>
-            </div>
-
-        ';
-
-        return $template;
+    private function buildSignature(){
+        return "
+            <table width=\"500\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border:1px solid #ddd; background:#FFF; font-family:Arial, sans-serif; color:#000 !important;\">
+                <tr>
+                    <td colspan=\"2\" height=\"40\" style=\"line-height: 20px; font-size: 0;\">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td width=\"120\" align=\"center\" style=\"padding: 0 30px;\">
+                        <img src=\"https://sindibr.com.br/favicon.png\" alt=\"Logo\" width=\"80\" height=\"80\" style=\"display: block;\" />
+                    </td>
+        
+                    <td>
+                        <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">
+                            <tr>
+                                <td width=\"2\" align=\"center\" valign=\"middle\" style=\"background: #000;\"></td>
+        
+                                <td style=\"padding: 0 25px;\">
+                                    <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">
+                                        <tr>
+                                            <td style=\"font-size: 26px; font-weight: bold; letter-spacing: 3px; color:#000;\">sindi</td>
+                                        </tr>
+                                        <tr>
+                                            <td style=\"font-size: 14px; color: #555 !important; padding-bottom: 15px;\">
+                                                conectando síndicos, transformando condomínios
+                                            </td>
+                                        </tr>
+        
+                                        <tr>
+                                            <td style=\"font-size: 14px; pad4ing-top: 5px;\">
+                                                <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">
+                                                    <tr>
+                                                        <td width=\"30\" align=\"center\" valign=\"middle\" style=\"font-size:16px;\">📧</td>
+                                                        <td style=\"padding-left: 8px; text-decoration:none;\">
+                                                            <span style=\" text-decoration:none; color:#000;\">suporte@sindibr.com.br</span>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+        
+                                        <tr>
+                                            <td style=\"font-size: 14px; padding-top: 5px;\">
+                                                <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">
+                                                    <tr>
+                                                        <td width=\"30\" align=\"center\" valign=\"middle\" style=\"font-size:16px;\">📍</td>
+                                                        <td style=\"padding-left: 8px; text-decoration:none; color:#000;\">Rio de Janeiro, Brasil</td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+        
+                                        <tr>
+                                            <td style=\"font-size: 14px; padding-top: 5px;\">
+                                                <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">
+                                                    <tr>
+                                                        <td width=\"30\" align=\"center\" valign=\"middle\" style=\"font-size:16px;\">🌐</td>
+                                                        <td style=\"padding-left: 8px;\">
+                                                            <span style=\" text-decoration:none; color:#000;\">sindibr.com.br</span>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan=\"2\" height=\"40\" style=\"line-height: 20px; font-size: 0;\">&nbsp;</td>
+                </tr>
+            </table>
+        ";
     }
 
     public function sendEmailConfirmation($user_id){
