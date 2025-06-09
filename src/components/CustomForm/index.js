@@ -16,16 +16,67 @@ function CustomForm({fields, onSubmit, ButtonText, customStyle, formError}) {
     const [loading, setLoading] = useState(false);
 
     function handleKeyDown(event) {
-        if (event.key === "Enter") {
-            sendForm();
-        }
+        if (event.key === "Enter") sendForm();
     }
+
+    const setErrorMessage = useCallback((field, message) => {
+        setErrors((prev) => ({ ...prev, [field]: message }))
+    }, []);
+
+    const checkPasswordIsStrong = useCallback((password) => {
+
+        if(!password) return;
+
+        const minLength = 8;
+        const hasUpperCase = /[A-Z]/.test(password);
+        const hasLowerCase = /[a-z]/.test(password);
+        const hasNumber = /[0-9]/.test(password);
+        const hasSpecialChar = /[\W_]/.test(password);
+    
+        if (
+            password.length < minLength ||
+            !hasUpperCase ||
+            !hasLowerCase ||
+            !hasNumber ||
+            !hasSpecialChar
+        ) {
+            return false;
+        }
+
+        return true;
+
+    },[]);
+
+    const checkPasswordsMatch = useCallback(() => {
+    
+        if (fieldValues.password !== fieldValues.confirmPassword) {
+            setErrors((prev) => ({ ...prev, confirmPassword: "As senhas não coincidem" }));
+            return false;
+        }
+
+        setErrors((prev) => ({ ...prev, confirmPassword: "" }));
+        return true;
+
+    }, [fieldValues.password, fieldValues.confirmPassword]);
 
     const handleChange = useCallback((name, value) => {
         setFieldValues((prev) => ({ ...prev, [name]: value }));
+        if(name === 'password' || name === 'confirmPassword') return;
         setErrors((prev) => ({ ...prev, [name]: "" }));
     }, []);
-    
+
+    useEffect(() => {
+
+        if(!fieldValues.password && !fieldValues.confirmPassword) return;
+
+        let passwordIsStrong = checkPasswordIsStrong(fieldValues.password);
+        if(!passwordIsStrong) setErrorMessage('password', "A senha deve conter caracteres especiais, letras maiúscula, minúsculas e números.");
+        else setErrorMessage('password', '');
+
+        checkPasswordsMatch();
+
+    }, [fieldValues.password, fieldValues.confirmPassword, checkPasswordIsStrong, checkPasswordsMatch, setErrorMessage]);
+
     const updateFieldProperty = useCallback((fieldName, property, newValue) => {
         setHookFields((prevFields) => ({
             ...prevFields,
@@ -37,9 +88,7 @@ function CustomForm({fields, onSubmit, ButtonText, customStyle, formError}) {
     }, []);
 
     function removeMasks(value) {
-        
         return value?.replace(/\D/g, '');
-
     }
 
     function validateForm() {
@@ -48,7 +97,7 @@ function CustomForm({fields, onSubmit, ButtonText, customStyle, formError}) {
         let firstErrorField = null;
     
         for (let input of requiredFields) {
-            
+
             const name = input.getAttribute("name");
             const value = fields[name].mask ? removeMasks(fieldValues[name]) : fieldValues[name];       
             
@@ -105,7 +154,7 @@ function CustomForm({fields, onSubmit, ButtonText, customStyle, formError}) {
                 continue;
             }
 
-            if(name === "password" && requiredFields['confirmPassword']){
+            if(name === "password"){
                 if(!checkPasswordIsStrong(value)){
                     if(!newErrors[name]) newErrors[name] = "A senha deve conter caracteres especiais, letras maiúscula, minúsculas e números.";
                     if(!firstErrorField) firstErrorField = input;
@@ -240,42 +289,6 @@ function CustomForm({fields, onSubmit, ButtonText, customStyle, formError}) {
 
     }
 
-    const checkPasswordIsStrong = useCallback((password) => {
-
-        const minLength = 8;
-        const hasUpperCase = /[A-Z]/.test(password);
-        const hasLowerCase = /[a-z]/.test(password);
-        const hasNumber = /[0-9]/.test(password);
-        const hasSpecialChar = /[\W_]/.test(password);
-    
-        if (
-            password.length >= minLength &&
-            hasUpperCase &&
-            hasLowerCase &&
-            hasNumber &&
-            hasSpecialChar
-        ) {
-            return true;
-        } else {
-            return false;
-        }
-
-    },[])
-
-    const checkPasswordsMatch = useCallback(async () => {
-
-        if (!fieldValues.password || !fieldValues.confirmPassword) return;
-    
-        if (fieldValues.password !== fieldValues.confirmPassword) {
-            setErrors((prev) => ({ ...prev, confirmPassword: "As senhas não coincidem" }));
-            return false;
-        } else {
-            setErrors((prev) => ({ ...prev, confirmPassword: "" }));
-            return true;
-        }
-
-    }, [fieldValues.password, fieldValues.confirmPassword]);
-
     async function getCepData(cep){
         let cepData = await Api.cep({cep});
             
@@ -303,10 +316,6 @@ function CustomForm({fields, onSubmit, ButtonText, customStyle, formError}) {
 
     }, [handleChange, updateFieldProperty]);
 
-    const setErrorMessage = useCallback((field, message) => {
-        setErrors((prev) => ({ ...prev, [field]: message }))
-    }, []);
-    
     const checkCep = useCallback(async () => {
 
         if (!fieldValues.cep) return;
@@ -337,38 +346,10 @@ function CustomForm({fields, onSubmit, ButtonText, customStyle, formError}) {
 
         setErrorMessage('cpf','CPF Inválido')
 
-    }, [fieldValues.cpf,setErrorMessage]);
-
-    // const checkCnpj = useCallback(async () => {
-
-    //     if(!fieldValues.cnpj) return;
-
-    //     let cnpj = fieldValues.cnpj.replace(/\D/g, '');
-    //     if(!cnpj || cnpj.length !== 14) return;
-
-    //     let isCnpjValid = validateCNPJ(cnpj);
-    //     if(isCnpjValid) return;
-
-    //     setErrorMessage('cnpj','CNPJ Inválido')
-
-    // }, [fieldValues.cnpj,setErrorMessage]); 
+    }, [fieldValues.cpf,setErrorMessage]); 
 
     useEffect(() => { checkCpf(); }, [checkCpf]);
-    
-    // useEffect(() => { checkCnpj(); }, [checkCnpj]);
-
     useEffect(() => { checkCep(); }, [checkCep]);
-
-    useEffect(() => { 
-        
-        checkPasswordsMatch();
-
-        if(fieldValues['password']){
-            let passwordIsStrong = checkPasswordIsStrong(fieldValues['password']);
-            if(!passwordIsStrong) setErrorMessage('password', "A senha deve conter caracteres especiais, letras maiúscula, minúsculas e números.");
-        }
-
-    }, [checkPasswordsMatch, checkPasswordIsStrong, setErrorMessage, fieldValues]);
 
     return(
         <div className="custom-form-container" onKeyDown={handleKeyDown} ref={formRef} style={customStyle}>
@@ -410,6 +391,24 @@ function CustomForm({fields, onSubmit, ButtonText, customStyle, formError}) {
                                         placeholder={field.placeholder}
                                         required={field.required}
                                         disabled={field.disabled}
+                                        onChange={(value) => handleChange(name, value)}
+                                        errorMessage={errors[name]}
+                                    />
+                                );
+                            case "password" :
+                                return (
+                                    <CustomTextInput //CustomPasswordInput
+                                        key={name}
+                                        name={name}
+                                        value={fieldValues[name]}
+                                        label={field.label}
+                                        placeholder={field.placeholder}
+                                        mask={field.mask}
+                                        type={field.type}
+                                        required={field.required}
+                                        disabled={field.disabled}
+                                        min={field.min}
+                                        max={field.max}
                                         onChange={(value) => handleChange(name, value)}
                                         errorMessage={errors[name]}
                                     />
