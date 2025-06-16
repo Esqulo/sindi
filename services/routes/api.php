@@ -23,13 +23,6 @@ Route::middleware(['CheckCardsGroup','PendingDealsGroup'])->group(function () {
         'meeting' => MeetingsController::class
     ]);
 
-    Route::prefix('chat')->group(function(){
-        Route::get('/',[ChatController::class, 'getUserChats']);
-        Route::get('/{chat_id}',[ChatController::class, 'getChatMessages']);
-        Route::post('/message',[ChatController::class, 'sendMessage']);
-        Route::post('/new',[ChatController::class, 'createNewChat']);
-    });
-
     Route::prefix('offeredservices')->group(function(){
         Route::get('/',[ProductsController::class, 'getUserOfferedServices']);
         Route::get('/{user_id}',[ProductsController::class, 'getUserOfferedServices']);
@@ -106,4 +99,11 @@ Route::prefix('mp')->group(function(){
     Route::get('/card', [MercadoPagoController::class, 'getUserCards']);
     Route::delete('/card/{card_id}', [MercadoPagoController::class, 'deleteCard']);
     Route::get('/plans', [MercadoPagoController::class, 'getPlans']);
+});
+
+Route::prefix('chat')->group(function(){
+    Route::get('/',[ChatController::class, 'getUserChats']);
+    Route::get('/{chat_id}',[ChatController::class, 'getChatMessages']);
+    Route::post('/message',[ChatController::class, 'sendMessage']);
+    Route::post('/new',[ChatController::class, 'createNewChat']);
 });

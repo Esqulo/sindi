@@ -14,6 +14,7 @@ function Chat(){
 
     const chatContainerRef = useRef(null);
     const chatListContainerRef = useRef(null);
+    const loadingPreviousMessages = useRef(false);
 
     const [chatsList,setChatsList] = useState([]);
     const [currentChatData,setCurrentChatData] = useState({});
@@ -35,7 +36,6 @@ function Chat(){
     const [showDealsButton, setShowDealsButton] = useState(false);
 
     const currentChatPage = useRef(0);
-    let currentChatDataVar = {};
 
     function formatDateTime(dateTimeString) {
         const date = new Date(dateTimeString);
@@ -51,9 +51,7 @@ function Chat(){
     }
     
     function handleKeyDown(event) {
-        if (event.key === "Enter") {
-            sendMessage();
-        }
+        if (event.key === "Enter") sendMessage();
     }
 
     async function sendMessage(){
@@ -63,21 +61,10 @@ function Chat(){
             message: currentMessage,
             to: currentChatData.id
         });
-
-        let now = new Date();
-        let dateString = `${now.getFullYear()}-${now.getMonth() < 9 ? `0${now.getMonth()+1}` : `${now.getMonth()+1}`}/${now.getDate()} ${now.getHours() < 10 ? `0${now.getHours()}` : now.getHours()}:${now.getMinutes() < 10 ? `0${now.getMinutes()}` : now.getMinutes()}`;
-        let sent_at = dateString;
-        
-        setChatMessages((prev) => [
-            ...prev, 
-            {
-                from: currentUserId,
-                message: currentMessage,
-                sent_at
-            }
-        ]);
         
         setCurrentMessage('');
+
+        await loadMessagesFromDatabase();
     }
 
     function handleValueChange(value) {
@@ -171,7 +158,7 @@ function Chat(){
         }
     }, [chatMessages, autoScrollEnabled]);
 
-    function handleMessagesScroll() {
+    async function handleMessagesScroll() {
         if (!chatContainerRef.current) return;
 
         const { scrollTop, scrollHeight, clientHeight } = chatContainerRef.current;
@@ -180,6 +167,11 @@ function Chat(){
             setAutoScrollEnabled(false);
         } else {
             setAutoScrollEnabled(true);
+        }
+
+        if(scrollTop <= 10){
+            const messagesBefore = chatMessages[0].sent_at;
+            await loadPreviousMessages(messagesBefore);
         }
     }
 
@@ -262,95 +254,101 @@ function Chat(){
         }
     }, []);
 
-    const storeChatMessages = useCallback(async (chat_id, messages) => {
-    // function storeChatMessages(chat_id, messages) {
-        if (!messages.length) return;
+    const storeChatLastCheckpoint = useCallback(async (chat_id) => {
+        let now = new Date();
+        const pad = (n) => n.toString().padStart(2, '0');
+        const dateString = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+        localStorage.setItem(`chat_data_${chat_id}`, dateString);
+    }, []);
 
-        const lastMessage = messages[messages.length - 1];
-        const lastMessageDate = lastMessage ? lastMessage.sent_at : null;
+    async function setChat(chatData) {
+        if(chatData.id === currentChatData.id) return;
+        
+        setChatMessages([]);
 
-        let dataToStore = {
-            id: chat_id,
-            title: currentChatDataVar.title,
-            image: currentChatDataVar.image,
-            messages: messages,
-            lastMessageDate: lastMessageDate
-        };
+        let chatObject = {
+            id: chatData.id,
+            title: chatData.title,
+            image: chatData.image
+        }
 
-        localStorage.setItem(`chat_data_${chat_id}`, JSON.stringify(dataToStore));
-    }, [currentChatDataVar.image,currentChatDataVar.title] )
+        if(chatData.type === 0){
+            setShowDealsButton(true);
+            chatObject.chatWithUser = chatData.user_id;
+        }
+
+        setCurrentChatData(chatObject);
+    }
+
+    const loadPreviousMessages = useCallback(async (messagesBefore) => {
+        if(loadingPreviousMessages.current) return;
+        try{
+            loadingPreviousMessages.current = true;
+
+            let chat_id = currentChatData.id;
+            if(!chat_id) return;
+
+            const apiResponse = await Api.getChatMessages({
+                end_date: messagesBefore,
+                chat_id
+            });
+
+            const newMessages = apiResponse.data || [];
+
+            await storeChatLastCheckpoint(chat_id);
+
+            setChatMessages((prev) => [...newMessages, ...prev]);
+        }catch(err){
+            console.err(err)
+        }finally{
+            loadingPreviousMessages.current = false;
+        }
+    },[currentChatData, storeChatLastCheckpoint]);
 
     const loadMessagesFromDatabase = useCallback(async () => {
-        let chat_id = currentChatDataVar.id;
+
+        let chat_id = currentChatData.id;
         if(!chat_id) return;
 
-        const storedChat = localStorage.getItem(`chat_data_${chat_id}`);
-        const storedJson = storedChat ? JSON.parse(storedChat) : { messages: [] };
-        
-        const lastMessageDate = storedJson.lastMessageDate || null;
-       
+        const storedCheckpoint = localStorage.getItem(`chat_data_${chat_id}`);
+
         const apiResponse = await Api.getChatMessages({
             chat_id,
-            begin_date: lastMessageDate
+            begin_date: storedCheckpoint
         });
 
         const newMessages = apiResponse.data || [];
 
-        if (newMessages.length === 0) return;
+        await storeChatLastCheckpoint(chat_id);
 
-        setChatMessages((prevMessages) => {
-            const updatedMessages = [...prevMessages, ...newMessages];
-            
-            storeChatMessages(chat_id, updatedMessages);
-            
-            return updatedMessages;
-        });
+        setChatMessages((prev) => [...prev, ...newMessages]);
 
-    }, [currentChatDataVar.id, storeChatMessages])
+    }, [currentChatData,storeChatLastCheckpoint]);
 
-    async function loadMessagesFromLocalStorage() {
-        let chat_id = currentChatDataVar.id;
-        if(!chat_id) return;
-       
-        const storedChat = localStorage.getItem(`chat_data_${chat_id}`);
-        let storedJson = storedChat ? JSON.parse(storedChat) : { messages: [] };
+    useEffect(() =>{
 
-        setChatMessages(storedJson.messages);
-        
-        setCurrentChatData((prev) => ({
-            ...prev,
-            lastMessageDate: storedJson.lastMessageDate
-        }));
-    }
+        if(!currentChatData.id || loadingMessages) return;
 
-    async function setChat(chatData) {
-        try{
-            if(chatData.id === currentChatData.id) return;
-            setChatMessages([]);
-            setLoadingMessages(true);
+        async function loadMessages() {
+            let now = new Date();
+            const pad = (n) => n.toString().padStart(2, '0');
+            const dateString = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
 
-            currentChatDataVar = {
-                id: chatData.id,
-                title: chatData.title,
-                image: chatData.image
-            }
-
-            if(chatData.type === 0){
-                setShowDealsButton(true);
-                currentChatDataVar.chatWithUser = chatData.user_id;
-            }
-            
-            setCurrentChatData(currentChatDataVar);
-
-            await loadMessagesFromLocalStorage();
+            await loadPreviousMessages(dateString);
             await loadMessagesFromDatabase();
-            
-        }catch(err){
+        }
 
+        try{
+            setLoadingMessages(true);
+            loadMessages();
+        }catch(err){
+            console.error('failed to load messages');
         }finally{
             setLoadingMessages(false);
         }
-    }
+
+        // eslint-disable-next-line
+    }, [currentChatData.id]);
 
     async function getCurrentUserId(){
         let userId = await Api.getCurrentUserId();

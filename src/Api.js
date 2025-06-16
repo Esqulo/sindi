@@ -39,7 +39,7 @@ async function apiFetch(url, options = {}){
     }
 };
 
-function getAuthHeaders(){
+async function getAuthHeaders(){
     return {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ const Api = {
     logout: async () =>
         apiFetch(`${BASE_URL}/auth/logout`, {
             method: 'GET',
-            headers: getAuthHeaders()
+            headers: await getAuthHeaders()
         }),
 
     cep: async ({ cep }) =>
@@ -70,58 +70,65 @@ const Api = {
     newUser: async (userData) =>
         apiFetch(`${BASE_URL}/user`, {
             method: 'POST',
-            headers: getAuthHeaders(),
+            headers: await getAuthHeaders(),
             body: JSON.stringify(userData)
         }),
 
     newCard: async (cardToken) =>
         apiFetch(`${BASE_URL}/mp/card`, {
             method: 'POST',
-            headers: getAuthHeaders(),
+            headers: await getAuthHeaders(),
             body: JSON.stringify({ card_token: cardToken })
         }),
 
     getMyCards: async () =>
         apiFetch(`${BASE_URL}/mp/card`, {
             method: 'GET',
-            headers: getAuthHeaders()
+            headers: await getAuthHeaders()
         }),
 
     deleteCard: async (cardId) =>
         apiFetch(`${BASE_URL}/mp/card/${cardId}`, {
             method: 'DELETE',
-            headers: getAuthHeaders()
+            headers: await getAuthHeaders()
         }),
 
     getMyChats: async (page = 1) =>
         apiFetch(`${BASE_URL}/chat?page=${page}`, {
             method: 'GET',
-            headers: getAuthHeaders()
+            headers: await getAuthHeaders()
         }),
 
-    getChatMessages: async ({ chat_id, begin_date }) =>
-        apiFetch(`${BASE_URL}/chat/${chat_id}?begin_date=${begin_date}`, {
+    getChatMessages: async ({ chat_id, begin_date, end_date }) => {
+        const params = new URLSearchParams();
+        if (begin_date) params.append('begin_date', begin_date);
+        if (end_date) params.append('end_date', end_date);
+
+        const url = `${BASE_URL}/chat/${chat_id}${params.toString() ? `?${params.toString()}` : ''}`;
+
+        return apiFetch(url, {
             method: 'GET',
-            headers: getAuthHeaders()
-        }),
+            headers: await getAuthHeaders()
+        })
+    },
 
     getCurrentUserId: async () =>
         apiFetch(`${BASE_URL}/auth/currentUserId`, {
             method: 'GET',
-            headers: getAuthHeaders()
+            headers: await getAuthHeaders()
         }),
 
     sendMessage: async ({ message, to }) =>
         apiFetch(`${BASE_URL}/chat/message`, {
             method: 'POST',
-            headers: getAuthHeaders(),
+            headers: await getAuthHeaders(),
             body: JSON.stringify({ message, to })
         }),
 
     getDeals: async (page = 1) => {
         const res = await apiFetch(`${BASE_URL}/deal?page=${page}`, {
             method: 'GET',
-            headers: getAuthHeaders()
+            headers: await getAuthHeaders()
         });
         return res.data ?? res;
     },
@@ -129,53 +136,53 @@ const Api = {
     getDealDetails: async (dealId) =>
         apiFetch(`${BASE_URL}/deal/${dealId}`, {
             method: 'GET',
-            headers: getAuthHeaders()
+            headers: await getAuthHeaders()
         }),
 
     answerDeal: async (dealId, dealData) =>
         apiFetch(`${BASE_URL}/deal/answer/${dealId}`, {
             method: 'PUT',
-            headers: getAuthHeaders(),
+            headers: await getAuthHeaders(),
             body: JSON.stringify(dealData)
         }),
 
     createDeal: async (dealData) =>
         apiFetch(`${BASE_URL}/deal/create`, {
             method: 'POST',
-            headers: getAuthHeaders(),
+            headers: await getAuthHeaders(),
             body: JSON.stringify(dealData)
         }),
 
     getUserProfile: async (userId) =>
         apiFetch(`${BASE_URL}/user/${userId || 0}`, {
             method: 'GET',
-            headers: getAuthHeaders()
+            headers: await getAuthHeaders()
         }),
 
     getComments: async ({ userId, page = 1 }) =>
         apiFetch(`${BASE_URL}/avaliation/user/${userId}?page=${page}`, {
             method: 'GET',
-            headers: getAuthHeaders()
+            headers: await getAuthHeaders()
         }),
 
     createChat: async ({ users, message }) =>
         apiFetch(`${BASE_URL}/chat/new`, {
             method: 'POST',
-            headers: getAuthHeaders(),
+            headers: await getAuthHeaders(),
             body: JSON.stringify({ users, message })
         }),
 
     avaliateUser: async ({ to, message, stars }) =>
         apiFetch(`${BASE_URL}/avaliation/new`, {
             method: 'POST',
-            headers: getAuthHeaders(),
+            headers: await getAuthHeaders(),
             body: JSON.stringify({ to, message, stars })
         }),
 
     newService: async ({ title, price, description }) =>
         apiFetch(`${BASE_URL}/offeredservices`, {
             method: 'POST',
-            headers: getAuthHeaders(),
+            headers: await getAuthHeaders(),
             body: JSON.stringify({
                 name: title,
                 description,
@@ -186,25 +193,25 @@ const Api = {
     LinkGoogle: async (code) =>
         apiFetch(`${BASE_URL}/auth/callback?code=${code}`, {
             method: 'GET',
-            headers: getAuthHeaders()
+            headers: await getAuthHeaders()
         }),
 
     checkGoogleIsLinked: async () =>
         apiFetch(`${BASE_URL}/google/accountIsLinked`, {
             method: 'GET',
-            headers: getAuthHeaders()
+            headers: await getAuthHeaders()
         }),
 
     unlinkGoogleAccount: async () =>
         apiFetch(`${BASE_URL}/google/unlinkAccount`, {
             method: 'GET',
-            headers: getAuthHeaders()
+            headers: await getAuthHeaders()
         }),
 
     createMeeting: async (meetingData) => 
         apiFetch(`${BASE_URL}/calendar/events/create`, {
             method: 'POST',
-            headers: getAuthHeaders(),
+            headers: await getAuthHeaders(),
             body: JSON.stringify({
                 address: meetingData.address,
                 type: meetingData.type,
@@ -228,7 +235,7 @@ const Api = {
     updatePassword: async (token, password) => 
         apiFetch(`${BASE_URL}/auth/updatepassword`, {
             method: 'POST',
-            headers: {
+            headers: { //this should not come from getAuthHeaders()
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
                 'Authorization': `${token}`
@@ -241,19 +248,19 @@ const Api = {
     getNearbyTrustee: async (page) => 
         apiFetch(`${BASE_URL}/nearby/trustee?page=${page}`, {
             method: 'GET',
-            headers: getAuthHeaders()
+            headers: await getAuthHeaders()
         }),
 
     requestFullProfile: async() => 
         apiFetch(`${BASE_URL}/profile`, {
             method: 'GET',
-            headers: getAuthHeaders()
+            headers: await getAuthHeaders()
         }),
 
     updateProfile: async (userData) =>
         apiFetch(`${BASE_URL}/profile`, {
             method: 'POST',
-            headers: getAuthHeaders(),
+            headers: await getAuthHeaders(),
             body: JSON.stringify(
                 userData
             )
