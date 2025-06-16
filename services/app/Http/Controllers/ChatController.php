@@ -189,22 +189,32 @@ class ChatController extends Controller
 
         $token = $request->header('Authorization');
         $user_id = $this->retrieveId($token);
-
         if(!$user_id) return response()->json(['success' => false, 'message' => 'Not allowed.'], 403);
 
         $hasAccess = $this->checkChatPermission($user_id,$chat_id);
-
         if(!$hasAccess) return response()->json(['success' => false, 'message' => 'Conversation not found.'], 404);
 
         $beginDate = $request->begin_date;
+        $endDate = $request->end_date;
 
-        $query = ChatMessages::where('chat_id', $chat_id)->orderBy('sent_at', 'asc');
+        $query = ChatMessages::where('chat_id', $chat_id);
+
+        if ($endDate){
+            $query->where('sent_at', '<', $endDate);
+        }
 
         if ($beginDate) {
             $query->where('sent_at', '>', $beginDate);
+            $query->orderBy('sent_at', 'asc');
+        } else {
+            $query->orderBy('sent_at', 'desc');
         }
 
         $conversation = $query->paginate(10);
+
+        if (!$beginDate) {
+            $conversation->setCollection($conversation->getCollection()->reverse()->values());
+        }
 
         return response()->json($conversation);
     }
