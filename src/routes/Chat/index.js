@@ -170,6 +170,7 @@ function Chat(){
         }
 
         if(scrollTop <= 10){
+            if(!chatMessages[0] || !chatMessages[0].sent_at) return;
             const messagesBefore = chatMessages[0].sent_at;
             await loadPreviousMessages(messagesBefore);
         }
