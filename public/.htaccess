@@ -4,12 +4,15 @@ Options -MultiViews
   RewriteEngine On
   RewriteBase /
 
+  # NÃO reescreve chamadas à API Laravel
   RewriteCond %{REQUEST_URI} ^/services [NC]
   RewriteRule ^ - [L]
 
+  # NÃO reescreve arquivos e pastas reais
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
 
+  # Tudo o que sobrou vai para index.html (React Router cuida)
   RewriteRule ^ index.html [L]
 </IfModule>
