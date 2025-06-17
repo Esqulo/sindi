@@ -376,7 +376,7 @@ function Chat(){
                 <div className="chat-people-container column-centered shadow-default custom-scroll" ref={chatListContainerRef} onScroll={handleChatListScroll}>
                     {chatsList.map((chat,index) => (
                         <div className={`chat-person-container row-centered prevent-select ${chat.id === currentChatData.id ? 'selected' : ''}`} key={String(chat.id)} onClick={ () => setChat(chat) }>
-                            <CustomImageComponent img={chat.image || noUserImage} width={"80px"} borderRadius={"50%"} style={{border:'2px solid #FFF' }}/>
+                            <CustomImageComponent img={chat.image || noUserImage} width={"80px"} height={"80px"} borderRadius={"50%"} style={{border:'2px solid #FFF' }}/>
                             <div className="chat-person-info">
                                 <span className="chat-person-name">{chat.title}</span>
                                 <span className="chat-person-last-message" title={chat.last_message}>{chat.last_message}</span>
