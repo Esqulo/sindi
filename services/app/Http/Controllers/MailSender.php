@@ -145,14 +145,15 @@ class MailSender extends Controller
             'expires_at' => $expires
         ]);
 
-        $link = "http://sindibr.com.br/confirmarEmail?t=$token";
+        $envURL = env('APP_URL', 'https://sindibr.com.br');
+        $link = "$envURL/confirmarEmail?t=$token";
 
         $template = "
             <div style=\"width:100%\">
                 <h1 style=\"text-align:center; font-family:Arial;\">Confirmação de e-mail</h1>
                 <span style=\"font-family:Arial;\">
                     Você está recebendo este email pois uma tentativa de cadastrar
-                    o seu email foi realizada no em <a href=\"sindibr.com.br\">sindibr.com.br</a>.
+                    o seu email foi realizada no em <a href=\"$envURL\">$envURL</a>.
                 </span>
                 <br><br>
                 <span style=\"font-family:Arial;\">
