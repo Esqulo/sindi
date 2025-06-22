@@ -11,6 +11,7 @@ import Login from './routes/Login';
 import Signup from './routes/Signup';
 import ForgotPassword from './routes/ForgotPassword';
 import SetNewPassword from './routes/SetNewPassord';
+import ConfirmEmail from './routes/ConfirmEmail';
 import MyCards from './routes/MyCards';
 import Chat from './routes/Chat';
 import MyDeals from './routes/MyDeals';
@@ -65,6 +66,10 @@ const router = createBrowserRouter([
       {
         path: "setpassword",
         element: <SetNewPassword/>
+      },
+      {
+        path: "confirmarEmail",
+        element: <ConfirmEmail/>
       },
     ]
   }

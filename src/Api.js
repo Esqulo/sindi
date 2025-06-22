@@ -274,7 +274,16 @@ const Api = {
                 'Authorization': `Bearer ${localStorage.getItem("token")}`
             },
             body: userData
-        })
+        }),
+
+    confirmEmail : async(token) =>
+        apiFetch(`${BASE_URL}/auth/confirm/email`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        }),
 };
 
 export default Api;

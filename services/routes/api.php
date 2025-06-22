@@ -74,6 +74,8 @@ Route::prefix('auth')->group(function(){
 
     Route::get('google', [GoogleController::class, 'redirectToGoogle']);
     Route::get('callback', [GoogleController::class, 'handleGoogleCallback']);
+    
+    Route::get('confirm/email', [AuthController::class, 'confirmEmail']);
 });
 
 Route::prefix('google')->group(function(){

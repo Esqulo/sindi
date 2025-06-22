@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Http\Controllers\MailSender;
+use Illuminate\Support\Carbon;
 
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -164,6 +165,42 @@ class AuthController extends Controller
                 'message' => $e->getMessage() ?? 'unkown error.'
             ], $e->getCode() ?: 500);
         }
+    }
 
+    public function confirmEmail(Request $request){
+        try{
+            $token = $request->header('Authorization');
+            if (preg_match('/Bearer\s(\S+)/', $token, $matches)) $token = $matches[1];
+            if(!$token) throw new Exception("token inválido", 403);
+
+            $tokenData = TokenModel::where('code', $token)->first();
+            if(!$tokenData) throw new Exception("token inválido", 403);
+
+            if($tokenData->already_used == 1 || $tokenData->expired_by_another ||  $tokenData->expires_at <= now()) throw new Exception("token expirado", 403);
+
+            $user = User::find($tokenData->user_id);
+
+            $user->update([
+                'email_verified_at' => Carbon::now()
+            ]);
+
+            $tokenData->already_used = 1;
+            $tokenData->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'email verificado com sucesso'
+            ], 200);
+
+        }catch(Exception $e){
+            $status = $e->getCode();
+            if (!is_int($status) || $status < 100 || $status > 599) {
+                $status = 500;
+            }
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage() ?? 'unkown error.'
+            ], $status);
+        }
     }
 }
