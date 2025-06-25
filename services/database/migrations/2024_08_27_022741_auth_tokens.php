@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('auth', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('user_id');
             $table->string('token');
             $table->dateTime('created_at')->useCurrent();
             $table->dateTime('expires_at')->default('2100-12-31 23:59');
@@ -21,7 +21,7 @@ return new class extends Migration
         
         Schema::create('phone_confirmation_codes', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('user_id');
             $table->string('code');
             $table->dateTime('created_at')->useCurrent();
             $table->dateTime('expires_at')->default('2100-12-31 23:59');
@@ -31,7 +31,7 @@ return new class extends Migration
 
         Schema::create('email_confirmation_codes', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('user_id');
             $table->string('code');
             $table->dateTime('created_at')->useCurrent();
             $table->dateTime('expires_at')->default('2100-12-31 23:59');
