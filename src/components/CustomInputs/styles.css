@@ -25,6 +25,25 @@
     color: red;
 }
 
+.custom_password_field{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.custom_password_field .custom-text-input-field{
+    width: 100%;
+}
+
+.toggle_pass{
+    position: absolute;
+    right: 1px;
+    cursor: pointer;
+    background-color: #FFF;
+    padding: 0 10px;
+}
+
 .custom-check-input-row {
     display: flex;
     gap: 10px;

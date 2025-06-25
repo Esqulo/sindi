@@ -26,6 +26,37 @@ const CustomTextInput = function ({name, value, label, placeholder, type="text",
     )
 }
 
+const CustomPasswordInput = function ({name, value, label, placeholder, required=false, onChange, inputRef, errorMessage, customStyle, mask, disabled, min, max}) {
+
+    const [isVisible, setIsVisible] = useState(false);
+
+    return (
+        <div className="custom-text-input">
+            <label className="custom-text-input-label">{label}</label>
+            <div className="custom_password_field">
+                <MaskedInput 
+                    className="custom-text-input-field"
+                    name={name}
+                    value={value}
+                    type={isVisible ? 'text' : 'password'}
+                    placeholder={placeholder}
+                    disabled={disabled}
+                    required={required}
+                    mask={mask}
+                    min={min}
+                    max={max}
+                    onChange={(e) => onChange(e.target.value)}
+                    ref={inputRef}
+                    style={customStyle}
+                    />
+                {isVisible && <span className="toggle_pass material-symbols-outlined" onClick={()=> setIsVisible(false) }>visibility</span>}
+                {!isVisible && <span className="toggle_pass material-symbols-outlined" onClick={()=> setIsVisible(true) }>visibility_off</span>}
+            </div>
+            {errorMessage && <span className="custom-text-input-error">{errorMessage}</span>}
+        </div>
+    )
+}
+
 const CustomTextAreaInput = function ({name, value, label, placeholder, required=false, onChange, inputRef, errorMessage, customStyle, mask, disabled, min, max}) {
     return (
         <div className="custom-text-input">
@@ -229,6 +260,7 @@ const CustomDocInput = ({ name, value, label, required = false, whenChange, inpu
 
 export {
     CustomTextInput,
+    CustomPasswordInput,
     CustomTextAreaInput,
     CustomCheckInput,
     CustomDocInput

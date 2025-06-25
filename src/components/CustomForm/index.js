@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback} from "react";
 import "./styles.css";
 
-import { CustomTextInput, CustomCheckInput, CustomDocInput, CustomTextAreaInput } from "../CustomInputs";
+import { CustomTextInput, CustomPasswordInput, CustomCheckInput, CustomDocInput, CustomTextAreaInput } from "../CustomInputs";
 
 import LoadingIcon from "../LoadingIcon";
 
@@ -397,7 +397,7 @@ function CustomForm({fields, onSubmit, ButtonText, customStyle, formError}) {
                                 );
                             case "password" :
                                 return (
-                                    <CustomTextInput //CustomPasswordInput
+                                    <CustomPasswordInput
                                         key={name}
                                         name={name}
                                         value={fieldValues[name]}
