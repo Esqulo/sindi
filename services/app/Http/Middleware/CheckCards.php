@@ -19,24 +19,24 @@ class CheckCards
     public function handle(Request $request, Closure $next): Response
     {
 
-        $controller = new UserController();
-        $userId = $controller->retrieveId($request->header('Authorization'));
+        // $controller = new UserController();
+        // $userId = $controller->retrieveId($request->header('Authorization'));
 
-        if (!$userId) return response()->json([
-            'success' => false,
-            'action' => 'redirectToLogin',
-            'message' => 'Não autenticado'
-        ], 401);
+        // if (!$userId) return response()->json([
+        //     'success' => false,
+        //     'action' => 'redirectToLogin',
+        //     'message' => 'Não autenticado'
+        // ], 401);
 
-        $userData = $controller->getUserData($userId);
+        // $userData = $controller->getUserData($userId);
         
-        $hasCards = UserSavedCard::where('user_id',$userId)->first();
+        // $hasCards = UserSavedCard::where('user_id',$userId)->first();
 
-        if (!$hasCards && $userData->user_type != 0) return response()->json([
-            'success' => false,
-            'action' => 'redirectToCards',
-            'message' => 'Nenhum cartão foi encontrado'
-        ], 403);
+        // if (!$hasCards && $userData->user_type != 0) return response()->json([
+        //     'success' => false,
+        //     'action' => 'redirectToCards',
+        //     'message' => 'Nenhum cartão foi encontrado'
+        // ], 403);
 
         return $next($request);
 
