@@ -27,12 +27,13 @@ class UserController extends Controller
             $validatedData = $body->validate([
                 "email" => "required|email|unique:users,email",
                 "name" => "required|string",
-                "place_name" => "required_if:user_type,0|string",
-                "units" => "required_if:user_type,0|integer",
-                "position" => "required_if:user_type,0|string",
-                "doc_type" => "required|string",
-                "doc_number" => "required|string|unique:users,doc_number",
-                "id_number" => "required_if:user_type,1|string",
+                // "place_name" => "required_if:user_type,0|string",
+                // "units" => "required_if:user_type,0|integer",
+                // "position" => "required_if:user_type,0|string",
+                "doc_type" => "nullable|string",
+                // "doc_number" => "nullable|string|unique:users,doc_number",
+                // "id_number" => "required_if:user_type,1|string",
+                "id_number" => "nullable|string",
                 "phone" => "required|string|unique:users,phone",
                 "password" => "required|string|min:8|regex:/[a-z]/|regex:/[A-Z]/|regex:/[0-9]/|regex:/[@$!%*#?&.;?,'\":{}\-\+\=`_^]/",
                 "birthdate" => "required|date|after_or_equal:1900-01-01|before:now",
@@ -54,9 +55,14 @@ class UserController extends Controller
 
             $user = User::create($validatedData);
 
+            //ajuste temporário para evitar que o campo fique em branco, quebrando a aplicação com o "unique" do banco
+            $user->update([
+                'doc_number' => $user->id,
+            ]);
+
             if($validatedData['user_type'] == 0){
                 Place::create([
-                    'name' => $validatedData['place_name'],
+                    'name' => $validatedData['place_name'] ?? '',
                     'owner_id' => $user->id,
                     'cep' => $validatedData['cep'],
                     'state' => $validatedData['state'],
@@ -64,7 +70,7 @@ class UserController extends Controller
                     'neighbourhood' => $validatedData['neighbourhood'],
                     'address' => $validatedData['address'],
                     'number' => $validatedData['number'],
-                    'units' => $validatedData['units']
+                    'units' => $validatedData['units'] ?? 0
                 ]);
             }
 

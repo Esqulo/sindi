@@ -42,8 +42,8 @@ function Signup() {
 		address: { label: "Endereço", placeholder: "Rua das Oliveiras", type: "text", required: true },
 		number: { label: "Número", placeholder: "123", type: "text", required: true },
 		complement: { label: "Complemento", placeholder: "Apto. 201", type: "text" },
-		doc: { label: "CPF/CNPJ", type: "doc", required: true },
-		rg: { label: "RG", placeholder: "00000000", type: "text", required: true },
+		// doc: { label: "CPF/CNPJ", type: "doc", required: true },
+		// rg: { label: "RG", placeholder: "00000000", type: "text", required: true },
 		//Formações
 		work_since: { label: "Síndico profissional desde", placeholder: "31/12/1999", type: "date", min: "1920-01-01", max: getCurrentDate(), required: true },
 		//work_fields
@@ -53,14 +53,14 @@ function Signup() {
 	};
 
 	const consumer_fields = {
-		place_name: { label: "Nome do condomínio", placeholder: "Vila Verde Residencial", type: "text", required: true },
+		// place_name: { label: "Nome do condomínio", placeholder: "Vila Verde Residencial", type: "text", required: true },
 		//place_type: { label: "Tipo de condomínio", type: "options", required: true, options: []},
-		units: { label: "Número de unidades", placeholder: "100", type: "numeric", required: true },
+		// units: { label: "Número de unidades", placeholder: "100", type: "numeric", required: true },
 		//3rd_party
 		//professionals
 		name: { label: "Nome Completo", placeholder: "José da Silva", type: "text", required: true },
-		cpf: { label: "CPF", placeholder: "111.222.333-12", type: "numeric", mask: "999.999.999-99", required: true },
-		position: { label: "Cargo/Função", placeholder: "Morador / Conselheiro / Síndico", type: "text", required: false },
+		// cpf: { label: "CPF", placeholder: "111.222.333-12", type: "numeric", mask: "999.999.999-99", required: true },
+		// position: { label: "Cargo/Função", placeholder: "Morador / Conselheiro / Síndico", type: "text", required: false },
 		phone: { label: "Celular", placeholder: "(12) 91234-1234", type: "tel", mask: "(99) 99999-9999", required: true },
 		email: { label: "Email", placeholder: "seuemail@email.com", type: "email", required: true },
 		birthdate: { label: "Data de nascimento", placeholder: "31/12/1999", type: "date", min: "1920-01-01", max: getCurrentDate(), required: true },
