@@ -13,7 +13,7 @@ function Footer() {
           <div className="footer-column column-centered">
             <CustomImgComponent img={Logo} width="206px" height="65px" style={{alignSelf: 'start'}}/>
             <ul className="footer-list">
-              <a href="/policy"><li>Politica de privacidade</li></a>
+              <a href="/privacy.pdf"><li>Politica de privacidade</li></a>
               {/* <a href="/"><li>Novos recursos</li></a>
               <a href="/"><li>Blog</li></a>
               <a href="/"><li>Newsletter</li></a>
