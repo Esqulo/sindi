@@ -8,10 +8,13 @@
 
 .custom-text-input-field,
 .custom-check-input-field,
-.custom-textarea-input-field {
+.custom-textarea-input-field,
+input[type="date"] {
     border: 1px solid #000;
     border-radius: 5px;
     padding: 10px;
+    width: 100%;
+    background: white;
 }
 
 .custom-text-input-field::placeholder {

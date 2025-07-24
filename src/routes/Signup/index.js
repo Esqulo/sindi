@@ -30,7 +30,7 @@ function Signup() {
 
 	const trustee_fields = {
 		name: { label: "Nome Completo", placeholder: "José da Silva", type: "text", required: true },
-		birthdate: { label: "Data de nascimento", placeholder: "31/12/1999", type: "date", min: "1920-01-01", max: getCurrentDate(), required: true },
+		birthdate: { label: "Data de nascimento", placeholder: "DD/MM/YYYY", type: "date", min: "1920-01-01", max: getCurrentDate(), required: true },
 		//gender: { label: "Gênero", type: "options", required: true, options: []},
 		// marital_status: { label: "Estado Civil", placeholder: "Casado", type: "text", required: false },
 		phone: { label: "Celular", placeholder: "(12) 91234-1234", type: "tel", mask: "(99) 99999-9999", required: true },
@@ -45,7 +45,7 @@ function Signup() {
 		// doc: { label: "CPF/CNPJ", type: "doc", required: true },
 		// rg: { label: "RG", placeholder: "00000000", type: "text", required: true },
 		//Formações
-		work_since: { label: "Síndico profissional desde", placeholder: "31/12/1999", type: "date", min: "1920-01-01", max: getCurrentDate(), required: true },
+		work_since: { label: "Síndico profissional desde", placeholder: "DD/MM/YYYY", type: "date", min: "1920-01-01", max: getCurrentDate(), required: true },
 		//work_fields
 		password: { label: "Senha", placeholder: "**********", type: "password", required: true },
 		confirmPassword: { label: "Confirme a senha", placeholder: "**********", type: "password", required: true },
@@ -63,7 +63,7 @@ function Signup() {
 		// position: { label: "Cargo/Função", placeholder: "Morador / Conselheiro / Síndico", type: "text", required: false },
 		phone: { label: "Celular", placeholder: "(12) 91234-1234", type: "tel", mask: "(99) 99999-9999", required: true },
 		email: { label: "Email", placeholder: "seuemail@email.com", type: "email", required: true },
-		birthdate: { label: "Data de nascimento", placeholder: "31/12/1999", type: "date", min: "1920-01-01", max: getCurrentDate(), required: true },
+		birthdate: { label: "Data de nascimento", placeholder: "DD/MM/YYYY", type: "date", min: "1920-01-01", max: getCurrentDate(), required: true },
 		cep: { label: "Cep", placeholder: "12345-678", type: "numeric", mask: "99999-999", required: true },
 		state: { label: "Estado", placeholder: "MG", type: "text", required: true },
 		city: { label: "Cidade", placeholder: "Belo Horizonte", type: "text", required: true },
