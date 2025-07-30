@@ -54,6 +54,7 @@
     letter-spacing: -2px;
     text-overflow: ellipsis;
     cursor: pointer;
+    text-transform: uppercase;
 }
 
 .tsc-name:hover{
