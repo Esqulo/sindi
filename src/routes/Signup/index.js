@@ -99,6 +99,7 @@ function Signup() {
 			password: values?.password,
 			user_type: selectedRadio === 'consumer' ? '0' : '1',
 			// doc_type: selectedRadio === 'consumer' ? 'cpf' : values?.doc.type,
+			doc_type: 'cpf',
 			doc_number: selectedRadio === 'consumer' ? values?.cpf : values?.doc.value,
 			id_number: values?.rg,
 			work_since: values?.work_since,
