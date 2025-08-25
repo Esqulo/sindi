@@ -79,11 +79,11 @@ export default function ImageCropper({ width = 500, height = 500, onImageCropped
 
 
     return (
-        <div className="container">
+        <div className="crop-container">
             <input type="file" accept="image/*" onChange={handleFileChange} />
 
             {image && <>
-                <div className="crop-container">
+                <div className="internal-crop-container">
                     <Cropper
                         image={image}
                         crop={crop}

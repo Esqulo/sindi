@@ -1,10 +1,10 @@
-.container {
+.crop-container {
 	display: flex;
 	flex-direction: column;
 	padding: 20px;
 }
 
-.crop-container {
+.internal-crop-container {
 	position: relative;
 	width: 350px;
 	height: 350px;
