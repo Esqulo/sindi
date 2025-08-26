@@ -30,7 +30,7 @@ function Profile() {
 	return (
 		<div className='home-container column-centered shadow-default'>
 
-			<BannerComponent bannerImg={userData.banner} />
+			<BannerComponent bannerImg={userData.banner || banner} />
 			<DetailComponent userData={userData} />
 
 			{userData.services && userData.services.length > 0 &&
