@@ -11,8 +11,7 @@ import StarsInput from '../../StarsInput';
 
 import Api from "../../../Api";
 
-// Sim, este código precisa ser refatorado...
-//está horrível, mas precisa ser entregue rápido...
+// to do: refatorar este componente
 
 function DetailComponent({ userData }) {
 

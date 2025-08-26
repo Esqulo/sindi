@@ -51,6 +51,7 @@ function EditProfile() {
 	});
 
     const [croppedAvatar, setCroppedAvatar] = useState(null);
+    const [croppedBanner, setCroppedBanner] = useState(null);
 
     async function handleSubmit(formValues){
         try {
@@ -58,8 +59,9 @@ function EditProfile() {
 
             let api_response = await Api.updateProfile(formValues);
 			if(!api_response.success) throw api_response;
-            console.log(croppedAvatar)
+
             if(croppedAvatar) updateAvatar();
+            if(croppedBanner) updateBanner();
 
             alert("campos atualizados com sucesso");
 		} catch (error) {
@@ -121,7 +123,7 @@ function EditProfile() {
 
     const updateAvatar = async () => {
         const formData = new FormData();
-        formData.append('avatar', croppedAvatar);
+        formData.append('image', croppedAvatar);
 
         try {
             await Api.updateAvatar(formData);
@@ -132,8 +134,25 @@ function EditProfile() {
         }
     };
 
+    const updateBanner = async () => {
+        const formData = new FormData();
+        formData.append('image', croppedBanner);
+
+        try {
+            await Api.updateBanner(formData);
+            // alert('Banner atualizado com sucesso!');
+        } catch (error) {
+            console.error('Erro ao atualizar Banner:', error);
+            // alert('Erro ao atualizar banner.');
+        }
+    };
+
     const handleImageCropped = (croppedBlob) => {
         setCroppedAvatar(croppedBlob);
+    };
+
+    const handleUserBannerCropped = (croppedBlob) => {
+        setCroppedBanner(croppedBlob);
     };
 
     return (
@@ -143,11 +162,10 @@ function EditProfile() {
                 <h1>Avatar</h1>
                 <ImageCropper width={500} height={500} onImageCropped={handleImageCropped}/>
             </div>
-            {/* future feature
              <div className="edit-profile-banner">
                 <h1>Banner</h1>
-                <ImageCropper width={1920} height={300} onImageCropped={handleImageCropped}/>
-            </div> */}
+                <ImageCropper width={1920} height={300} onImageCropped={handleUserBannerCropped}/>
+            </div>
             {accountData.user_type !== undefined ? (
                 accountData.user_type === 1 ? (
                     <CustomForm fields={trustee_fields} onSubmit={handleSubmit} ButtonText={"Enviar"} formError={formError}/>

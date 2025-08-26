@@ -41,10 +41,17 @@ async function apiFetch(url, options = {}){
 
 async function getAuthHeaders(){
     return {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem("token")}`
-    }
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+    };
+};
+
+async function getAuthHeadersWithoutType(){
+    return {
+        "Accept": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+    };
 };
 
 const Api = {
@@ -269,10 +276,14 @@ const Api = {
     updateAvatar: async (userData) => 
         apiFetch(`${BASE_URL}/profile/avatar`, {
             method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem("token")}`
-            },
+            headers: await getAuthHeadersWithoutType(),
+            body: userData
+        }),
+
+    updateBanner: async (userData) => 
+        apiFetch(`${BASE_URL}/profile/banner`, {
+            method: 'POST',
+            headers: await getAuthHeadersWithoutType(),
             body: userData
         }),
 

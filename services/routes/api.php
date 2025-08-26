@@ -57,6 +57,7 @@ Route::prefix('profile')->group(function(){
     Route::get('',[UserController::class, 'getFullProfile']);
     Route::post('',[UserController::class, 'updateUserData']);
     Route::post('/avatar',[UserController::class, 'updateUserAvatar']);
+    Route::post('/banner',[UserController::class, 'updateUserBanner']);
 });
 
 Route::prefix('nearby')->group(function(){

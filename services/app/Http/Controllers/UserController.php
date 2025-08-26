@@ -142,6 +142,7 @@ class UserController extends Controller
             'rating' => $userRating->rating ?? 0,
             'reviews' => $userData->reviews_count,
             'avatar' => $userData->avatar,
+            'banner' => $userData->banner,
             'highlight' => false, //future feature
             'bio' => $userData->bio,
             'services' => $services
@@ -301,17 +302,46 @@ class UserController extends Controller
             if(!$userId) throw new Exception('Not allowed.', 403);
 
             $request->validate([
-                'avatar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ]);
 
-            if ($request->hasFile('avatar')) {
-                $avatarPath = $request->file('avatar')->store('avatars', 'public');
+            // to do: improve this block
+            if ($request->hasFile('image')) {
+                $avatarPath = $request->file('image')->store('avatars', 'public');
 
                 $user = User::find($userId);
                 $user->avatar = env('APP_URL').'/services/storage/app/public/'. $avatarPath;
                 $user->save();
 
                 return response()->json(['message' => 'Avatar atualizado com sucesso!']);
+            }
+
+        }catch(Exception $e){
+            return response()->json([
+                "success" => false,
+                "message" => $e->getMessage() ?? "Erro inesperado."
+            ], $e->getCode() ?: 500);
+        }
+    }
+
+    public function updateUserBanner(Request $request){
+        try{
+            $userId = $this->retrieveId($request->header('Authorization'));
+            if(!$userId) throw new Exception('Not allowed.', 403);
+
+            $request->validate([
+                'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            ]);
+
+            // to do: improve this block
+            if ($request->hasFile('image')) {
+                $bannerPath = $request->file('image')->store('user_banners', 'public');
+
+                $user = User::find($userId);
+                $user->banner = env('APP_URL').'/services/storage/app/public/'. $bannerPath;
+                $user->save();
+
+                return response()->json(['message' => 'Banner atualizado com sucesso!']);
             }
 
         }catch(Exception $e){
