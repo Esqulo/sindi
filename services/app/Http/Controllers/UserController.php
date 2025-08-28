@@ -228,6 +228,7 @@ class UserController extends Controller
             "phone" => $user->phone,
             "birthdate" => $user->birthdate->format('d/m/Y'),
             "avatar" => $user->avatar,
+            "banner" => $user->banner,
             "doc_type" => $user->doc_type,
             "doc_number" => $user->doc_number,
             "id_number" => $user->id_number,

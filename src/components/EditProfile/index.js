@@ -22,18 +22,18 @@ function EditProfile() {
 		address: { label: "Endereço", placeholder: "Rua das Oliveiras", type: "text" },
 		number: { label: "Número", placeholder: "123", type: "text" },
 		complement: { label: "Complemento", placeholder: "Apto. 201", type: "text" },
-		doc: { label: "CPF/CNPJ", type: "text", disabled: true },
-		rg: { label: "RG", placeholder: "00000000", type: "text", disabled: true },
+		// doc: { label: "CPF/CNPJ", type: "text", disabled: true },
+		// rg: { label: "RG", placeholder: "00000000", type: "text", disabled: true },
 		bio: { label: "Apresentação", type: "textarea"},
 		// work_since: { label: "Síndico profissional desde", placeholder: "31/12/1999", type: "date", min: "1920-01-01", max: getCurrentDate() },
 		password: { label: "Alterar Senha", placeholder: "**********", type: "password" },
 		confirmPassword: { label: "Confirme a senha", placeholder: "**********", type: "password" }
 	});
     const [consumer_fields, setConsumer_fields] = useState({
-		place_name: { label: "Nome do condomínio", placeholder: "Vila Verde Residencial", type: "text" },
-		units: { label: "Número de unidades", placeholder: "100", type: "numeric" },
+		// place_name: { label: "Nome do condomínio", placeholder: "Vila Verde Residencial", type: "text" },
+		// units: { label: "Número de unidades", placeholder: "100", type: "numeric" },
 		name: { label: "Nome Completo", placeholder: "José da Silva", type: "text", disabled: true },
-		doc_number: { label: "CPF", placeholder: "111.222.333-12", type: "numeric", mask: "999.999.999-99", disabled: true },
+		// doc_number: { label: "CPF", placeholder: "111.222.333-12", type: "numeric", mask: "999.999.999-99", disabled: true },
 		position: { label: "Cargo/Função", placeholder: "Morador / Conselheiro / Síndico", type: "text", required: false },
 		phone: { label: "Celular", placeholder: "(12) 91234-1234", type: "tel", mask: "(99) 99999-9999" },
 		email: { label: "Email", placeholder: "seuemail@email.com", type: "email", disabled: true },
@@ -50,6 +50,8 @@ function EditProfile() {
 		confirmPassword: { label: "Confirme a senha", placeholder: "**********", type: "password" },
 	});
 
+    const [userAvatar, setUserAvatar] = useState(null);
+    const [userBanner, setUserBanner] = useState(null);
     const [croppedAvatar, setCroppedAvatar] = useState(null);
     const [croppedBanner, setCroppedBanner] = useState(null);
 
@@ -73,6 +75,8 @@ function EditProfile() {
         try{
             let apiResponse = await Api.requestFullProfile();
             setAccountData(apiResponse);
+            setUserAvatar(apiResponse.avatar);
+            setUserBanner(apiResponse.banner);
             if(apiResponse.user_type === 1){
                 setTrustee_fields((prev) => ({
                     ...prev,
@@ -87,8 +91,8 @@ function EditProfile() {
                     address: { ...prev.address, placeholder: apiResponse.address },
                     number: { ...prev.number, placeholder: apiResponse.number },
                     complement: { ...prev.complement, placeholder: apiResponse.complement },
-                    doc: { ...prev.doc, placeholder: apiResponse.doc_number },
-                    rg: { ...prev.rg, placeholder: apiResponse.id_number },
+                    // doc: { ...prev.doc, placeholder: apiResponse.doc_number },
+                    // rg: { ...prev.rg, placeholder: apiResponse.id_number },
                     bio: { ...prev.bio, placeholder: apiResponse.bio },
                     // work_since: { ...prev.work_since, value: apiResponse.work_since },
                 }));
@@ -148,10 +152,14 @@ function EditProfile() {
     };
 
     const handleImageCropped = (croppedBlob) => {
+        consumer_fields.avatar = null;
+        trustee_fields.avatar = null;
         setCroppedAvatar(croppedBlob);
     };
 
     const handleUserBannerCropped = (croppedBlob) => {
+        consumer_fields.banner = null;
+        trustee_fields.banner = null;
         setCroppedBanner(croppedBlob);
     };
 
@@ -160,10 +168,16 @@ function EditProfile() {
             <h2>Editar Perfil</h2>
             <div className="edit-profile-avatar">
                 <h1>Avatar</h1>
+                {userAvatar &&
+                    <img src={userAvatar} alt="user_avatar" className="profile_avatar_image"/>
+                }
                 <ImageCropper width={500} height={500} onImageCropped={handleImageCropped}/>
             </div>
              <div className="edit-profile-banner">
                 <h1>Banner</h1>
+                {userBanner &&
+                    <img src={userBanner} alt="user_banner" className="profile_banner_image"/>
+                }
                 <ImageCropper width={1920} height={300} onImageCropped={handleUserBannerCropped}/>
             </div>
             {accountData.user_type !== undefined ? (
