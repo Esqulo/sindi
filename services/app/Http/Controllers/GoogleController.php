@@ -191,7 +191,7 @@ class GoogleController extends Controller
 
         $userGoogleCredentials = $this->retrieveUserGoogleCredentials($userId);
 
-        if (!$userGoogleCredentials) return response()->json(['error' => 'Token não fornecido'], 401);
+        if (!$userGoogleCredentials) return response()->json(['error' => 'Você não vinculou sua conta ao Google'], 401);
         
         try{
             if($data){
