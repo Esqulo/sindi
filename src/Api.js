@@ -216,7 +216,6 @@ const Api = {
         }),
 
     createMeeting: async (meetingData) => {
-        console.log(`${BASE_URL}/calendar/events/create`)
         return apiFetch(`${BASE_URL}/calendar/events/create`, {
             method: 'POST',
             headers: await getAuthHeaders(),
