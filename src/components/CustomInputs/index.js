@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./styles.css";
 import MaskedInput from "react-input-mask";
+import { CurrencyInput } from 'react-currency-mask';
 
 const CustomTextInput = function ({name, value, label, placeholder, type="text", required=false, onChange, inputRef, errorMessage, customStyle, mask, disabled, min, max}) {
     return (
@@ -52,6 +53,29 @@ const CustomPasswordInput = function ({name, value, label, placeholder, required
                 {isVisible && <span className="toggle_pass material-symbols-outlined" onClick={()=> setIsVisible(false) }>visibility</span>}
                 {!isVisible && <span className="toggle_pass material-symbols-outlined" onClick={()=> setIsVisible(true) }>visibility_off</span>}
             </div>
+            {errorMessage && <span className="custom-text-input-error">{errorMessage}</span>}
+        </div>
+    )
+}
+
+const CustomMonetaryInput = function ({name, value, label, placeholder, type="numeric", required=false, onChange, inputRef, errorMessage, customStyle, disabled}) {
+    return (
+        <div className="custom-text-input">
+            <label className="custom-text-input-label">{label}</label>
+            <CurrencyInput 
+                className="custom-text-input-field"
+                name={name}
+                value={value}
+                type={type}
+                placeholder={placeholder}
+                disabled={disabled}
+                required={required}
+                onChangeValue={(event, originalValue, maskedValue) => {
+                    onChange(originalValue);
+                }}
+                ref={inputRef}
+                style={customStyle}
+            />
             {errorMessage && <span className="custom-text-input-error">{errorMessage}</span>}
         </div>
     )
@@ -261,6 +285,7 @@ const CustomDocInput = ({ name, value, label, required = false, whenChange, inpu
 export {
     CustomTextInput,
     CustomPasswordInput,
+    CustomMonetaryInput,
     CustomTextAreaInput,
     CustomCheckInput,
     CustomDocInput

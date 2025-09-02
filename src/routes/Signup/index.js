@@ -46,6 +46,7 @@ function Signup() {
 		// rg: { label: "RG", placeholder: "00000000", type: "text", required: true },
 		//Formações
 		work_since: { label: "Síndico profissional desde", placeholder: "DD/MM/YYYY", type: "date", min: "1920-01-01", max: getCurrentDate(), required: true },
+		avg_price: { label: "Preço médio dos serviços", placeholder: "R$ 399,90", type: "money", required: true },
 		//work_fields
 		password: { label: "Senha", placeholder: "**********", type: "password", required: true },
 		confirmPassword: { label: "Confirme a senha", placeholder: "**********", type: "password", required: true },
@@ -102,6 +103,7 @@ function Signup() {
 			doc_type: 'cpf',
 			// doc_number: selectedRadio === 'consumer' ? values?.cpf : values?.doc.value,
 			// id_number: values?.rg,
+			avg_price: values?.avg_price,
 			work_since: values?.work_since,
 			phone: values?.phone,
 			terms: values?.terms,

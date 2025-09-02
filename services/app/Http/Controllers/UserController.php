@@ -47,6 +47,7 @@ class UserController extends Controller
                 "complement" => "nullable|string",
                 "user_type" => "required|integer|min:0|max:1",
                 "terms" => "required|integer|min:1|max:1",
+                "avg_price" => "nullable|numeric",
                 "bio" => "sometimes|string"
             ]);
             
@@ -239,6 +240,7 @@ class UserController extends Controller
             "address" => $user->address,
             "number" => $user->number,
             "complement" => $user->complement,
+            "avg_price" => $user->avg_price,
             "cep" => $user->cep,
             "bio" => $user->bio,
             "work_since" => $user->work_since,

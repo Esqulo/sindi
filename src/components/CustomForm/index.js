@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback} from "react";
 import "./styles.css";
 
-import { CustomTextInput, CustomPasswordInput, CustomCheckInput, CustomDocInput, CustomTextAreaInput } from "../CustomInputs";
+import { CustomTextInput, CustomPasswordInput, CustomCheckInput, CustomDocInput, CustomTextAreaInput, CustomMonetaryInput } from "../CustomInputs";
 
 import LoadingIcon from "../LoadingIcon";
 
@@ -99,8 +99,8 @@ function CustomForm({fields, onSubmit, ButtonText, customStyle, formError}) {
         for (let input of requiredFields) {
 
             const name = input.getAttribute("name");
-            const value = fields[name].mask ? removeMasks(fieldValues[name]) : fieldValues[name];       
-            
+            const value = fields[name].mask ? removeMasks(fieldValues[name]) : fieldValues[name];
+
             if(name === 'doc'){
                 if(!value.value) if(!newErrors[name]) newErrors[name] = "Campo obrigatório";
                 if (!firstErrorField) firstErrorField = input;
@@ -109,7 +109,7 @@ function CustomForm({fields, onSubmit, ButtonText, customStyle, formError}) {
             
             if(name === 'terms' && fieldValues[name] === true) continue;
             
-            if (!value || !value.trim() || (input.type === "checkbox" && !input.checked)) {
+            if (!value || !String(value).trim() || (input.type === "checkbox" && !input.checked)) {
                 if(!newErrors[name]) newErrors[name] = "Campo obrigatório";
                 if (!firstErrorField) firstErrorField = input;
                 continue;
@@ -409,6 +409,20 @@ function CustomForm({fields, onSubmit, ButtonText, customStyle, formError}) {
                                         disabled={field.disabled}
                                         min={field.min}
                                         max={field.max}
+                                        onChange={(value) => handleChange(name, value)}
+                                        errorMessage={errors[name]}
+                                    />
+                                );
+                            case "money":
+                                return(
+                                    <CustomMonetaryInput
+                                        key={name}
+                                        name={name}
+                                        value={fieldValues[name]}
+                                        label={field.label}
+                                        placeholder={field.placeholder}
+                                        required={field.required}
+                                        disabled={field.disabled}
                                         onChange={(value) => handleChange(name, value)}
                                         errorMessage={errors[name]}
                                     />
