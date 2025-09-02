@@ -220,7 +220,7 @@ function DetailComponent({ userData }) {
 	async function createMeeting(){
 		if(sendingMeeting) return;
         try{
-
+console.log('create meeting')
 			setSendingMeeting(true);
 			if(!newMeetingAddress || (!newMeetingType && newMeetingType !== 0 ) || !newMeetingDateTime) throw new Error("Preencha todos os campos!");
 
