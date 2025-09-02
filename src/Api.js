@@ -215,8 +215,9 @@ const Api = {
             headers: await getAuthHeaders()
         }),
 
-    createMeeting: async (meetingData) => 
-        apiFetch(`${BASE_URL}/calendar/events/create`, {
+    createMeeting: async (meetingData) => {
+        console.log(`${BASE_URL}/calendar/events/create`)
+        return apiFetch(`${BASE_URL}/calendar/events/create`, {
             method: 'POST',
             headers: await getAuthHeaders(),
             body: JSON.stringify({
@@ -225,7 +226,7 @@ const Api = {
                 time: meetingData.time,
                 to: meetingData.to
             })
-        }),
+        })},
 
     forgotPassword: async (email) => 
         apiFetch(`${BASE_URL}/auth/forgotpassword`, {
