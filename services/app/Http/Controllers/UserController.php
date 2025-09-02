@@ -276,6 +276,7 @@ class UserController extends Controller
                 "neighbourhood" => "sometimes|string",
                 "address" => "sometimes|string",
                 "number" => "sometimes|string",
+                "avg_price" => "sometimes|numeric",
                 "complement" => "sometimes|string",
                 "bio" => "sometimes|string"
             ]);
