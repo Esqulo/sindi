@@ -49,7 +49,7 @@ function Signup() {
 		//work_fields
 		password: { label: "Senha", placeholder: "**********", type: "password", required: true },
 		confirmPassword: { label: "Confirme a senha", placeholder: "**********", type: "password", required: true },
-		terms: { label: 'Eu concordo com os <a href="/terms.pdf" target="blank">termos</a> de serviço e <a href="/privacy.pdf" target="blank">privacidade</a>', type: "checkbox", required: true },
+		terms: { label: 'Eu concordo com os termos de <a href="/terms.pdf" target="blank">serviço</a> e <a href="/privacy.pdf" target="blank">privacidade</a>', type: "checkbox", required: true },
 	};
 
 	const consumer_fields = {
