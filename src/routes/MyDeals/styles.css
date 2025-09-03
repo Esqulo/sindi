@@ -147,3 +147,43 @@ h1.title{
     gap: 20px;
     scroll-behavior: smooth;
 }
+
+.deals-list-filter-container{
+    width: 100%;
+    gap: 10px;
+}
+
+.deals-list-filter-container .icon{
+    font-size: 32px;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.deals-list-filter-container .icon:hover{
+    opacity: 65%;
+}
+
+.deals-list-filter-dropdown-container{
+    position: relative;
+}
+
+.deals-list-filter-dropdown{
+    padding: 0 10px;
+    border-radius: 5px;
+    position: absolute;
+    right: 0;
+    background-color: #fff;
+    border: 2px solid #000;
+    box-shadow: 5px 5px 10px 2px #9c9c9c86;
+}
+
+.deals-list-filter-dropdown-option{
+    padding: 10px 0;
+    font-size: 18px;
+    gap: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.deals-list-filter-dropdown-option{
+    gap: 10px;
+}

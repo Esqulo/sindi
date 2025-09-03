@@ -102,7 +102,7 @@ const CustomTextAreaInput = function ({name, value, label, placeholder, required
     )
 }
 
-const CustomCheckInput = function({name, value, label, required=false, onChange, inputRef, errorMessage, customStyle}) {
+const CustomCheckInput = function({name, value, label, required=false, onChange, inputRef, errorMessage, checked, customStyle}) {
     return (
         <div className="custom-check-input">
             <div className="custom-check-input-row">
@@ -114,6 +114,7 @@ const CustomCheckInput = function({name, value, label, required=false, onChange,
                     type="checkbox"
                     required={required}
                     onChange={(e) => onChange(e.target.checked)}
+                    checked={checked}
                     ref={inputRef}
                 />
                 <label className="custom-check-input-label" dangerouslySetInnerHTML={{ __html: label }} htmlFor={name}/>

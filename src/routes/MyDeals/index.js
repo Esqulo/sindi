@@ -6,6 +6,8 @@ import DealDetailsItem from "../../components/DealDetailsItem";
 import LoadingIcon from "../../components/LoadingIcon";
 import noUserImage from "../../assets/images/icons/no-image-profile.png";
 
+import {CustomTextInput, CustomCheckInput} from "../../components/CustomInputs";
+
 import Api from '../../Api';
 
 function MyDeals() {
@@ -18,6 +20,10 @@ function MyDeals() {
     const [loadingDeals, setLoadingDeals] = useState(false);
     const [loadingDetails, setLoadingDetails] = useState(false);
     const [currentDealsPage, setCurrentDealsPage] = useState(1);
+    
+    const [selectedStatuses, setSelectedStatuses] = useState(['aceito','pendente','recusado']); 
+    const [showFilerDropdown, setShowFilerDropdown] = useState(false);
+    const [filterText, setFilterText] = useState('');
 
     const getDeals = useCallback(async (page) => {
         if (loadingDeals || reachedEndOfDeals.current) return;
@@ -81,12 +87,44 @@ function MyDeals() {
         getDealDetails(answeredDealId);
     }
 
+    const handleStatusChange = (status, checked) => {
+        setSelectedStatuses((prev) => {
+            if (checked) return [...prev, status];
+            return prev.filter((s) => s !== status);
+        });
+    };
+
+    const filteredList = dealsList.filter((item) => {
+        const matchesText = item.title.toLowerCase().includes(filterText.toLowerCase());
+        const matchesStatus = selectedStatuses.includes(item.status);
+        return matchesText && matchesStatus;
+    });
+
     return (
         <div className="deals-container column-centered">
             <h1 className="title">Propostas</h1>
             <div className="deals-content row-centered">
                 <div className="deals-list column-centered shadow-default custom-scroll" ref={dealsListContainerRef} onScroll={handledealsListScroll}>
-                    {dealsList.map((deal) => (
+                    <div className="deals-list-filter-container row-centered">
+                        <CustomTextInput onChange={(value)=>setFilterText(value)} placeholder={"digite aqui para filtrar"} customStyle={{width: '100%'}}/>
+                        <div className="deals-list-filter-dropdown-container">
+                            <span className="material-symbols-outlined icon" onClick={()=>setShowFilerDropdown(!showFilerDropdown)}>filter_alt</span>
+                            {showFilerDropdown &&
+                                <div className="deals-list-filter-dropdown">
+                                    <div className="row-centered deals-list-filter-dropdown-option">
+                                        <CustomCheckInput label={'Aceitas'} checked={selectedStatuses.includes("aceito")} onChange={(value) => handleStatusChange("aceito", value)} name="accepted"/>
+                                    </div>
+                                    <div className="row-centered deals-list-filter-dropdown-option">
+                                        <CustomCheckInput label={'Pendentes'} checked={selectedStatuses.includes("pendente")} onChange={(value) => handleStatusChange("pendente", value)} name="pending"/>
+                                    </div>
+                                    <div className="row-centered deals-list-filter-dropdown-option">
+                                        <CustomCheckInput label={'Recusadas'} checked={selectedStatuses.includes("recusado")} onChange={(value) => handleStatusChange("recusado", value)} name="refused"/>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    {filteredList.map((deal) => (
                         <div className={`deal-item row-centered prevent-select ${deal.status} ${deal.id === selectedDeal.id ? 'selected' : ''}`} key={String(deal.id)} onClick={() => setSelectedDeal(deal)}>
                             <CustomImageComponent img={deal.image || noUserImage} width={"80px"} height={"80px"} borderRadius={"50%"} style={{ border: '2px solid #FFF' }} />
                             <div className="deal-item-info">
