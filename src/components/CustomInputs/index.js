@@ -107,6 +107,7 @@ const CustomCheckInput = function({name, value, label, required=false, onChange,
         <div className="custom-check-input">
             <div className="custom-check-input-row">
                 <input 
+                    id={name}
                     className="custom-check-input-field"
                     name={name} 
                     value={value}
@@ -115,7 +116,7 @@ const CustomCheckInput = function({name, value, label, required=false, onChange,
                     onChange={(e) => onChange(e.target.checked)}
                     ref={inputRef}
                 />
-                <label className="custom-check-input-label" dangerouslySetInnerHTML={{ __html: label }} />
+                <label className="custom-check-input-label" dangerouslySetInnerHTML={{ __html: label }} for={name}/>
             </div>
             {errorMessage && <span className="custom-check-input-error">{errorMessage}</span>}
         </div>
