@@ -419,6 +419,7 @@ function CustomForm({fields, onSubmit, ButtonText, customStyle, formError}) {
                                         key={name}
                                         name={name}
                                         value={fieldValues[name]}
+                                        type={field.type}
                                         label={field.label}
                                         placeholder={field.placeholder}
                                         required={field.required}
