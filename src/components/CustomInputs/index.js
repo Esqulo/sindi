@@ -6,7 +6,7 @@ import { CurrencyInput } from 'react-currency-mask';
 const CustomTextInput = function ({name, value, label, placeholder, type="text", required=false, onChange, inputRef, errorMessage, customStyle, mask, disabled, min, max}) {
     return (
         <div className="custom-text-input">
-            <label className="custom-text-input-label">{label}</label>
+            <span className="custom-text-input-label">{label}</span>
             <MaskedInput 
                 className="custom-text-input-field"
                 name={name}
@@ -33,7 +33,7 @@ const CustomPasswordInput = function ({name, value, label, placeholder, required
 
     return (
         <div className="custom-text-input">
-            <label className="custom-text-input-label">{label}</label>
+            <span className="custom-text-input-label">{label}</span>
             <div className="custom_password_field">
                 <MaskedInput 
                     className="custom-text-input-field"
@@ -61,7 +61,7 @@ const CustomPasswordInput = function ({name, value, label, placeholder, required
 const CustomMonetaryInput = function ({name, value, label, placeholder, type="numeric", required=false, onChange, inputRef, errorMessage, customStyle, disabled}) {
     return (
         <div className="custom-text-input">
-            <label className="custom-text-input-label">{label}</label>
+            <span className="custom-text-input-label">{label}</span>
             <CurrencyInput 
                 className="custom-text-input-field"
                 name={name}
@@ -81,10 +81,10 @@ const CustomMonetaryInput = function ({name, value, label, placeholder, type="nu
     )
 }
 
-const CustomTextAreaInput = function ({name, value, label, placeholder, required=false, onChange, inputRef, errorMessage, customStyle, mask, disabled, min, max}) {
+const CustomTextAreaInput = function ({name, value, label, placeholder, required=false, onChange, inputRef, errorMessage, customStyle, disabled}) {
     return (
         <div className="custom-text-input">
-            <label className="custom-text-input-label">{label}</label>
+            <span className="custom-text-input-label">{label}</span>
             <textarea 
                 className="custom-textarea-input-field"
                 name={name}
@@ -250,7 +250,7 @@ const CustomDocInput = ({ name, value, label, required = false, whenChange, inpu
 
     return (
         <div className="custom-doc-input">
-            <label className="custom-doc-input-label">{label}</label>
+            <span className="custom-doc-input-label">{label}</span>
             <div className="custom-doc-input-row">
                 <select className="custom-doc-input-select" value={docType} disabled={disabled}
                     onChange={(e) => {

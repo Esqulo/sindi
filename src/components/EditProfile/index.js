@@ -180,7 +180,7 @@ function EditProfile() {
                 {userBanner &&
                     <img src={userBanner} alt="user_banner" className="profile_banner_image"/>
                 }
-                <ImageCropper width={1920} height={300} onImageCropped={handleUserBannerCropped}/>
+                <ImageCropper width={1920} height={300} cropperWidth={'550px'} onImageCropped={handleUserBannerCropped}/>
             </div>
             {accountData.user_type !== undefined ? (
                 accountData.user_type === 1 ? (

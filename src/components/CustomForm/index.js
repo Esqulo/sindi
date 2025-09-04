@@ -356,96 +356,101 @@ function CustomForm({fields, onSubmit, ButtonText, customStyle, formError}) {
             {
                 Object.entries(hookFields).map(
                     ([name, field])=>{
-
-                        switch (field.type) {
-                            case "checkbox" :
-                                return (
-                                    <CustomCheckInput
+                        try{
+                            switch (field.type) {
+                                case "checkbox" :
+                                    return (
+                                        <CustomCheckInput
+                                            key={name}
+                                            name={name}
+                                            value={fieldValues[name]}
+                                            label={field.label}
+                                            required={field.required}
+                                            disabled={field.disabled}
+                                            onChange={(value) => handleChange(name, value)}
+                                            errorMessage={errors[name]}
+                                        />
+                                    );
+                                case "doc" : 
+                                    return (<CustomDocInput
                                         key={name}
                                         name={name}
                                         value={fieldValues[name]}
                                         label={field.label}
                                         required={field.required}
                                         disabled={field.disabled}
-                                        onChange={(value) => handleChange(name, value)}
-                                        errorMessage={errors[name]}
-                                    />
-                                );
-                            case "doc" : 
-                                return (<CustomDocInput
-                                    key={name}
-                                    name={name}
-                                    value={fieldValues[name]}
-                                    label={field.label}
-                                    required={field.required}
-                                    disabled={field.disabled}
-                                    whenChange={(value) => handleChange(name, value)}
-                                />);
-                            case "textarea" : 
-                                return (
-                                    <CustomTextAreaInput
-                                        key={name}
-                                        name={name}
-                                        value={fieldValues[name]}
-                                        label={field.label}
-                                        placeholder={field.placeholder}
-                                        required={field.required}
-                                        disabled={field.disabled}
-                                        onChange={(value) => handleChange(name, value)}
-                                        errorMessage={errors[name]}
-                                    />
-                                );
-                            case "password" :
-                                return (
-                                    <CustomPasswordInput
-                                        key={name}
-                                        name={name}
-                                        value={fieldValues[name]}
-                                        label={field.label}
-                                        placeholder={field.placeholder}
-                                        mask={field.mask}
-                                        type={field.type}
-                                        required={field.required}
-                                        disabled={field.disabled}
-                                        min={field.min}
-                                        max={field.max}
-                                        onChange={(value) => handleChange(name, value)}
-                                        errorMessage={errors[name]}
-                                    />
-                                );
-                            case "money":
-                                return(
-                                    <CustomMonetaryInput
-                                        key={name}
-                                        name={name}
-                                        value={fieldValues[name]}
-                                        type={field.type}
-                                        label={field.label}
-                                        placeholder={field.placeholder}
-                                        required={field.required}
-                                        disabled={field.disabled}
-                                        onChange={(value) => handleChange(name, value)}
-                                        errorMessage={errors[name]}
-                                    />
-                                );
-                            default:
-                                return (
-                                    <CustomTextInput
-                                        key={name}
-                                        name={name}
-                                        value={fieldValues[name]}
-                                        label={field.label}
-                                        placeholder={field.placeholder}
-                                        mask={field.mask}
-                                        type={field.type}
-                                        required={field.required}
-                                        disabled={field.disabled}
-                                        min={field.min}
-                                        max={field.max}
-                                        onChange={(value) => handleChange(name, value)}
-                                        errorMessage={errors[name]}
-                                    />
-                                );
+                                        whenChange={(value) => handleChange(name, value)}
+                                    />);
+                                case "textarea" : 
+                                    return (
+                                        <CustomTextAreaInput
+                                            key={name}
+                                            name={name}
+                                            value={fieldValues[name]}
+                                            label={field.label}
+                                            placeholder={field.placeholder}
+                                            required={field.required}
+                                            disabled={field.disabled}
+                                            onChange={(value) => handleChange(name, value)}
+                                            errorMessage={errors[name]}
+                                        />
+                                    );
+                                case "password" :
+                                    return (
+                                        <CustomPasswordInput
+                                            key={name}
+                                            name={name}
+                                            value={fieldValues[name]}
+                                            label={field.label}
+                                            placeholder={field.placeholder}
+                                            mask={field.mask}
+                                            type={field.type}
+                                            required={field.required}
+                                            disabled={field.disabled}
+                                            min={field.min}
+                                            max={field.max}
+                                            onChange={(value) => handleChange(name, value)}
+                                            errorMessage={errors[name]}
+                                        />
+                                    );
+                                case "money":
+                                    return(
+                                        <CustomMonetaryInput
+                                            key={name}
+                                            name={name}
+                                            value={fieldValues[name]}
+                                            type={field.type}
+                                            label={field.label}
+                                            placeholder={field.placeholder}
+                                            required={field.required}
+                                            disabled={field.disabled}
+                                            onChange={(value) => handleChange(name, value)}
+                                            errorMessage={errors[name]}
+                                        />
+                                    );
+                                default:
+                                    return (
+                                        <CustomTextInput
+                                            key={name}
+                                            name={name}
+                                            value={fieldValues[name]}
+                                            label={field.label}
+                                            placeholder={field.placeholder}
+                                            mask={field.mask}
+                                            type={field.type}
+                                            required={field.required}
+                                            disabled={field.disabled}
+                                            min={field.min}
+                                            max={field.max}
+                                            onChange={(value) => handleChange(name, value)}
+                                            errorMessage={errors[name]}
+                                        />
+                                    );
+                            }
+                        }catch(e){
+                            console.log('error:',e)
+                            console.log('name:',name)
+                            console.log('field:',field)
                         }
                         
                     }
