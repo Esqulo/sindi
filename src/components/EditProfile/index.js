@@ -112,7 +112,7 @@ function EditProfile() {
                     address: { ...prev.address, placeholder: apiResponse.address },
                     number: { ...prev.number, placeholder: apiResponse.number },
                     complement: { ...prev.complement, placeholder: apiResponse.complement },
-                    doc_number: { ...prev.doc_number, placeholder: apiResponse.doc_number },
+                    // doc_number: { ...prev.doc_number, placeholder: apiResponse.doc_number },
                     position: { ...prev.position, placeholder: apiResponse.position },
                     bio: { ...prev.bio, placeholder: apiResponse.bio },
                 }));
