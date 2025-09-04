@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import "./styles.css";
 import Cropper from 'react-easy-crop';
 
-export default function ImageCropper({ width = 500, height = 500, onImageCropped }) {
+export default function ImageCropper({ width = 500, height = 500, cropperWidth = '350px', cropperHeight = '350px', onImageCropped }) {
     const [image, setImage] = useState(null);
     const [crop, setCrop] = useState({ x: 0, y: 0 });
     const [zoom, setZoom] = useState(1);
@@ -83,7 +83,7 @@ export default function ImageCropper({ width = 500, height = 500, onImageCropped
             <input type="file" accept="image/*" onChange={handleFileChange} />
 
             {image && <>
-                <div className="internal-crop-container">
+                <div className="internal-crop-container" style={{width: cropperWidth, height: cropperHeight}}>
                     <Cropper
                         image={image}
                         crop={crop}
