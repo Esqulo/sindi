@@ -18,11 +18,11 @@ function NearbyTrustee(){
     const pageRef = useRef(1);
     const initialFetched = useRef(false);
 
-    const getNearbyTrustee = useCallback(async () => {
+    const getNearbyUsers = useCallback(async () => {
         if(!keeploading || loading) return;
         setLoading(true);
         try {
-            const apiResponse = await Api.getNearbyTrustee(pageRef.current);
+            const apiResponse = await Api.getNearbyUsers(pageRef.current);
             if(!apiResponse.data.length){
                 setKeepLoading(false);
                 return;
@@ -38,9 +38,9 @@ function NearbyTrustee(){
 
     useEffect(() => {
         if (initialFetched.current) return;
-        getNearbyTrustee();
+        getNearbyUsers();
         initialFetched.current = true;
-    }, [getNearbyTrustee]);
+    }, [getNearbyUsers]);
 
     return (
         <div className="nt-container column-centered">
@@ -77,7 +77,7 @@ function NearbyTrustee(){
                         ))}
                         {loading && <LoadingIcon color='#000'/>}
                         {keeploading &&
-                            <button className='nt-list-see_more' onClick={getNearbyTrustee}>Ver mais</button>
+                            <button className='nt-list-see_more' onClick={getNearbyUsers}>Ver mais</button>
                         }
                     </div>
                 </div>

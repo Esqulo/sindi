@@ -252,8 +252,8 @@ const Api = {
             })
         }),
 
-    getNearbyTrustee: async (page) => 
-        apiFetch(`${BASE_URL}/nearby/trustee?page=${page}`, {
+    getNearbyUsers: async (page) => 
+        apiFetch(`${BASE_URL}/nearby/users?page=${page}`, {
             method: 'GET',
             headers: await getAuthHeaders()
         }),
