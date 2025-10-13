@@ -4,7 +4,7 @@ import "./styles.css";
 // import PinpointIcon from "../../assets/images/icons/pinpoint.png";
 // import FiltersIcon from "../../assets/images/icons/filters.png";
 
-import TrusteeComponent from "../TrusteeComponent";
+import UserComponent from "../UserComponent";
 import LoadingIcon from '../LoadingIcon';
 
 import Api from '../../Api';
@@ -59,21 +59,7 @@ function NearbyTrustee(){
                     <span className="nt-list-title">Os mais próximos de você</span>
                     <div className="nt-list column-centered">
                         {nearbyUsers.map((nearbyUser, index) => (
-                            <TrusteeComponent key={nearbyUser.id}
-                                trusteeData={{
-                                    id: nearbyUser.id,
-                                    img: nearbyUser.avatar,
-                                    name: nearbyUser.name,
-                                    stars: nearbyUser.stars,
-                                    starsCount: nearbyUser.reviews_count,
-                                    experienceYears: nearbyUser.experience_time,
-                                    career: nearbyUser.position,
-                                    // age: 47,
-                                    // distance: 15,
-                                    // price: 175,
-                                    // sponsored: true
-                                }}
-                            />
+                            <UserComponent key={nearbyUser.id} userData={nearbyUser}/>
                         ))}
                         {loading && <LoadingIcon color='#000'/>}
                         {keeploading &&
