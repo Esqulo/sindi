@@ -4,7 +4,7 @@ import "./styles.css";
 // import PinpointIcon from "../../assets/images/icons/pinpoint.png";
 // import FiltersIcon from "../../assets/images/icons/filters.png";
 
-import TrusteeComponent from "../TrusteeComponent";
+import UserComponent from "../UserComponent";
 import LoadingIcon from '../LoadingIcon';
 
 import Api from '../../Api';
@@ -18,11 +18,11 @@ function NearbyTrustee(){
     const pageRef = useRef(1);
     const initialFetched = useRef(false);
 
-    const getNearbyTrustee = useCallback(async () => {
+    const getNearbyUsers = useCallback(async () => {
         if(!keeploading || loading) return;
         setLoading(true);
         try {
-            const apiResponse = await Api.getNearbyTrustee(pageRef.current);
+            const apiResponse = await Api.getNearbyUsers(pageRef.current);
             if(!apiResponse.data.length){
                 setKeepLoading(false);
                 return;
@@ -38,9 +38,9 @@ function NearbyTrustee(){
 
     useEffect(() => {
         if (initialFetched.current) return;
-        getNearbyTrustee();
+        getNearbyUsers();
         initialFetched.current = true;
-    }, [getNearbyTrustee]);
+    }, [getNearbyUsers]);
 
     return (
         <div className="nt-container column-centered">
@@ -59,25 +59,11 @@ function NearbyTrustee(){
                     <span className="nt-list-title">Os mais próximos de você</span>
                     <div className="nt-list column-centered">
                         {nearbyUsers.map((nearbyUser, index) => (
-                            <TrusteeComponent key={nearbyUser.id}
-                                trusteeData={{
-                                    id: nearbyUser.id,
-                                    img: nearbyUser.avatar,
-                                    name: nearbyUser.name,
-                                    stars: nearbyUser.stars,
-                                    starsCount: nearbyUser.reviews_count,
-                                    experienceYears: nearbyUser.experience_time,
-                                    career: nearbyUser.position,
-                                    // age: 47,
-                                    // distance: 15,
-                                    // price: 175,
-                                    // sponsored: true
-                                }}
-                            />
+                            <UserComponent key={nearbyUser.id} userData={nearbyUser}/>
                         ))}
                         {loading && <LoadingIcon color='#000'/>}
                         {keeploading &&
-                            <button className='nt-list-see_more' onClick={getNearbyTrustee}>Ver mais</button>
+                            <button className='nt-list-see_more' onClick={getNearbyUsers}>Ver mais</button>
                         }
                     </div>
                 </div>
