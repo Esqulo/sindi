@@ -30,7 +30,8 @@ async function apiFetch(url, options = {}){
     try {
         const response = await fetch(url, options);
         const json = await response.json();
-        
+        json.status = response.status;
+
         handleAction(json);
 
         return json;

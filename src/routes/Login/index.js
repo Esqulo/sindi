@@ -83,9 +83,7 @@ function Login() {
 
 			window.location.href = '/';
 
-		}catch(err){
-			err.status = err.status ? err.status : -1;
-			
+		}catch(err){			
 			switch(err.status){
 				case 404:
 					setformError("Email ou senha inválidos");
