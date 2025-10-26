@@ -81,7 +81,7 @@ function Login() {
 
 			localStorage.setItem('token', api_response.token.toString());
 
-			window.location.href = '/';
+			window.location.href = '/home';
 
 		}catch(err){			
 			switch(err.status){

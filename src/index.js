@@ -6,6 +6,7 @@ import App from './App';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import LandingPage from './routes/LandingPage';
+import Index from './routes/Index';
 import Home from './routes/Home';
 import Login from './routes/Login';
 import Signup from './routes/Signup';
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
       },
       {
         index: true,
+        element: <Index/>
+      },
+      {
+        path: "home",
         element: <Home/>
       },
       {
