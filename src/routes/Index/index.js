@@ -11,12 +11,10 @@ import securityIcon from "../../assets/images/landing_page/security_icon.png";
 
 export default function Index(){
 
-    //on start check for token and send to /home if necessary
-
     const bannerBackground = `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${bannerImage})`;
 
     const laptopItems = [
-        {type: "video", media: ""},
+        {type: "embed", media: "https://www.youtube.com/embed/z70XJKqV-pM?si=BY5Xfbkzgy-d9geu&amp;controls=0;"},
     ];
 
     return (
