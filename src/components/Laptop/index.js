@@ -36,6 +36,9 @@ function Laptop({ content = [], time = 5000 }){
             {currentContent.type === "video" &&
                 <video className={`laptop_screen ${fade ? 'fade-in' : 'fade-out'}`} src={currentContent.media} muted={true} autoPlay={true} loop playsInline controls={false}/>
             }
+            {currentContent.type === "embed" &&
+                <iframe className={`laptop_screen ${fade ? 'fade-in' : 'fade-out'}`} src={currentContent.media} frameborder="0" allow="autoplay; encrypted-media;" referrerpolicy="strict-origin-when-cross-origin" title="laptop_screen"></iframe>
+            }
         </div>
     );
 }
