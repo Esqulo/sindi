@@ -1,4 +1,6 @@
 import React from "react";
+import {useEffect} from "react";
+import { useNavigate } from "react-router-dom";
 import './styles.css';
 
 import Laptop from "../../components/Laptop";
@@ -10,6 +12,14 @@ import helpIcon from "../../assets/images/landing_page/help_icon.png";
 import securityIcon from "../../assets/images/landing_page/security_icon.png";
 
 export default function Index(){
+
+    const navigate = useNavigate();
+
+    useEffect(()=>{
+        const token = localStorage.getItem("token");
+        if(!token) return;
+        navigate("/home")
+    },[navigate])
 
     const bannerBackground = `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${bannerImage})`;
 
