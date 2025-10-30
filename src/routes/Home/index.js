@@ -4,7 +4,7 @@ import "./styles.css";
 import HomeBanner from '../../components/HomeBanner';
 import NearbyUsers from '../../components/NearbyUsers';
 
-import bannerImage from '../../assets/images/banner-home.svg';
+import bannerImage from '../../assets/images/banner-home.jpg';
 
 function Home(){
     return (
