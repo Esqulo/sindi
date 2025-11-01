@@ -193,13 +193,52 @@
 
 @media (max-width: 700px)  {
     .banner_highlight_text{
-        font-size: 3.4dvw;
+        font-size: 4dvw;
         max-width: 80%;
     }
 
     .banner_description_text{
-        font-size: 2.2dvw;
+        font-size: 3dvw;
         max-width: 80%;
+    }
+
+    .index_content{
+        width: 100%;
+        padding: 30px;
+    }
+
+
+    .index_highlight_text{
+        font-size: 6dvw;
+        text-align: center;
+    }
+
+    .index_paragraph{
+        text-align: center;
+    }
+
+    .font-medium{
+        font-size: 6dvw;
+    }
+
+    .font-small{
+        font-size: 5dvw;
+    }
+
+    .index_laptop{
+        padding: 30px 0;
+    }
+
+    .index-sign_in{
+        width: 100%;
+        font-size: 5dvw;
+        border-radius: 15px;
+        padding: 20px 50px;
+        margin: 10px;
+    }
+
+    .index-benefits-title{
+        margin-top: 50px;
     }
 
     .index-benefits-container{
@@ -207,5 +246,9 @@
         flex-direction: column;
         align-items: center;
         gap: 100px;
+    }
+
+    .index-benefits-item{
+        width: 100%;
     }
 }

@@ -50,9 +50,9 @@ export default function Index(){
                         <b>A Sindi está aqui para resolver esses problemas.</b> Nossa missão é tornar fácil e sem complicações a conexão entre síndicos profissionais e condomínios, ajudando você a encontrar as melhores oportunidades quando e onde quiser.
                     </div>
                 </div>
-                <button className="index-sign_in">Cadastrar agora!</button>
+                <button className="index-sign_in"  onClick={() => {navigate("signup")}}>Cadastrar agora!</button>
 
-                <div className="index_highlight_text text-center">Por que ser parceiro da Sindi?</div>
+                <div className="index_highlight_text text-center index-benefits-title">Por que ser parceiro da Sindi?</div>
 
                 <div className="index-benefits-container">
                     <div className="index-benefits-item">
