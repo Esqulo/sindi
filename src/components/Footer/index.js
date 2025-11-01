@@ -3,15 +3,14 @@ import "./styles.css";
 
 import CustomImgComponent from "../CustomImgComponent";
 
-import Logo from "../../assets/logo-with-name-white.png";
-
+import Logo from "../../assets/logo-branca.png";
 
 function Footer() {
   return (
     <footer className="column-centered">
         <div className="footer-columns-container row-centered">
           <div className="footer-column column-centered">
-            <CustomImgComponent img={Logo} width="206px" height="65px" style={{alignSelf: 'start'}}/>
+            <CustomImgComponent img={Logo} width="100px" height="100px" style={{alignSelf: 'start'}}/>
             <ul className="footer-list">
               <a href="/privacy.pdf"><li>Politica de privacidade</li></a>
               {/* <a href="/"><li>Novos recursos</li></a>
@@ -41,7 +40,7 @@ function Footer() {
         </div>
         <div className="footer-copyrigth-container row-centered">
           <span>© 2025. Todos os direitos reservados</span>
-          <span>Desenvolvido por Sindi.</span>
+          {/* <span>Desenvolvido por Sindi.</span> */}
         </div>
     </footer>
   );
