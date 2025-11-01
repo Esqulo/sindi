@@ -183,5 +183,39 @@
         max-width: 100dvw;
         padding: 0 30px;
     }
+
+}
+
+@media (max-width: 700px) {
+
+    .mainheader-contents{
+        padding: 0 10px;
+        max-height: 100px;
+    }
+
+    .mainheader-logo{
+        height: 40%;
+    }
+
+    .mainheader-container{
+        height: 100px;
+        display: flex;
+        align-items: row;
+        align-items: center;
+        padding: 0;
+    }
+
+    .logged-out{
+        display: flex;
+        flex-direction: column-reverse;
+        gap: 5px;
+    }
     
+    .logged-out button{
+        padding: 10px 20px;
+        width: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 }
